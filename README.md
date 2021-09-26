@@ -1,21 +1,15 @@
-# ALPHA 
+# CONSIGLIERE
 
-Thou shalt [use this repo as a set up](https://github.com/tgrx/tms-template/generate) for beginner to study web programming.
+A library for building Telegram apps.
 
-[![Heroku](https://img.shields.io/website?up_color=brightgreen&url=https%3A%2F%2Falphasrv.herokuapp.com)](https://alphasrv.herokuapp.com)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Maintainability](https://api.codeclimate.com/v1/badges/3f8ce386dad7b8a96470/maintainability)](https://codeclimate.com/github/tgrx/alpha/maintainability)
-[![Lines of code](https://img.shields.io/tokei/lines/github/tgrx/alpha)](https://github.com/tgrx/alpha/tree/main)
-[![main](https://github.com/tgrx/alpha/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/tgrx/alpha/actions)
-[![codecov](https://codecov.io/gh/tgrx/alpha/branch/main/graph/badge.svg?token=4UQQJV1KIO)](https://codecov.io/gh/tgrx/alpha)
+[![Maintainability](https://api.codeclimate.com/v1/badges/4164098b73754a3eda4b/maintainability)](https://codeclimate.com/github/tgrx/consigliere/maintainability)
+[![Lines of code](https://img.shields.io/tokei/lines/github/tgrx/consigliere)](https://github.com/tgrx/consigliere/tree/main)
+[![main](https://github.com/tgrx/consigliere/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/tgrx/consigliere/actions)
+[![codecov](https://codecov.io/gh/tgrx/consigliere/branch/main/graph/badge.svg?token=SNEY3K22KI)](https://codecov.io/gh/tgrx/consigliere)
 
 ## Packages
-[![asyncpg](https://img.shields.io/github/pipenv/locked/dependency-version/tgrx/alpha/asyncpg?color=white)](https://magicstack.github.io/asyncpg/current/)
-[![gunicorn](https://img.shields.io/github/pipenv/locked/dependency-version/tgrx/alpha/gunicorn?color=white)](https://gunicorn.org/)
-[![httpx](https://img.shields.io/github/pipenv/locked/dependency-version/tgrx/alpha/httpx?color=white)](https://www.python-httpx.org/)
 [![pydantic](https://img.shields.io/github/pipenv/locked/dependency-version/tgrx/alpha/pydantic?color=white)](https://pydantic-docs.helpmanual.io/)
-[![sentry-sdk](https://img.shields.io/github/pipenv/locked/dependency-version/tgrx/alpha/sentry-sdk?color=white)](https://sentry.io/welcome/)
-[![uvicorn](https://img.shields.io/github/pipenv/locked/dependency-version/tgrx/alpha/uvicorn?color=white)](https://www.uvicorn.org/)
 
 [![black](https://img.shields.io/github/pipenv/locked/dependency-version/tgrx/alpha/dev/black?color=white)](https://black.readthedocs.io/en/stable/)
 [![flake8](https://img.shields.io/github/pipenv/locked/dependency-version/tgrx/alpha/dev/flake8?color=white)](https://flake8.pycqa.org/en/latest/)

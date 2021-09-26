@@ -13,8 +13,9 @@ define log
 	@tput bold 2>/dev/null || exit 0
 	@tput setab 0  2>/dev/null || exit 0
 	@tput setaf 4  2>/dev/null || exit 0
-	@echo ">>>>>>>>>>>>>>>>    $(1)    "
+	@printf %s "#    $(1)    #"
 	@tput sgr0  2>/dev/null || exit 0
+	@echo ""
 endef
 
 endif
@@ -39,9 +40,7 @@ endif
 # -----------------------------------------------
 # Paths
 
-DIR_CONFIG = $(abspath $(DIR_REPO)/config)
-DIR_SCRIPTS = $(abspath $(DIR_REPO)/scripts)
-DIR_SRC := $(abspath $(DIR_REPO)/src)
+DIR_SRC := $(abspath $(DIR_REPO)/consigliere)
 DIR_TESTS := $(abspath $(DIR_REPO)/tests)
 
 
@@ -49,4 +48,3 @@ DIR_TESTS := $(abspath $(DIR_REPO)/tests)
 # calculated variables
 
 PYTHON := python
-MANAGEMENT := $(PYTHON) -m management

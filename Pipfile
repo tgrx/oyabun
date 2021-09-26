@@ -7,7 +7,10 @@ verify_ssl = true
 python_version = "3.9"
 
 [dev-packages]
-black = "==21.7b0"
+
+[packages]
+beautifulsoup4 = "*"
+black = "==21.9b0"
 coverage = { extras = ["toml"], version = "*" }
 devtools = { extras = ["pygments"], version = "*" }
 dlint = "*"
@@ -34,23 +37,17 @@ flake8-print = "*"
 flake8-printf-formatting = "*"
 flake8-simplify = "*"
 flake8-variables-names = "*"
-httpie = "*"
+httpx = "*"
 ipython = "*"
 isort = "*"
 mypy = "*"
 pep8-naming = "*"
-pudb = "*"
+pydantic = { extras = ["dotenv"], version = "*" }
 pylint = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
 pytest-mock = "*"
-
-[packages]
-asyncpg = "*"
-gunicorn = "*"
-httpx = "*"
-pydantic = { extras = ["dotenv"], version = "*" }
 python-dotenv = "*"
-sentry-sdk = "*"
-uvicorn = { extras = ["standard", ], version = "*" }
+twine = "*"
+build = "*"

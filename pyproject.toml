@@ -16,9 +16,11 @@ exclude = """
 
 
 [tool.isort]
+case_sensitive = false
 force_single_line = true
 line_length = 79
 multi_line_output = 3
+order_by_type =  false
 profile = "black"
 
 
@@ -27,13 +29,7 @@ console_output_style = "count"
 filterwarnings = [
     "ignore::DeprecationWarning",
 ]
-markers = [
-    "functional",
-    "webapp",
-    "unit",
-]
 testpaths = [
-    "src/framework/tests",
     "tests",
 ]
 addopts = "--cov --no-cov-on-fail --cov-fail-under=0"
@@ -55,9 +51,7 @@ warn_return_any = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
-[[tool.mypy.overrides]]
-module = [
-    "asyncpg",
-    "uvicorn",
-]
-ignore_missing_imports = true
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
