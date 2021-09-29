@@ -3,9 +3,6 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
-[requires]
-python_version = "3.9"
-
 [packages]
 beautifulsoup4 = "*"
 black = "==21.9b0"
@@ -49,5 +46,6 @@ pytest-cov = "*"
 pytest-mock = "*"
 python-dotenv = "*"
 twine = "*"
+typed-ast = { version = "*", markers = "python_version < '3.8'" }
 
 [dev-packages]

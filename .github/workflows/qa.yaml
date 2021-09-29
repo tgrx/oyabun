@@ -41,7 +41,7 @@ jobs:
         run: pip install pipenv
       - name: install python packages
         if: ${{ !steps.cache-runtime.outputs.cache-hit }}
-        run: make venv-deploy-all
+        run: make venv-dev
       - name: run tests
         run: make qa coverage
       - name: upload coverage to codecov.io
