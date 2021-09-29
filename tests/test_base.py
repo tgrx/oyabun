@@ -4,7 +4,7 @@ import pytest
 from pydantic import Field
 from pydantic import ValidationError
 
-from consigliere.types import base
+from consigliere.scheme import base
 
 
 def test_exclude_unset() -> None:
