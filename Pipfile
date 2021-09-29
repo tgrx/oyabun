@@ -6,11 +6,10 @@ verify_ssl = true
 [requires]
 python_version = "3.9"
 
-[dev-packages]
-
 [packages]
 beautifulsoup4 = "*"
 black = "==21.9b0"
+build = "*"
 coverage = { extras = ["toml"], version = "*" }
 devtools = { extras = ["pygments"], version = "*" }
 dlint = "*"
@@ -50,4 +49,5 @@ pytest-cov = "*"
 pytest-mock = "*"
 python-dotenv = "*"
 twine = "*"
-build = "*"
+
+[dev-packages]
