@@ -41,10 +41,11 @@ jobs:
         run: pip install pipenv
       - name: install python packages
         if: ${{ !steps.cache-runtime.outputs.cache-hit }}
-        run: make venv-dev
+        run: make venv-deploy-all
       - name: run tests
         run: make qa coverage
       - name: upload coverage to codecov.io
+        if: ${{ github.ref === "ref/head/main" && matrix.os === "ubuntu-latest" && matrix.python-version === "3.9" }}
         uses: codecov/codecov-action@v2
         with:
           files: ./coverage.xml
