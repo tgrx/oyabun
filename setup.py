@@ -35,7 +35,8 @@ EXTRAS = {
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------
 # Except, perhaps the License and Trove Classifiers!
-# If you do change the License, remember to change the Trove Classifier for that!
+# If you do change the License,
+# remember to change the Trove Classifier for that!
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -51,8 +52,9 @@ except FileNotFoundError:
 about = {}
 if not VERSION:
     project_slug = NAME.lower().replace("-", "_").replace(" ", "_")
-    with open(os.path.join(here, project_slug, "__version__.py")) as f:
-        exec(f.read(), about)
+    version_file = os.path.join(here, project_slug, "__version__.py")
+    with open(version_file) as f:
+        exec(f.read(), about)  # noqa: S102,DUO105
 else:
     about["__version__"] = VERSION
 
@@ -64,9 +66,9 @@ class UploadCommand(Command):
     user_options = []
 
     @staticmethod
-    def status(s):
+    def status(msg):
         """Prints things in bold."""
-        print("\033[1m{0}\033[0m".format(s))
+        print("\033[1m{0}\033[0m".format(msg))  # noqa: T001
 
     def initialize_options(self):
         pass
@@ -82,16 +84,17 @@ class UploadCommand(Command):
             pass
 
         self.status("Building Source and Wheel (universal) distribution…")
-        os.system(
+        os.system(  # noqa: S605,DUO106
             "{0} setup.py sdist bdist_wheel --universal".format(sys.executable)
         )
 
         self.status("Uploading the package to PyPI via Twine…")
-        os.system("twine upload dist/*")
+        os.system("twine upload dist/*")  # noqa: S605,S607,DUO106
 
         self.status("Pushing git tags…")
-        os.system("git tag v{0}".format(about["__version__"]))
-        os.system("git push --tags")
+        version = about["__version__"]
+        os.system(f"git tag v{version}")  # noqa: S605,DUO106
+        os.system("git push --tags")  # noqa: S605,S607,DUO106
 
         sys.exit()
 

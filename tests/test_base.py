@@ -22,7 +22,7 @@ def test_request() -> None:
     assert base.Request().dict() == {}
 
 
-def test_response_parameters():
+def test_response_parameters() -> None:
     assert base.ResponseParameters().dict() == {}
     assert base.ResponseParameters(migrate_to_chat_id=1).dict() == {
         "migrate_to_chat_id": 1
@@ -30,7 +30,7 @@ def test_response_parameters():
     assert base.ResponseParameters(retry_after=1).dict() == {"retry_after": 1}
 
 
-def test_response():
+def test_response() -> None:
     assert base.Response(ok=True).dict() == {"ok": True}
     assert base.Response.parse_obj({"ok": 1}) == {"ok": True}
     assert base.Response.parse_obj({"ok": "on"}) == {"ok": True}
@@ -42,7 +42,7 @@ def test_response():
     assert base.Response.parse_obj({"ok": "false"}) == {"ok": False}
 
 
-def test_str64():
+def test_str64() -> None:
     class Klass(base.TelegramBotApiType):
         attr: base.Str64
 

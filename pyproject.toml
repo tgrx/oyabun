@@ -1,18 +1,16 @@
 [tool.black]
 line-length = 79
 target-version = ["py38"]
-exclude = """
-(
+exclude = '''
   /(
-      /.git
-    | /.github
-    | /.pytest_cache
-    | /.run
-    | /.venv
-    | /htmlcov
+      \.git
+    | \.github
+    | \.pytest_cache
+    | \.run
+    | \.venv
+    | htmlcov
   )/
-)
-"""
+'''
 
 
 [tool.isort]

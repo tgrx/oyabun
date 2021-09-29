@@ -24,6 +24,7 @@ class GetWebhookInfoResponse(Response):
         will return an object with the url field empty.
     https://core.telegram.org/bots/api#getwebhookinfo
     """
+
     result: Optional[WebhookInfo] = Field(None)
 
 
@@ -32,6 +33,7 @@ class SetWebhookResponse(Response):
     Returns True on success.
     https://core.telegram.org/bots/api#setwebhook
     """
+
     result: bool = Field(False)
 
 
@@ -40,6 +42,7 @@ class SendMessageResponse(Response):
     On success, the sent Message is returned.
     https://core.telegram.org/bots/api#sendmessage
     """
+
     result: Optional[Message] = Field(None)
 
 
