@@ -56,7 +56,7 @@ qa: tests coverage code-typing code-format code-linters
 
 tests: clean-python
 	$(call log, running tests)
-	pytest
+	python -m pytest
 
 
 coverage:
@@ -67,7 +67,7 @@ coverage:
 
 code-typing:
 	$(call log, checking code typing)
-	mypy
+	python -m mypy
 
 
 code-format:
@@ -84,7 +84,7 @@ code-format:
 
 code-linters:
 	$(call log, linting)
-	flake8
+	python -m flake8
 
 
 sh:
