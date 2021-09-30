@@ -19,7 +19,7 @@ DESCRIPTION = "A library to build Telegram bots"
 URL = "https://github.com/tgrx/consigliere"
 EMAIL = "alexander@sidorov.dev"
 AUTHOR = "Alexander Sidorov"
-PYTHON_REQUIRES = ">=3.9.0"
+PYTHON_REQUIRES = ">=3.7.0"
 VERSION = None
 
 # What packages are required for this module to be executed?
@@ -126,11 +126,23 @@ setup(
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
+        "Development Status :: 3 - Alpha",
+        "Environment :: Console",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Telecommunications Industry",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python",
+        "Natural Language :: English",
+        "Operating System :: MacOS :: MacOS X",
+        "Operating System :: Microsoft :: Windows",
+        "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: Implementation :: CPython",
+        "Programming Language :: Python",
+        "Topic :: Communications :: Chat",
+        "Topic :: Software Development :: Libraries :: Application Frameworks",
     ],
     # $ setup.py publish support.
     cmdclass={
