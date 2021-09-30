@@ -87,7 +87,7 @@ jobs:
       - name: download library as artifact
         uses: actions/download-artifact@v2
         with:
-          name: consigliere-${{ jobs.build.outputs.version }}
+          name: consigliere-${{ needs.build.outputs.version }}
 
 #      - name: install twine
 #        run: pip install twine
