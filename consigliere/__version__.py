@@ -4,4 +4,4 @@ VERSION = (
     1,
 )
 
-__version__ = ".".join(f"{comp}" for comp in VERSION) + "a2"
+__version__ = ".".join(f"{comp}" for comp in VERSION) + "a3"

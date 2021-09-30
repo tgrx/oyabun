@@ -5,11 +5,20 @@ verify_ssl = true
 
 [packages]
 atomicwrites = { version = "*", sys_platform = "== 'win32'" }
-beautifulsoup4 = "*"
-black = "==21.9b0"
 build = "*"
 coverage = { extras = ["toml"], version = "*" }
 devtools = { extras = ["pygments"], version = "*" }
+pytest = "*"
+pytest-asyncio = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+python-dotenv = "*"
+twine = "*"
+typed-ast = { version = "*", markers = "python_version < '3.8'" }
+
+[dev-packages]
+beautifulsoup4 = "*"
+black = "==21.9b0"
 dlint = "*"
 flake8 = "*"
 flake8-annotations-complexity = "*"
@@ -41,12 +50,3 @@ mypy = "*"
 pep8-naming = "*"
 pydantic = { extras = ["dotenv"], version = "*" }
 pylint = "*"
-pytest = "*"
-pytest-asyncio = "*"
-pytest-cov = "*"
-pytest-mock = "*"
-python-dotenv = "*"
-twine = "*"
-typed-ast = { version = "*", markers = "python_version < '3.8'" }
-
-[dev-packages]
