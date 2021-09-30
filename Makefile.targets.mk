@@ -1,5 +1,5 @@
-.PHONY: build upload clean clean-python clean-dist format qa tests coverage
-.PHONY: code-typing code-format code-linters sh
+.PHONY: build upload-test upload get-version clean clean-python clean-dist
+.PHONY: format qa tests coverage code-typing code-format code-linters sh
 .PHONY: venv-dir venv venv-dev venv-deploy venv-deploy-all upgrade-venv
 
 
@@ -16,6 +16,10 @@ upload-test: build
 upload: build
 	$(call log, uploading dist to pypi.org)
 	python -m twine upload dist/*
+
+
+get-version:
+	@python -c "from consigliere import __version__ as v; print(v.__version__)"
 
 
 clean: clean-python clean-dist

@@ -1,0 +1,101 @@
+name: Deploy (Test)
+
+on:
+#  push:
+#    branches:
+#      - main
+  pull_request:
+  workflow_dispatch:
+
+env:
+  PIPENV_VENV_IN_PROJECT: "1"
+  PYTHONPATH: "consigliere"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          - "ubuntu-latest"
+        python-version:
+          - "3.9"
+    runs-on: ${{ matrix.os }}
+
+    outputs:
+      version: ${{ steps.lib-version.outputs.version }}
+
+    steps:
+
+      - name: pull code from repo
+        uses: actions/checkout@v2
+
+      - name: set up runtime
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: "x64"
+
+      - name: cache runtime
+        id: cache-runtime
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.pythonLocation }}
+          key: cache-runtime-${{ matrix.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}
+
+      - name: install pipenv
+        if: ${{ !steps.cache-runtime.outputs.cache-hit }}
+        run: pip install pipenv
+
+      - name: install python packages
+        if: ${{ !steps.cache-runtime.outputs.cache-hit }}
+        run: make venv-deploy-all
+
+      - name: build library
+        run: make build
+
+      - name: remove sources
+        run: rm -rf ./consigliere
+
+      - name: install library from zip
+        run: pip install dist/consigliere*.tar.gz
+
+      - name: run tests against installed lib
+        run: make tests
+
+      - name: set lib version
+        id: lib-version
+        run: echo "::set-output name=version::$(make get-version)"
+
+      - name: upload library as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: consigliere-${{ steps.lib-version.outputs.version }}
+          path: dist/
+  deploy-test:
+    needs:
+      - build
+
+    runs-on: ${{ needs.build.runs-on }}
+
+    steps:
+#      - name: set up runtime
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: "3.9"
+#          architecture: "x64"
+
+      - name: download library as artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: consigliere-${{ jobs.build.outputs.version }}
+
+#      - name: install twine
+#        run: pip install twine
+
+      - name: upload library to test pypi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.TEST_PYPI_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
+          verbose: true
