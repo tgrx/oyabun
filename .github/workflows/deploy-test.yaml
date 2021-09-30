@@ -80,11 +80,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: remove sources (normal system)
-        if: ${{ !contains(matrix.os, "windows") }}
+        if: ${{ !contains(matrix.os, 'windows') }}
         run: rm -rf ./consigliere
 
       - name: remove sources (windows)
-        if: ${{ contains(matrix.os, "windows") }}
+        if: ${{ contains(matrix.os, 'windows') }}
         run: RMDIR consigliere /S /Q
 
       - name: set up runtime
