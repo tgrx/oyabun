@@ -79,8 +79,13 @@ jobs:
       - name: pull code from repo
         uses: actions/checkout@v2
 
-      - name: remove sources
+      - name: remove sources (normal system)
+        if: ${{ !contains(matrix.os, "windows") }}
         run: rm -rf ./consigliere
+
+      - name: remove sources (windows)
+        if: ${{ contains(matrix.os, "windows") }}
+        run: RMDIR consigliere /S /Q
 
       - name: set up runtime
         uses: actions/setup-python@v2
