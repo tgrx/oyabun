@@ -85,7 +85,9 @@ jobs:
 
       - name: remove sources (windows)
         if: ${{ contains(matrix.os, 'windows') }}
-        run: RMDIR consigliere /S /Q
+        uses: JesseTG/rm@v1.0.2
+        with:
+          path: consigliere
 
       - name: set up runtime
         uses: actions/setup-python@v2
