@@ -45,7 +45,7 @@ jobs:
       - name: run tests
         run: make qa coverage
       - name: upload coverage to codecov.io
-        if: ${{ github.ref == 'refs/heads/main' && matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' }}
         uses: codecov/codecov-action@v2
         with:
           files: ./coverage.xml
