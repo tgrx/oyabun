@@ -78,19 +78,14 @@ jobs:
     runs-on: "ubuntu-latest"
 
     steps:
-#      - name: set up runtime
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: "3.9"
-#          architecture: "x64"
-
       - name: download library as artifact
         uses: actions/download-artifact@v2
         with:
           name: consigliere-${{ needs.build.outputs.version }}
+          path: dist/
 
-#      - name: install twine
-#        run: pip install twine
+      - name: debug
+        run: tree .
 
       - name: upload library to test pypi
         uses: pypa/gh-action-pypi-publish@release/v1
