@@ -1,32 +1,166 @@
-name: Deploy
+name: Deploy (Test)
 
 on:
   push:
 #    branches:
-#      - releases
+#      - release
   workflow_dispatch:
 
+env:
+  PIPENV_VENV_IN_PROJECT: "1"
+  PYTHONPATH: "consigliere"
+
 jobs:
-
-  deploy:
-
+  build:
     runs-on: "ubuntu-latest"
 
+    outputs:
+      version: ${{ steps.lib-version.outputs.version }}
+
     steps:
-      - name: get version from commit message
-        id: get-version
-        run: |
-          echo "::set-output name=result::$(echo ${{ github.event.head_commit.message }} | sed 's/^v//')"
+
+      - name: pull code from repo
+        uses: actions/checkout@v2
+
+      - name: set up runtime
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+          architecture: "x64"
+
+      - name: cache runtime
+        id: cache-runtime
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.pythonLocation }}
+          key: cache-runtime-${{ matrix.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}-dev
+
+      - name: install pipenv
+        if: ${{ !steps.cache-runtime.outputs.cache-hit }}
+        run: pip install pipenv
+
+      - name: install python packages
+        if: ${{ !steps.cache-runtime.outputs.cache-hit }}
+        run: make venv-deploy-all
+
+      - name: build library
+        run: make build
+
+      - name: set lib version
+        id: lib-version
+        run: echo "::set-output name=version::$(make get-version)"
+
+      - name: check lib version == version from commit message
+        if: >-
+          ${{ github.ref }} == 'refs/heads/release' &&
+          ${{ github.event.head_commit.message }} != 'v${{ steps.lib-version.outputs.version }}'
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed(
+              'github commit message ' +
+              '"${{ github.event.head_commit.message }}"' +
+              ' != ' +
+              '"v${{ steps.lib-version.outputs.version }}"'
+            )
+
+      - name: upload library as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: consigliere-${{ steps.lib-version.outputs.version }}
+          path: dist/
+
+  test-build:
+
+    runs-on: ${{ matrix.os }}
+
+    needs:
+      - build
+
+    strategy:
+      matrix:
+        os:
+          - "macos-latest"
+          - "ubuntu-latest"
+          - "windows-latest"
+        python-version:
+          - "3.7"
+          - "3.8"
+          - "3.9"
+
+    steps:
+
+      - name: pull code from repo
+        uses: actions/checkout@v2
+
+      - name: remove sources (normal os)
+        if: ${{ !contains(matrix.os, 'windows') }}
+        run: rm -rf ./consigliere
+
+      - name: remove sources (shit os)
+        if: ${{ contains(matrix.os, 'windows') }}
+        uses: JesseTG/rm@v1.0.2
+        with:
+          path: consigliere
+
+      - name: set up runtime
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: "x64"
+
+      - name: cache runtime
+        id: cache-runtime
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.pythonLocation }}
+          key: cache-runtime-${{ matrix.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}
+
+      - name: install pipenv
+        if: ${{ !steps.cache-runtime.outputs.cache-hit }}
+        run: pip install pipenv
+
+      - name: install python packages
+        if: ${{ !steps.cache-runtime.outputs.cache-hit }}
+        run: make venv-deploy
 
       - name: download library as artifact
         uses: actions/download-artifact@v2
         with:
-          name: consigliere-${{ steps.get-version.outputs.result }}
+          name: consigliere-${{ needs.build.outputs.version }}
+          path: dist/
+
+      - name: install library from zip (normal os)
+        if: ${{ !contains(matrix.os, 'windows') }}
+        run: pip install dist/consigliere-${{ needs.build.outputs.version }}.tar.gz
+
+      - name: install library from zip (shit os)
+        if: ${{ contains(matrix.os, 'windows') }}
+        run: pip install dist\consigliere-${{ needs.build.outputs.version }}.tar.gz
+
+      - name: run tests against installed lib
+        run: make tests
+
+  deploy:
+
+    if: github.ref == 'refs/heads/release'
+
+    needs:
+      - build
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+
+      - name: download library as artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: consigliere-${{ needs.build.outputs.version }}
           path: dist/
 
       - name: upload library to pypi
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
-          password: ${{ secrets.PYPI_TOKEN }}kk
+          password: ${{ secrets.TEST_PYPI_TOKEN }}kk
           verbose: true
