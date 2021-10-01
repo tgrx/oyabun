@@ -5,7 +5,7 @@
 
 build: clean
 	$(call log, building wheels and bdist)
-	python -m build
+	python -m build --sdist --wheel --outdir dist/ .
 
 
 upload-test: build
