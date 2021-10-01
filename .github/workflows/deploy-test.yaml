@@ -79,11 +79,11 @@ jobs:
       - name: pull code from repo
         uses: actions/checkout@v2
 
-      - name: remove sources (normal system)
+      - name: remove sources (normal os)
         if: ${{ !contains(matrix.os, 'windows') }}
         run: rm -rf ./consigliere
 
-      - name: remove sources (windows)
+      - name: remove sources (shit os)
         if: ${{ contains(matrix.os, 'windows') }}
         uses: JesseTG/rm@v1.0.2
         with:
@@ -116,8 +116,13 @@ jobs:
           name: consigliere-${{ needs.build.outputs.version }}
           path: dist/
 
-      - name: install library from zip
-        run: pip install dist/consigliere*.tar.gz
+      - name: install library from zip (normal os)
+        if: ${{ !contains(matrix.os, 'windows') }}
+        run: pip install dist/consigliere-${{ needs.build.outputs.version }}.tar.gz
+
+      - name: install library from zip (shit os)
+        if: ${{ contains(matrix.os, 'windows') }}
+        run: pip install dist\consigliere-${{ needs.build.outputs.version }}.tar.gz
 
       - name: run tests against installed lib
         run: make tests
