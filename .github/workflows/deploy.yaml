@@ -13,16 +13,17 @@ jobs:
     runs-on: "ubuntu-latest"
 
     steps:
-      - name: debug
-        run:
-          echo ${{ github.event.head_commit.message }}
+      - name: get version from commit message
+        id: get-version
+        run: |
+          echo "::set-output name=result::$(echo ${{ github.event.head_commit.message }} | sed 's/^v//)"
 
-#      - name: download library as artifact
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: consigliere-${{ needs.build.outputs.version }}
-#          path: dist/
-#
+      - name: download library as artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: consigliere-${{ steps.get-version.outputs.result }}
+          path: dist/
+
 #      - name: upload library to pypi
 #        if: startsWith(github.ref, 'refs/tags')
 #        uses: pypa/gh-action-pypi-publish@release/v1
