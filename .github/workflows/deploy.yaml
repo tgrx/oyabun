@@ -14,12 +14,8 @@ jobs:
 
     steps:
       - name: debug
-        run: >-
-          echo event ${{ github.event }};
-          echo event name ${{ github.event_name }};
-          echo ref ${{ github.ref }};
-          echo sha ${{ github.sha }};
-          echo msg $(git log --format=%B -n 1 ${{ github.sha }} | head -n 1);
+        run:
+          echo ${{ github.event.head_commit.message }}
 
 #      - name: download library as artifact
 #        uses: actions/download-artifact@v2
