@@ -24,10 +24,9 @@ jobs:
           name: consigliere-${{ steps.get-version.outputs.result }}
           path: dist/
 
-#      - name: upload library to pypi
-#        if: startsWith(github.ref, 'refs/tags')
-#        uses: pypa/gh-action-pypi-publish@release/v1
-#        with:
-#          user: __token__
-#          password: ${{ secrets.PYPI_TOKEN }}
-#          verbose: true
+      - name: upload library to pypi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}kk
+          verbose: true
