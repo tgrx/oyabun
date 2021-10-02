@@ -2,8 +2,8 @@ name: Deploy
 
 on:
   push:
-#    branches:
-#      - release
+  #    branches:
+  #      - release
   workflow_dispatch:
 
 env:
@@ -38,12 +38,12 @@ jobs:
         if: ${{ !steps.cache-runtime.outputs.cache-hit }}
         run: pip install pipenv
 
-#      - name: install python packages
-#        if: ${{ !steps.cache-runtime.outputs.cache-hit }}
-#        run: make venv-deploy-all
+      #      - name: install python packages
+      #        if: ${{ !steps.cache-runtime.outputs.cache-hit }}
+      #        run: make venv-deploy-all
 
-#      - name: build library
-#        run: make build
+      #      - name: build library
+      #        run: make build
 
       - name: set lib version
         id: lib-version
@@ -57,8 +57,10 @@ jobs:
 
       - name: check lib version == version from commit message
         if: |
-          (true || github.ref == 'refs/heads/version-0.0.1a1') &&
-          (github.event.head_commit.message == format('v{0}', steps.lib-version.outputs.version))
+          ${{
+            (true || github.ref == 'refs/heads/version-0.0.1a1') &&
+            github.event.head_commit.message == format('v{0}', steps.lib-version.outputs.version)
+          }}
         uses: actions/github-script@v3
         with:
           script: |
@@ -150,7 +152,7 @@ jobs:
 
   deploy:
 
-#    if: github.ref == 'refs/heads/release'
+    #    if: github.ref == 'refs/heads/release'
 
     needs:
       - build
