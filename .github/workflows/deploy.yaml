@@ -59,8 +59,8 @@ jobs:
         if: |
           ${{
             (true || github.ref == 'refs/heads/version-0.0.1a1')
-            && github.event != undefined
-            && github.event.head_commit != undefined
+            && github.event
+            && github.event.head_commit
             && github.event.head_commit.message == format('v{0}', steps.lib-version.outputs.version)
           }}
         uses: actions/github-script@v3
