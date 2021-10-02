@@ -9,7 +9,6 @@ on:
 
 env:
   PIPENV_VENV_IN_PROJECT: "1"
-  PYTHONPATH: "consigliere"
 
 jobs:
   qa:

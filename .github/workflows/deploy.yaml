@@ -8,7 +8,6 @@ on:
 
 env:
   PIPENV_VENV_IN_PROJECT: "1"
-  PYTHONPATH: "consigliere"
 
 jobs:
   build:
@@ -39,16 +38,22 @@ jobs:
         if: ${{ !steps.cache-runtime.outputs.cache-hit }}
         run: pip install pipenv
 
-      - name: install python packages
-        if: ${{ !steps.cache-runtime.outputs.cache-hit }}
-        run: make venv-deploy-all
+#      - name: install python packages
+#        if: ${{ !steps.cache-runtime.outputs.cache-hit }}
+#        run: make venv-deploy-all
 
-      - name: build library
-        run: make build
+#      - name: build library
+#        run: make build
 
       - name: set lib version
         id: lib-version
         run: echo "::set-output name=version::$(make get-version)"
+
+      - name: debug
+        run: |
+          echo ${{ steps.lib-version.outputs.version }}
+          echo github.event.head_commit.message
+          exit 1
 
       - name: check lib version == version from commit message
 #        if: >-
