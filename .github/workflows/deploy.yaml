@@ -59,16 +59,18 @@ jobs:
 #        if: >-
 #          ${{ github.ref }} == 'refs/heads/release' &&
 #          ${{ github.event.head_commit.message }} != 'v${{ steps.lib-version.outputs.version }}'
-        if: !contains(github.event.head_commit.message, format('v{0}', steps.lib-version.outputs.version))
+        if: !startsWith(github.event.head_commit.message, format('v{0}', steps.lib-version.outputs.version))
         uses: actions/github-script@v3
         with:
           script: |
+            console.log(github.event.head_commit.message);
+            console.log(steps.lib-version.outputs.version);
             core.setFailed(
               'github commit message ' +
               '"${{ github.event.head_commit.message }}"' +
               ' != ' +
               '"v${{ steps.lib-version.outputs.version }}"'
-            )
+            );
 
       - name: upload library as artifact
         uses: actions/upload-artifact@v2
