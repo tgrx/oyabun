@@ -57,13 +57,13 @@ jobs:
 
       - name: check lib version == version from commit message
         if: |
-          github.ref == 'refs/heads/main' &&
+          (true || github.ref == 'refs/heads/main') &&
           github.event.head_commit.message != format('v{0}', steps.lib-version.outputs.version)
         uses: actions/github-script@v3
         with:
           script: |
-#            console.log(github.event.head_commit.message);
-#            console.log(steps.lib-version.outputs.version);
+            console.log(github.event.head_commit.message);
+            console.log(steps.lib-version.outputs.version);
             core.setFailed(
               'github commit message ' +
               '"${{ github.event.head_commit.message }}"' +
