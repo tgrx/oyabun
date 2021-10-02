@@ -58,8 +58,8 @@ jobs:
       - name: check lib version == version from commit message
         if: >
           ${{
-            github.ref == 'refs/heads/main'
-            && github.event.head_commit.message != format('v{0}', steps.lib-version.outputs.version)
+            (github.ref == 'refs/heads/main')
+            && (github.event.head_commit.message != format('v{0}', steps.lib-version.outputs.version))
           }}
         uses: actions/github-script@v3
         with:
