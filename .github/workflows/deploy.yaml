@@ -51,23 +51,21 @@ jobs:
 
       - name: debug
         run: echo '${{ toJson(github.event) }}'
-#          echo ${{ toJson(github.ref) }}
-#          echo ${{ toJson(steps.lib-version.outputs.version) }}
-#          echo ${{ toJson(github.event.head_commit.message) }}
+      #          echo ${{ toJson(github.ref) }}
+      #          echo ${{ toJson(steps.lib-version.outputs.version) }}
+      #          echo ${{ toJson(github.event.head_commit.message) }}
 
       - name: check lib version == version from commit message
         if: |
           ${{
             (true || github.ref == 'refs/heads/version-0.0.1a1')
-            && github.event
-            && github.event.head_commit
+            && github.event != undefined
+            && github.event.head_commit != undefined
             && github.event.head_commit.message == format('v{0}', steps.lib-version.outputs.version)
           }}
         uses: actions/github-script@v3
         with:
           script: |
-            console.log(github.event.head_commit.message);
-            console.log(steps.lib-version.outputs.version);
             core.setFailed(
               'github commit message ' +
               '"${{ github.event.head_commit.message }}"' +
