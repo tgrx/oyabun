@@ -51,9 +51,9 @@ jobs:
 
       - name: debug
         run: |
-          echo ${{ toJson(github.ref) }}
-          echo ${{ toJson(steps.lib-version.outputs.version) }}
-          echo ${{ toJson(github.event.head_commit.message) }}
+#          echo ${{ toJson(github.ref) }}
+#          echo ${{ toJson(steps.lib-version.outputs.version) }}
+#          echo ${{ toJson(github.event.head_commit.message) }}
           echo ${{ toJson(github.event) }}
 
       - name: check lib version == version from commit message
