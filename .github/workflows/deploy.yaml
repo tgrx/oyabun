@@ -51,8 +51,8 @@ jobs:
 
       - name: debug
         run: |
-          echo ${{ steps.lib-version.outputs.version }}
-          echo github.event.head_commit.message
+          echo v${{ steps.lib-version.outputs.version }}
+          echo ${{ github.event.head_commit.message }}
           exit 1
 
       - name: check lib version == version from commit message
