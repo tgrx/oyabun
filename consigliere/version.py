@@ -1,11 +1,8 @@
 """
 https://www.python.org/dev/peps/pep-0440/
 """
-import os
 import re
-from typing import Dict
 from typing import Optional
-from typing import TypeVar
 
 from pydantic import BaseModel
 from pydantic import Field
@@ -38,9 +35,6 @@ class Version(BaseModel):
     post: Optional[NumericComponent] = Field(None)
     dev: Optional[NumericComponent] = Field(None)
     local: Optional[LocalComponent] = Field(None)
-
-    _T = TypeVar("_T")
-    _TV = Dict[str, _T]
 
     def __str__(self) -> str:
         epoch = "" if not self.epoch else f"{self.epoch}!"
@@ -79,10 +73,10 @@ version = Version(
     micro=1,
     a=None,
     b=None,
-    rc=1,
+    rc=None,
     post=None,
     dev=None,
-    local=os.getenv("CONSIGLIERE_VERSION_LOCAL"),
+    local=None,
 )
 
 VERSION = str(version)
