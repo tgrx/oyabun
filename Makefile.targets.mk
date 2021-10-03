@@ -19,7 +19,7 @@ upload: build
 
 
 get-version:
-	@python -c "from consigliere import __version__ as v; print(v.__version__)"
+	@python -c "import consigliere as c; print(c.__version__)"
 
 
 clean: clean-python clean-dist

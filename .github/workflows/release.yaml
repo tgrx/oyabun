@@ -17,10 +17,13 @@ jobs:
   dist:
     name: 'The distribution is built.'
 
-    runs-on: 'ubuntu-latest'
-
     outputs:
       version: ${{ steps.get-version.outputs.result }}
+
+    env:
+      CONSIGLIERE_VERSION_LOCAL: ${{ github.sha }}
+
+    runs-on: 'ubuntu-latest'
 
     steps:
 
@@ -81,7 +84,8 @@ jobs:
   test-dist:
     name: 'The library distribution passes all tests.'
 
-    runs-on: ${{ matrix.os }}
+    outputs:
+      version: ${{ needs.dist.outputs.version }}
 
     needs:
       - dist
@@ -96,6 +100,8 @@ jobs:
           - '3.7'
           - '3.8'
           - '3.9'
+
+    runs-on: ${{ matrix.os }}
 
     steps:
 
@@ -153,6 +159,9 @@ jobs:
   test-deploy:
     name: 'The library is deployed on test PyPI.'
 
+    outputs:
+      version: ${{ needs.dist.outputs.version }}
+
     needs:
       - dist
 
@@ -176,6 +185,7 @@ jobs:
 
 
   deploy:
+
     name: 'The library is deployed on PyPI.'
 
     if: ${{ github.ref == 'refs/heads/version-0.0.1a1' }}
@@ -191,7 +201,7 @@ jobs:
       - name: '📦 The library distribution artifact is downloaded.'
         uses: actions/download-artifact@v2
         with:
-          name: consigliere-${{ needs.dist.outputs.version }}
+          name: consigliere-${{ needs.test-deploy.outputs.version }}
           path: dist/
 
       - name: '💎 A new library version is uploaded on PyPI.'
