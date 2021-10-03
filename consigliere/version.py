@@ -20,7 +20,7 @@ class NumericComponent(StrictInt):
 
 class LocalComponent(StrictStr):
     min_length = 1
-    regex = re.compile(r"^[a-z0-9]{1,16}(?:[-_.][a-z0-9]{1,16}){0,4}$")
+    regex = re.compile(r"^[a-z0-9]{1,40}(?:[-_.][a-z0-9]{1,40}){0,4}$")
     strip_whitespace = True
 
 
