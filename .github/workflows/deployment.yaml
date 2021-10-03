@@ -152,10 +152,8 @@ jobs:
         run: make tests
 
 
-  deploy:
-    name: 'The library is deployed on PyPI.'
-
-    #    if: ${{ github.ref == 'refs/heads/release' }}
+  test-deploy:
+    name: 'The library is deployed on test PyPI.'
 
     needs:
       - dist
@@ -174,5 +172,33 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
-          password: ${{ secrets.TEST_PYPI_TOKEN }}kk
+          password: ${{ secrets.TEST_PYPI_TOKEN }}-xxx
+          repository_url: https://test.pypi.org/legacy/
+          verbose: true
+
+
+  deploy:
+    name: 'The library is deployed on PyPI.'
+
+    if: ${{ github.ref == 'refs/heads/version-0.0.1a1' }}
+
+    needs:
+      - dist
+      - test-deploy
+
+    runs-on: 'ubuntu-latest'
+
+    steps:
+
+      - name: 'The library distribution artifact is downloaded.'
+        uses: actions/download-artifact@v2
+        with:
+          name: consigliere-${{ needs.dist.outputs.version }}
+          path: dist/
+
+      - name: 'A new library version is uploaded on PyPI.'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}-xxx
           verbose: true
