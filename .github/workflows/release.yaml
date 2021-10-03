@@ -69,7 +69,7 @@ jobs:
               || !github.event.head_commit
               || (github.event.head_commit.message != steps.get-version.outputs.result)
             ){
-              console.log('event:', core.toJSON(github.event));
+              console.log('event:', github.event);
               console.log('source version:', steps.get-version.outputs.result);
               console.log('commit message:', github.event.head_commit.message);
               core.setFailed(
