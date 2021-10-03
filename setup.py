@@ -52,9 +52,10 @@ except FileNotFoundError:
 about = {}
 if not VERSION:
     project_slug = NAME.lower().replace("-", "_").replace(" ", "_")
-    version_file = os.path.join(here, project_slug, "__version__.py")
+    version_file = os.path.join(here, project_slug, "version.py")
     with open(version_file) as f:
         exec(f.read(), about)  # noqa: S102,DUO105
+    about["__version__"] = about["VERSION"]
 else:
     about["__version__"] = VERSION
 

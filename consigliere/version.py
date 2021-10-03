@@ -80,7 +80,7 @@ class Version(BaseModel):
         return result
 
 
-VERSION = Version(
+version = Version(
     epoch=0,
     major=0,
     minor=0,
@@ -93,4 +93,4 @@ VERSION = Version(
     local=os.getenv("CONSIGLIERE_VERSION_LOCAL"),
 )
 
-print(VERSION)
+VERSION = str(version)
