@@ -60,19 +60,16 @@ jobs:
           echo "::set-output name=result::$(make get-version)"
 
       - name: '🚦 The commit message points to the current library version.'
-        if: |
-          ${{
-            github.ref == 'refs/heads/version-0.0.1a1' &&
-            github.event.head_commit.message != steps.get-version.outputs.result
-          }}
+        if: ${{ github.ref == 'refs/heads/version-0.0.1a1' }}
         uses: actions/github-script@v3
         with:
           script: |
             const commitMessage = "${{github.event.head_commit.message}}";
             const libraryVersion = "${{steps.get-version.outputs.result}}";
-            //const errorMessage = 'commit message "' + commitMessage +'" != lib version "' + libraryVersion + '"';
-            const errorMessage = `commit message "${commitMessage}" != lib version "${libraryVersion}"`;
-            core.setFailed(errorMessage);
+            if (commitMessage != libraryVersion) {
+              const errorMessage = `commit message "${commitMessage}" != lib version "${libraryVersion}"`;
+              core.setFailed(errorMessage);
+            }
 
       - name: '📦 The library distribution is uploaded as an artifact.'
         uses: actions/upload-artifact@v2
