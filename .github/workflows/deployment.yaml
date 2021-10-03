@@ -1,4 +1,4 @@
-name: Deployment to PyPI
+name: Deployment
 
 on:
   push:
@@ -170,7 +170,7 @@ jobs:
           name: consigliere-${{ needs.dist.outputs.version }}
           path: dist/
 
-      - name: 'The library with version ${{ needs.dist.outputs.version }} is uploaded on PyPI.'
+      - name: 'A new library version is uploaded on PyPI.'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
