@@ -70,13 +70,8 @@ jobs:
           script: |
             const x = "${{github.event.head_commit.message}}";
             const y = "${{steps.get-version.outputs.result}}";
-            core.setFailed(
-              core.format(
-                'commit message "{0}" != lib version "{1}"',
-                x,
-                y,
-              )
-            );
+            const z = 'commit message "' + x +'" != lib version "' + y + '"';
+            core.setFailed(z);
 
       - name: '📦 The library distribution is uploaded as an artifact.'
         uses: actions/upload-artifact@v2
