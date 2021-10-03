@@ -68,11 +68,13 @@ jobs:
         uses: actions/github-script@v3
         with:
           script: |
+            const x = "${{github.event.head_commit.message}}";
+            const y = "${{steps.get-version.outputs.result}}";
             core.setFailed(
               core.format(
                 'commit message "{0}" != lib version "{1}"',
-                "${{github.event.head_commit.message}}",
-                "${{steps.get-version.outputs.result}}",
+                x,
+                y,
               )
             );
 
