@@ -71,8 +71,8 @@ jobs:
             core.setFailed(
               core.format(
                 'commit message "{0}" != lib version "{1}"',
-                ${{github.event.head_commit.message}},
-                ${{steps.get-version.outputs.result}},
+                "${{github.event.head_commit.message}}",
+                "${{steps.get-version.outputs.result}}",
               )
             );
 
