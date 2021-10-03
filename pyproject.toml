@@ -51,5 +51,5 @@ warn_unused_ignores = true
 
 
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools", "wheel", "pydantic"]
 build-backend = "setuptools.build_meta"

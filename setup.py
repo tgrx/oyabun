@@ -20,7 +20,7 @@ URL = "https://github.com/tgrx/consigliere"
 EMAIL = "alexander@sidorov.dev"
 AUTHOR = "Alexander Sidorov"
 PYTHON_REQUIRES = ">=3.7.0"
-VERSION = "0.0.1a6"
+VERSION = None
 
 # What packages are required for this module to be executed?
 REQUIRED = [
@@ -39,6 +39,16 @@ EXTRAS = {
 # remember to change the Trove Classifier for that!
 
 here = os.path.abspath(os.path.dirname(__file__))
+
+# Load the package's __version__.py module as a dictionary.
+if not VERSION:
+    ns = {}
+    project_slug = NAME.lower().replace("-", "_").replace(" ", "_")
+    version_file = os.path.join(here, project_slug, "version.py")
+    with open(version_file) as f:
+        exec(f.read(), ns)  # noqa: S102,DUO105
+    VERSION = ns["VERSION"]
+
 
 # Import the README and use it as the long-description.
 # Note: this will only work if 'README.md' is present in your MANIFEST.in file!
