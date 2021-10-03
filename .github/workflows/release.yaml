@@ -71,7 +71,7 @@ jobs:
             const commitMessage = "${{github.event.head_commit.message}}";
             const libraryVersion = "${{steps.get-version.outputs.result}}";
             //const errorMessage = 'commit message "' + commitMessage +'" != lib version "' + libraryVersion + '"';
-            const errorMessage = `commit message "${commitMessage}" != lib version "${libraryVersion}"';
+            const errorMessage = `commit message "${commitMessage}" != lib version "${libraryVersion}"`;
             core.setFailed(errorMessage);
 
       - name: '📦 The library distribution is uploaded as an artifact.'
