@@ -60,7 +60,7 @@ jobs:
           echo "::set-output name=result::$(make get-version)"
 
       - name: '🚦 The commit message points to the current library version.'
-        if: ${{ false && github.ref == 'refs/heads/version-0.0.1a1' }}
+        if: ${{ github.ref == 'refs/heads/version-0.0.1a1' }}
         uses: actions/github-script@v3
         with:
           script: |
@@ -176,11 +176,11 @@ jobs:
           name: consigliere-${{ needs.dist.outputs.version }}
           path: dist/
 
-      - name: '👁‍🗨 A new library version is uploaded on test PyPI.'
+      - name: '🔷 A new library version is uploaded on test PyPI.'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
-          password: ${{ secrets.TEST_PYPI_TOKEN }}-xxx
+          password: xxx-${{ secrets.TEST_PYPI_TOKEN }}
           repository_url: https://test.pypi.org/legacy/
           verbose: true
 
@@ -208,5 +208,5 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
-          password: ${{ secrets.PYPI_TOKEN }}-xxx
+          password: xxx-${{ secrets.PYPI_TOKEN }}
           verbose: true
