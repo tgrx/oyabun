@@ -62,7 +62,7 @@ jobs:
       - name: 'The commit message points to the current library version.'
         if: |
           github.ref == 'refs/heads/version-0.0.1a1'
-          && github.event.head_commit.message != steps.lib-version.outputs.version
+          && github.event.head_commit.message != steps.get-version.outputs.result
         uses: actions/github-script@v3
         with:
           script: |
@@ -79,6 +79,7 @@ jobs:
         with:
           name: consigliere-${{ steps.get-version.outputs.result }}
           path: dist/
+
 
   test-dist:
     name: 'The library distribution passes all tests.'
@@ -183,7 +184,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/version-0.0.1a1' }}
 
     needs:
-      - dist
+      - test-dist
       - test-deploy
 
     runs-on: 'ubuntu-latest'
