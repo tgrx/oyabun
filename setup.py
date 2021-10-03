@@ -14,15 +14,13 @@ from setuptools import find_packages
 from setuptools import setup
 
 # Package meta-data.
-import consigliere
-
 NAME = "consigliere"
 DESCRIPTION = "A library to build Telegram bots"
 URL = "https://github.com/tgrx/consigliere"
 EMAIL = "alexander@sidorov.dev"
 AUTHOR = "Alexander Sidorov"
 PYTHON_REQUIRES = ">=3.7.0"
-VERSION = None
+VERSION = "0.0.1a6"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
@@ -49,8 +47,6 @@ try:
         long_description = "\n" + f.read()
 except FileNotFoundError:
     long_description = DESCRIPTION
-
-VERSION = VERSION or consigliere.__version__
 
 
 class UploadCommand(Command):
