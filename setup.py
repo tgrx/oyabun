@@ -14,6 +14,8 @@ from setuptools import find_packages
 from setuptools import setup
 
 # Package meta-data.
+import consigliere
+
 NAME = "consigliere"
 DESCRIPTION = "A library to build Telegram bots"
 URL = "https://github.com/tgrx/consigliere"
@@ -48,16 +50,7 @@ try:
 except FileNotFoundError:
     long_description = DESCRIPTION
 
-# Load the package's __version__.py module as a dictionary.
-about = {}
-if not VERSION:
-    project_slug = NAME.lower().replace("-", "_").replace(" ", "_")
-    version_file = os.path.join(here, project_slug, "version.py")
-    with open(version_file) as f:
-        exec(f.read(), about)  # noqa: S102,DUO105
-    about["__version__"] = about["VERSION"]
-else:
-    about["__version__"] = VERSION
+VERSION = VERSION or consigliere.__version__
 
 
 class UploadCommand(Command):
@@ -93,7 +86,7 @@ class UploadCommand(Command):
         os.system("twine upload dist/*")  # noqa: S605,S607,DUO106
 
         self.status("Pushing git tags…")
-        version = about["__version__"]
+        version = VERSION
         os.system(f"git tag v{version}")  # noqa: S605,DUO106
         os.system("git push --tags")  # noqa: S605,S607,DUO106
 
@@ -103,7 +96,7 @@ class UploadCommand(Command):
 # Where the magic happens:
 setup(
     name=NAME,
-    version=about["__version__"],
+    version=VERSION,
     description=DESCRIPTION,
     long_description=long_description,
     long_description_content_type="text/markdown",
