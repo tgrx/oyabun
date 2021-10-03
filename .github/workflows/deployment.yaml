@@ -1,9 +1,9 @@
-name: Deployment
+name: 'Deployment'
 
 on:
   push:
-    branches:
-      - release
+#    branches:
+#      - release
 
   workflow_dispatch:
 
@@ -155,7 +155,7 @@ jobs:
   deploy:
     name: 'The library is deployed on PyPI.'
 
-#    if: ${{ github.ref == 'refs/heads/release' }}
+    #    if: ${{ github.ref == 'refs/heads/release' }}
 
     needs:
       - dist
