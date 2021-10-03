@@ -1,57 +1,66 @@
 name: Development
 
+
 on:
-#  pull_request:
+  pull_request:
   workflow_dispatch:
 
+
 env:
-  PIPENV_VENV_IN_PROJECT: "1"
+  PIPENV_VENV_IN_PROJECT: '1'
+
 
 jobs:
+
   qa:
+    name: 'The code base passes all QA checks.'
+
     strategy:
       matrix:
         os:
-          - "macos-latest"
-          - "ubuntu-latest"
-          - "windows-latest"
+          - 'macos-latest'
+          - 'ubuntu-latest'
+          - 'windows-latest'
         python-version:
-          - "3.7"
-          - "3.8"
-          - "3.9"
+          - '3.7'
+          - '3.8'
+          - '3.9'
 
     runs-on: ${{ matrix.os }}
 
     steps:
 
-      - name: pull code from repo
+      - name: '🧱 The code is pulled from the repository.'
         uses: actions/checkout@v2
 
-      - name: set up runtime
+      - name: '🐍 Python is set up.'
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
           architecture: 'x64'
+          python-version: ${{ matrix.python-version }}
 
-      - name: cache runtime
-        id: cache-runtime
+      - name: '☁️ The whole Python is cached.'
+        id: cache-python
         uses: actions/cache@v2
         with:
+          key: cache-python-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}-dev
           path: ${{ env.pythonLocation }}
-          key: cache-runtime-${{ matrix.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}-dev
 
-      - name: install pipenv
-        if: ${{ !steps.cache-runtime.outputs.cache-hit }}
-        run: pip install pipenv
+      - name: '🪛 Pipenv is installed.'
+        if: ${{ !steps.cache-python.outputs.cache-hit }}
+        run: |
+          pip install pipenv
 
-      - name: install python packages
-        if: ${{ !steps.cache-runtime.outputs.cache-hit }}
-        run: make venv-deploy-all
+      - name: '🔋 The development dependencies are installed.'
+        if: ${{ !steps.cache-python.outputs.cache-hit }}
+        run: |
+          make venv-deploy-all
 
-      - name: run full qa
-        run: make qa
+      - name: '🍺 The code passes all QA checks'
+        run: |
+          make qa
 
-      - name: upload coverage to codecov.io
+      - name: '📝 The coverage report is uploaded to codecov.io'
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         uses: codecov/codecov-action@v2
         with:

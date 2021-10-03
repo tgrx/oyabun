@@ -3,7 +3,8 @@ name: 'Release'
 on:
   push:
     branches:
-      - version-0.0.1a1
+      - main
+      - release
 
   workflow_dispatch:
 
@@ -30,15 +31,15 @@ jobs:
       - name: '🐍 Python is set up.'
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
           architecture: 'x64'
+          python-version: '3.9'
 
       - name: '☁️ The whole Python is cached.'
         id: cache-python
         uses: actions/cache@v2
         with:
-          path: ${{ env.pythonLocation }}
           key: cache-python-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}-dev
+          path: ${{ env.pythonLocation }}
 
       - name: '🪛 Pipenv is installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
@@ -59,8 +60,8 @@ jobs:
         run: |
           echo "::set-output name=result::$(make get-version)"
 
-      - name: '🚦 The commit message points to the current library version.'
-        if: ${{ github.ref == 'refs/heads/version-0.0.1a1' }}
+      - name: '🚦 The actual library version is the release commit message.'
+        if: ${{ github.ref == 'refs/heads/release' }}
         uses: actions/github-script@v3
         with:
           script: |
@@ -105,7 +106,7 @@ jobs:
       - name: '🧱 The code is pulled from the repository.'
         uses: actions/checkout@v2
 
-      - name: '🪚 The library sources are deleted from the working directory.'
+      - name: '🪚 The library sources are deleted from the local code.'
         uses: JesseTG/rm@v1.0.2
         with:
           path: consigliere
@@ -113,15 +114,15 @@ jobs:
       - name: '🐍 Python is set up.'
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
           architecture: 'x64'
+          python-version: ${{ matrix.python-version }}
 
       - name: '☁️ The whole Python is cached.'
         id: cache-python
         uses: actions/cache@v2
         with:
-          path: ${{ env.pythonLocation }}
           key: cache-python-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}
+          path: ${{ env.pythonLocation }}
 
       - name: '🪛 Pipenv is installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
@@ -139,12 +140,12 @@ jobs:
           name: consigliere-${{ needs.dist.outputs.version }}
           path: dist/
 
-      - name: '🕋 The library is installed from distribution (normal OS)'
+      - name: '🚀 The library is installed from distribution'
         if: ${{ !contains(matrix.os, 'windows') }}
         run: |
           pip install dist/consigliere-${{ needs.dist.outputs.version }}.tar.gz
 
-      - name: '🕋 The library is installed from distribution (Windows)'
+      - name: '🦽 The library is installed from distribution'
         if: ${{ contains(matrix.os, 'windows') }}
         run: |
           pip install dist\consigliere-${{ needs.dist.outputs.version }}.tar.gz
@@ -155,6 +156,8 @@ jobs:
 
   test-deploy:
     name: 'The library is deployed on test PyPI.'
+
+    if: ${{ github.ref == 'refs/heads/release' }}
 
     outputs:
       version: ${{ needs.dist.outputs.version }}
@@ -182,10 +185,9 @@ jobs:
 
 
   deploy:
-
     name: 'The library is deployed on PyPI.'
 
-    if: ${{ github.ref == 'refs/heads/version-0.0.1a1' }}
+    if: ${{ github.ref == 'refs/heads/release' }}
 
     needs:
       - test-dist
