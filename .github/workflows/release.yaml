@@ -68,10 +68,11 @@ jobs:
         uses: actions/github-script@v3
         with:
           script: |
-            const x = "${{github.event.head_commit.message}}";
-            const y = "${{steps.get-version.outputs.result}}";
-            const z = 'commit message "' + x +'" != lib version "' + y + '"';
-            core.setFailed(z);
+            const commitMessage = "${{github.event.head_commit.message}}";
+            const libraryVersion = "${{steps.get-version.outputs.result}}";
+            //const errorMessage = 'commit message "' + commitMessage +'" != lib version "' + libraryVersion + '"';
+            const errorMessage = `commit message "${commitMessage}" != lib version "${libraryVersion}"';
+            core.setFailed(errorMessage);
 
       - name: '📦 The library distribution is uploaded as an artifact.'
         uses: actions/upload-artifact@v2
