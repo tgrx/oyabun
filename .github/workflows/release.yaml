@@ -60,7 +60,7 @@ jobs:
           echo "::set-output name=result::$(make get-version)"
 
       - name: '🚦 The commit message points to the current library version.'
-        if: ${{ github.ref == 'refs/heads/version-0.0.1a1' }}
+        if: ${{ false && github.ref == 'refs/heads/version-0.0.1a1' }}
         uses: actions/github-script@v3
         with:
           script: |
@@ -69,7 +69,7 @@ jobs:
               || !github.event.head_commit
               || (github.event.head_commit.message != steps.get-version.outputs.result)
             ){
-              console.log('event:', core.toJSON(github.event));
+              console.log('event:', toJSON(github.event));
               console.log('source version:', steps.get-version.outputs.result);
               console.log('commit message:', github.event.head_commit.message);
               core.setFailed(
