@@ -24,7 +24,7 @@ jobs:
 
     steps:
 
-      - name: 'THe sources are pulled from the repository.'
+      - name: 'The sources are pulled from the repository.'
         uses: actions/checkout@v2
 
       - name: 'Python is set up.'
@@ -38,7 +38,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.pythonLocation }}
-          key: cache-python-${{ matrix.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}-dev
+          key: cache-python-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}-dev
 
       - name: 'Pipenv is installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
@@ -67,7 +67,7 @@ jobs:
         with:
           script: |
             core.setFailed(
-              format(
+              core.format(
                 'commit message "{0}" != lib version "{1}"',
                 github.event.head_commit.message,
                 steps.get-version.outputs.result,
@@ -101,10 +101,10 @@ jobs:
 
     steps:
 
-      - name: 'THe sources are pulled from the repository.'
+      - name: 'The sources are pulled from the repository.'
         uses: actions/checkout@v2
 
-      - name: 'THe library sources are deleted from the working directory.'
+      - name: 'The library sources are deleted from the working directory.'
         uses: JesseTG/rm@v1.0.2
         with:
           path: consigliere
@@ -120,7 +120,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.pythonLocation }}
-          key: cache-python-${{ matrix.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}
+          key: cache-python-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}
 
       - name: 'Pipenv is installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
@@ -141,12 +141,12 @@ jobs:
       - name: 'The library is installed from distribution (normal OS)'
         if: ${{ !contains(matrix.os, 'windows') }}
         run: |
-          pip install dist/consigliere-${{ needs.build.outputs.version }}.tar.gz
+          pip install dist/consigliere-${{ needs.dist.outputs.version }}.tar.gz
 
       - name: 'The library is installed from distribution (Windows)'
         if: ${{ contains(matrix.os, 'windows') }}
         run: |
-          pip install dist\consigliere-${{ needs.build.outputs.version }}.tar.gz
+          pip install dist\consigliere-${{ needs.dist.outputs.version }}.tar.gz
 
       - name: 'The library distribution passes all tests.'
         run: make tests
