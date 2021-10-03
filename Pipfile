@@ -48,5 +48,6 @@ ipython = "*"
 isort = "*"
 mypy = "*"
 pep8-naming = "*"
+pudb = "*"
 pydantic = { extras = ["dotenv"], version = "*" }
 pylint = "*"
