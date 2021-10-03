@@ -3,7 +3,7 @@
 A library for building Telegram apps.
 
 [![PyPI](https://img.shields.io/pypi/v/consigliere?color=gold)](https://pypi.org/project/consigliere/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/CONSIGLIERE?color=gold&label=dpm)](https://pypi.org/project/consigliere/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/consigliere?color=gold&label=dpm)](https://pypi.org/project/consigliere/)
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4164098b73754a3eda4b/maintainability)](https://codeclimate.com/github/tgrx/consigliere/maintainability)
