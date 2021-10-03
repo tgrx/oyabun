@@ -17,12 +17,6 @@ jobs:
   dist:
     name: 'The distribution is built.'
 
-    strategy:
-      matrix:
-        local:
-          - ""
-          - ${{ github.sha }}
-
     outputs:
       version: ${{ steps.get-version.outputs.result }}
 
@@ -57,8 +51,6 @@ jobs:
           make venv-deploy-all
 
       - name: '📚 The library distribution is built.'
-        env:
-          CONSIGLIERE_VERSION_LOCAL: ${{ matrix.local }}
         run: |
           make build
 
@@ -74,8 +66,7 @@ jobs:
           script: |
             const commitMessage = "${{github.event.head_commit.message}}";
             const libraryVersion = "${{steps.get-version.outputs.result}}";
-            // if (commitMessage != libraryVersion) {
-            if (!libraryVersion.startsWith(commitMessage)) {
+            if (commitMessage != libraryVersion) {
               const errorMessage = `commit message "${commitMessage}" != lib version "${libraryVersion}"`;
               core.setFailed(errorMessage);
             }
