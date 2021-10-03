@@ -1,11 +1,9 @@
 [run]
 branch = True
 omit = \
-    src/framework/tests/*
-    src/main/app.py
     tests/*
 relative_files = True
-source = src
+source = consigliere
 
 
 [report]
@@ -18,4 +16,4 @@ sort = -Cover
 [html]
 skip_covered = False
 skip_empty = True
-title = Alpha
+title = Consigliere

@@ -1,0 +1,211 @@
+name: 'Release'
+
+on:
+  push:
+    branches:
+      - main
+      - release
+
+  workflow_dispatch:
+
+
+env:
+  PIPENV_VENV_IN_PROJECT: '1'
+
+
+jobs:
+
+  dist:
+    name: 'The distribution is built.'
+
+    outputs:
+      version: ${{ steps.get-version.outputs.result }}
+
+    runs-on: 'ubuntu-latest'
+
+    steps:
+
+      - name: '🧱 The code is pulled from the repository.'
+        uses: actions/checkout@v2
+
+      - name: '🐍 Python is set up.'
+        uses: actions/setup-python@v2
+        with:
+          architecture: 'x64'
+          python-version: '3.9'
+
+      - name: '☁️ The whole Python is cached.'
+        id: cache-python
+        uses: actions/cache@v2
+        with:
+          key: cache-python-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}-dev
+          path: ${{ env.pythonLocation }}
+
+      - name: '🪛 Pipenv is installed.'
+        if: ${{ !steps.cache-python.outputs.cache-hit }}
+        run: |
+          pip install pipenv
+
+      - name: '🔋 The development dependencies are installed.'
+        if: ${{ !steps.cache-python.outputs.cache-hit }}
+        run: |
+          make venv-deploy-all
+
+      - name: '📚 The library distribution is built.'
+        run: |
+          make build
+
+      - name: '🏷 The library version is set as the output.'
+        id: get-version
+        run: |
+          echo "::set-output name=result::$(make get-version)"
+
+      - name: '🚦 The actual library version is the release commit message.'
+        if: ${{ github.ref == 'refs/heads/release' }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const commitMessage = "${{github.event.head_commit.message}}";
+            const libraryVersion = "${{steps.get-version.outputs.result}}";
+            if (commitMessage != libraryVersion) {
+              const errorMessage = `commit message "${commitMessage}" != lib version "${libraryVersion}"`;
+              core.setFailed(errorMessage);
+            }
+
+      - name: '📦 The library distribution is uploaded as an artifact.'
+        uses: actions/upload-artifact@v2
+        with:
+          name: consigliere-${{ steps.get-version.outputs.result }}
+          path: dist/
+
+
+  test-dist:
+    name: 'The library distribution passes all tests.'
+
+    outputs:
+      version: ${{ needs.dist.outputs.version }}
+
+    needs:
+      - dist
+
+    strategy:
+      matrix:
+        os:
+          - 'macos-latest'
+          - 'ubuntu-latest'
+          - 'windows-latest'
+        python-version:
+          - '3.7'
+          - '3.8'
+          - '3.9'
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+      - name: '🧱 The code is pulled from the repository.'
+        uses: actions/checkout@v2
+
+      - name: '🪚 The library sources are deleted from the local code.'
+        uses: JesseTG/rm@v1.0.2
+        with:
+          path: consigliere
+
+      - name: '🐍 Python is set up.'
+        uses: actions/setup-python@v2
+        with:
+          architecture: 'x64'
+          python-version: ${{ matrix.python-version }}
+
+      - name: '☁️ The whole Python is cached.'
+        id: cache-python
+        uses: actions/cache@v2
+        with:
+          key: cache-python-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}
+          path: ${{ env.pythonLocation }}
+
+      - name: '🪛 Pipenv is installed.'
+        if: ${{ !steps.cache-python.outputs.cache-hit }}
+        run: |
+          pip install pipenv
+
+      - name: '🛢 The dependencies are installed.'
+        if: ${{ !steps.cache-python.outputs.cache-hit }}
+        run: |
+          make venv-deploy
+
+      - name: '📦 The library distribution artifact is downloaded.'
+        uses: actions/download-artifact@v2
+        with:
+          name: consigliere-${{ needs.dist.outputs.version }}
+          path: dist/
+
+      - name: '🚀 The library is installed from distribution'
+        if: ${{ !contains(matrix.os, 'windows') }}
+        run: |
+          pip install dist/consigliere-${{ needs.dist.outputs.version }}.tar.gz
+
+      - name: '🦽 The library is installed from distribution'
+        if: ${{ contains(matrix.os, 'windows') }}
+        run: |
+          pip install dist\consigliere-${{ needs.dist.outputs.version }}.tar.gz
+
+      - name: '🚦 The library distribution passes all tests.'
+        run: make tests
+
+
+  test-deploy:
+    name: 'The library is deployed on test PyPI.'
+
+    if: ${{ github.ref == 'refs/heads/release' }}
+
+    outputs:
+      version: ${{ needs.dist.outputs.version }}
+
+    needs:
+      - dist
+
+    runs-on: 'ubuntu-latest'
+
+    steps:
+
+      - name: '📦 The library distribution artifact is downloaded.'
+        uses: actions/download-artifact@v2
+        with:
+          name: consigliere-${{ needs.dist.outputs.version }}
+          path: dist/
+
+      - name: '🔷 A new library version is uploaded on test PyPI.'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.TEST_PYPI_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
+          verbose: true
+
+
+  deploy:
+    name: 'The library is deployed on PyPI.'
+
+    if: ${{ github.ref == 'refs/heads/release' }}
+
+    needs:
+      - test-dist
+      - test-deploy
+
+    runs-on: 'ubuntu-latest'
+
+    steps:
+
+      - name: '📦 The library distribution artifact is downloaded.'
+        uses: actions/download-artifact@v2
+        with:
+          name: consigliere-${{ needs.test-deploy.outputs.version }}
+          path: dist/
+
+      - name: '💎 A new library version is uploaded on PyPI.'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
+          verbose: true
