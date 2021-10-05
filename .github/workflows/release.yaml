@@ -17,8 +17,6 @@ jobs:
   xxx:
     name: 'debug'
 
-    if: ${{ false && github.ref == 'refs/heads/main' }}
-
     runs-on: ubuntu-latest
 
     steps:
