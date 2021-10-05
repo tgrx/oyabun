@@ -35,8 +35,9 @@ jobs:
         run: |
           git status
           git branch
-          git show
           git log
+          ls -la .
+          cat .github/workflows/release.yaml
 
   dist:
     if: "false"
