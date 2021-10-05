@@ -17,6 +17,8 @@ jobs:
   xxx:
     name: 'debug'
 
+    # if tag existing and push --tags: github.ref == refs/tags/v0.0.1.post1
+
     runs-on: ubuntu-latest
 
     steps:
