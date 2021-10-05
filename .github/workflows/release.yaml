@@ -29,8 +29,9 @@ jobs:
         uses: actions/github-script@v3
         with:
           script: |
-            const tagVersion = github.ref.replace('refs/tags/release-', '');
-            console.log(`tagVersion: ${tagVersion}`);
+            console.log(toJSON(github.event));
+#            const tagVersion = github.ref.replace('refs/tags/release-', '');
+#            console.log(`tagVersion: ${tagVersion}`);
 
 
   dist:
