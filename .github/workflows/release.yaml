@@ -25,11 +25,11 @@ jobs:
 
     steps:
       - name: '🚦 The actual library version is the release commit message.'
-        if: ${{ startsWith(github.ref, 'refs/tags/release-' }}
+        if: ${{ startsWith(github.ref, 'refs/tags/release-') }}
         uses: actions/github-script@v3
         with:
           script: |
-            const tagVersion = github.ref.replase('refs/tags/release-', '');
+            const tagVersion = github.ref.replace('refs/tags/release-', '');
             console.log(`tagVersion: ${tagVersion}`;
 
 
