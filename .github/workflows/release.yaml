@@ -19,6 +19,7 @@ jobs:
 
     # if tag existing and push --tags: github.ref == refs/tags/v0.0.1.post1
     # if tag new and push new --tags: github.ref == refs/tags/v0.0.1.post1
+    # refs/heads/release-on-tag
 
     runs-on: ubuntu-latest
 
