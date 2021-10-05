@@ -2,9 +2,9 @@ name: 'Release'
 
 on:
   push:
-    branches:
-      - main
-      - release-on-tag
+#    branches:
+#      - main
+#      - release-on-tag
     tags:
       - v*
 
