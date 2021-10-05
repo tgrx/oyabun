@@ -30,7 +30,7 @@ jobs:
         with:
           script: |
             const tagVersion = github.ref.replace('refs/tags/release-', '');
-            console.log(`tagVersion: ${tagVersion}`;
+            console.log(`tagVersion: ${tagVersion}`);
 
 
   dist:
