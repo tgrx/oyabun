@@ -28,6 +28,16 @@ jobs:
         run: |
           echo ${{ github.ref }}
 
+      - name: '🧱 The code is pulled from the repository.'
+        uses: actions/checkout@v2
+
+      - name: debug
+        run: |
+          git status
+          git branch
+          git show
+          git log
+
   dist:
     if: "false"
     name: 'The distribution is built.'
