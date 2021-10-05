@@ -1,12 +1,12 @@
 name: 'Release'
 
 on:
-  push:
+  pull_request:
     branches:
-#      - main
-      - release-on-tag
+      - main
+  push:
     tags:
-      - v*
+      - release-*
 
 env:
   PIPENV_VENV_IN_PROJECT: '1'
@@ -24,20 +24,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: debug
-        run: |
-          echo ${{ github.ref }}
+      - name: '🚦 The actual library version is the release commit message.'
+        if: ${{ startsWith(github.ref, 'refs/tags/release-' }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const tagVersion = github.ref.replase('refs/tags/release-', '');
+            console.log(`tagVersion: ${tagVersion}`;
 
-      - name: '🧱 The code is pulled from the repository.'
-        uses: actions/checkout@v2
-
-      - name: debug
-        run: |
-          git status
-          git branch
-          git log
-          ls -la .
-          cat .github/workflows/release.yaml
 
   dist:
     if: "false"
@@ -86,11 +80,11 @@ jobs:
           echo "::set-output name=result::$(make get-version)"
 
       - name: '🚦 The actual library version is the release commit message.'
-        if: ${{ github.ref == 'refs/heads/release' }}
+        if: ${{ startsWith(github.ref, 'refs/tags/release-' }}
         uses: actions/github-script@v3
         with:
           script: |
-            const commitMessage = "${{github.event.head_commit.message}}";
+            const tagVersion = "${{github.event.head_commit.message}}";
             const libraryVersion = "${{steps.get-version.outputs.result}}";
             if (commitMessage != libraryVersion) {
               const errorMessage = `commit message "${commitMessage}" != lib version "${libraryVersion}"`;
