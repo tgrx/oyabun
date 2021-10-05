@@ -4,10 +4,9 @@ on:
   push:
     branches:
       - main
-      - release
-
-  workflow_dispatch:
-
+      - release-on-tag
+    tags:
+      - v*
 
 env:
   PIPENV_VENV_IN_PROJECT: '1'
@@ -15,7 +14,20 @@ env:
 
 jobs:
 
+  xxx:
+    name: 'debug'
+
+    if: ${{ false && github.ref == 'refs/heads/main' }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: debug
+        run: |
+          echo ${{ github.ref }}
+
   dist:
+    if: "false"
     name: 'The distribution is built.'
 
     outputs:
@@ -80,6 +92,7 @@ jobs:
 
 
   test-dist:
+    if: "false"
     name: 'The library distribution passes all tests.'
 
     outputs:
@@ -157,7 +170,7 @@ jobs:
   test-deploy:
     name: 'The library is deployed on test PyPI.'
 
-    if: ${{ github.ref == 'refs/heads/release' }}
+    if: ${{ false && github.ref == 'refs/heads/release' }}
 
     outputs:
       version: ${{ needs.dist.outputs.version }}
@@ -187,7 +200,7 @@ jobs:
   deploy:
     name: 'The library is deployed on PyPI.'
 
-    if: ${{ github.ref == 'refs/heads/release' }}
+    if: ${{ false && github.ref == 'refs/heads/release' }}
 
     needs:
       - test-dist
