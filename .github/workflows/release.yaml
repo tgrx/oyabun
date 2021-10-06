@@ -1,9 +1,9 @@
 name: 'Release'
 
 on:
-#  pull_request:
-#    branches:
-#      - main
+  pull_request:
+    branches:
+      - main
   push:
     tags:
       - release-*
@@ -59,7 +59,7 @@ jobs:
         run: |
           echo "::set-output name=result::$(make get-version)"
 
-      - name: '🚦 The actual library version is the release commit message.'
+      - name: '🚦 The tag points to the actual library version.'
         if: ${{ startsWith(github.ref, 'refs/tags/release-') }}
         uses: actions/github-script@v3
         with:
@@ -176,7 +176,6 @@ jobs:
           path: dist/
 
       - name: '🔷 A new library version is uploaded on test PyPI.'
-        if: "false"
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
@@ -205,7 +204,6 @@ jobs:
           path: dist/
 
       - name: '💎 A new library version is uploaded on PyPI.'
-        if: "false"
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
