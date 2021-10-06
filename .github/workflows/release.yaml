@@ -1,13 +1,12 @@
 name: 'Release'
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-      - release
-
-  workflow_dispatch:
-
+  push:
+    tags:
+      - release-*
 
 env:
   PIPENV_VENV_IN_PROJECT: '1'
@@ -60,15 +59,16 @@ jobs:
         run: |
           echo "::set-output name=result::$(make get-version)"
 
-      - name: '🚦 The actual library version is the release commit message.'
-        if: ${{ github.ref == 'refs/heads/release' }}
+      - name: '🚦 The tag points to the actual library version.'
+        if: ${{ startsWith(github.ref, 'refs/tags/release-') }}
         uses: actions/github-script@v3
         with:
           script: |
-            const commitMessage = "${{github.event.head_commit.message}}";
+            const tag = "${{github.ref}}".replace('refs/tags/', '');
+            const tagVersion = tag.replace('release-', '');
             const libraryVersion = "${{steps.get-version.outputs.result}}";
-            if (commitMessage != libraryVersion) {
-              const errorMessage = `commit message "${commitMessage}" != lib version "${libraryVersion}"`;
+            if (tagVersion != libraryVersion) {
+              const errorMessage = `tag "${tag}" =/=> library version "${libraryVersion}"`;
               core.setFailed(errorMessage);
             }
 
@@ -157,7 +157,7 @@ jobs:
   test-deploy:
     name: 'The library is deployed on test PyPI.'
 
-    if: ${{ github.ref == 'refs/heads/release' }}
+    if: ${{ startsWith(github.ref, 'refs/tags/release-') }}
 
     outputs:
       version: ${{ needs.dist.outputs.version }}
@@ -187,7 +187,7 @@ jobs:
   deploy:
     name: 'The library is deployed on PyPI.'
 
-    if: ${{ github.ref == 'refs/heads/release' }}
+    if: ${{ startsWith(github.ref, 'refs/tags/release-') }}
 
     needs:
       - test-dist

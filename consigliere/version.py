@@ -74,7 +74,7 @@ version = Version(
     a=None,
     b=None,
     rc=None,
-    post=None,
+    post=1,
     dev=None,
     local=None,
 )
