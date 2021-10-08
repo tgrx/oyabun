@@ -72,11 +72,6 @@ class Response(TelegramBotApiType):
 BaseModelType = Type[BaseModel]
 
 
-def update_forward_refs(klass: BaseModelType) -> BaseModelType:
-    klass.update_forward_refs()
-    return klass
-
-
 class Str64(ConstrainedStr):
     min_length = 1
     max_length = 64
@@ -86,5 +81,4 @@ __all__ = (
     ResponseParameters.__name__,
     Str64.__name__,
     TelegramBotApiType.__name__,
-    update_forward_refs.__name__,
 )

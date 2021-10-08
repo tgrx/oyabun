@@ -1,13 +1,13 @@
 from datetime import datetime
-from typing import List
+from typing import List, NamedTuple, NewType
 from typing import Optional
 from typing import Union
-
+from io import BytesIO
+from pathlib import Path
 from pydantic import Field
 
 from .base import Str64
 from .base import TelegramBotApiType
-from .base import update_forward_refs
 
 
 class User(TelegramBotApiType):
@@ -229,6 +229,26 @@ class ForceReply(TelegramBotApiType):
     # fmt: on
 
 
+InputFileT = Union[str, BytesIO, Path, bytes]  # TODO: do we need to use TelegramBotApiType ?
+InputFile = NewType("InputFile", InputFileT)  # TODO: must be valid code
+
+
+class File(TelegramBotApiType):
+    # fmt: off
+    file_id: str = Field(..., description="Identifier for this file, which can be used to download or reuse the file.")
+    file_unique_id: str = Field(..., description="Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.")
+    file_size: Optional[int] = Field(None, description="Optional. File size, if known.")
+    file_path: Optional[str] = Field(None, description="Optional. File path. Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.")
+
+
+class BotCommand(TelegramBotApiType):
+    command: str = Field(..., min_length=1, max_length=32)  # TODO: Can contain only lowercase English letters, digits and underscores.
+    description: str = Field(..., min_length=3, max_length=256)
+
+
+# TODO: implement these: https://core.telegram.org/bots/api#botcommandscopedefault
+
+
 ReplyMarkupType = Union[
     InlineKeyboardMarkup,
     ReplyKeyboardMarkup,
@@ -236,17 +256,27 @@ ReplyMarkupType = Union[
     ForceReply,
 ]
 
-__all__ = (
-    Chat.__name__,
-    ForceReply.__name__,
-    InlineKeyboardButton.__name__,
-    InlineKeyboardMarkup.__name__,
-    KeyboardButton.__name__,
-    Message.__name__,
-    MessageEntity.__name__,
-    ReplyKeyboardMarkup.__name__,
-    ReplyKeyboardRemove.__name__,
-    Update.__name__,
-    User.__name__,
-    WebhookInfo.__name__,
+
+# TODO: sort
+__all_types__ = (
+    Chat,
+    ForceReply,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    KeyboardButton,
+    Message,
+    MessageEntity,
+    ReplyKeyboardMarkup,
+    ReplyKeyboardRemove,
+    Update,
+    User,
+    WebhookInfo,
+    File,
+    BotCommand,
 )
+
+for _tp in __all_types__:
+    _tp.update_forward_refs()
+
+
+__all__ = tuple(_tp.__name__ for _tp in __all_types__)
