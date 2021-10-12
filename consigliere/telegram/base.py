@@ -1,10 +1,19 @@
+from contextlib import contextmanager
+from io import BytesIO
+from pathlib import Path
 from typing import Any
 from typing import Dict
+from typing import Generic
+from typing import IO
+from typing import Iterator
+from typing import List
 from typing import Optional
+from typing import Set
 from typing import Type
+from typing import TypeVar
+from typing import Union
 
 from pydantic import BaseModel
-from pydantic import ConstrainedStr
 from pydantic import Field
 
 
@@ -17,17 +26,59 @@ class TelegramBotApiType(BaseModel):
     https://core.telegram.org/bots/api#available-types
     """
 
-    def json(self, **kw: Any) -> str:  # noqa: A003, VNE003
+    def _prepare_export_kw(self, kw: Dict[str, Any]) -> None:
+        kw["exclude_none"] = True
         kw["exclude_unset"] = True
+
+    def json(self, **kw: Any) -> str:  # noqa: A003, VNE003
+        self._prepare_export_kw(kw)
         return super().json(**kw)
 
     def dict(self, **kw: Any) -> Dict:  # noqa: A003, VNE003
-        kw["exclude_unset"] = True
+        self._prepare_export_kw(kw)
         return super().dict(**kw)
 
 
 class Request(TelegramBotApiType):
-    pass
+    def _get_input_files(self) -> Dict[str, Union[Path, IO]]:
+        fields_values = (
+            (attr, getattr(self, attr, None)) for attr in self.__fields__
+        )
+
+        fields_files = (
+            field_value
+            for field_value in fields_values
+            if isinstance(field_value[1], (Path, BytesIO))
+        )
+
+        return dict(fields_files)
+
+    def _prepare_export_kw(self, kw: Dict[str, Any]) -> None:
+        kw["exclude"] = frozenset(self._get_input_files())
+        return super()._prepare_export_kw(kw)
+
+    @contextmanager
+    def files(self) -> Iterator:
+        opened_files: List[IO] = []
+
+        def open_file(_path_or_io: Union[Path, IO]) -> IO:
+            if isinstance(_path_or_io, BytesIO):
+                return _path_or_io
+            assert isinstance(_path_or_io, Path)
+            _fp = _path_or_io.open("rb")
+            opened_files.append(_fp)
+            return _fp
+
+        try:
+            fields_file_tuples = {
+                field: ("InputFile", open_file(value))
+                for field, value in self._get_input_files().items()
+            }
+
+            yield fields_file_tuples
+        finally:
+            for _fp in opened_files:
+                _fp.close()
 
 
 class ResponseParameters(TelegramBotApiType):
@@ -42,7 +93,10 @@ class ResponseParameters(TelegramBotApiType):
     # fmt: on
 
 
-class Response(TelegramBotApiType):
+ResponseResultT = TypeVar("ResponseResultT")
+
+
+class Response(Generic[ResponseResultT], TelegramBotApiType):
     """
     The response contains a JSON object,
         which always has a Boolean field 'ok'
@@ -63,7 +117,7 @@ class Response(TelegramBotApiType):
     """
 
     ok: bool = Field(...)
-    result: Any = Field(None)
+    result: Optional[ResponseResultT] = Field(None)
     error_code: Optional[int] = Field(None)
     description: Optional[str] = Field(None)
     parameters: Optional[ResponseParameters] = Field(None)
@@ -71,14 +125,17 @@ class Response(TelegramBotApiType):
 
 BaseModelType = Type[BaseModel]
 
-
-class Str64(ConstrainedStr):
-    min_length = 1
-    max_length = 64
-
+__models__: Set[Type[TelegramBotApiType]] = {
+    Request,
+    Response,
+    ResponseParameters,
+    TelegramBotApiType,
+}
 
 __all__ = (
-    ResponseParameters.__name__,
-    Str64.__name__,
-    TelegramBotApiType.__name__,
+    "__models__",
+    "Request",
+    "Response",
+    "ResponseParameters",
+    "TelegramBotApiType",
 )
