@@ -251,19 +251,19 @@ class File(TelegramBotApiType):
 
 class BotCommand(TelegramBotApiType):
     # fmt: off
-    command: str = Field(..., min_length=1, max_length=32)  # TODO: Can contain only lowercase English letters, digits and underscores.
+    command: str = Field(..., min_length=1, max_length=32)
     description: str = Field(..., min_length=3, max_length=256)
     # fmt: on
 
 
 class BotCommandScope(TelegramBotApiType):
     # fmt: off
-    type: str = Field(..., description="Scope type")
+    type: str = Field(..., description="Scope type")  # noqa: A003,VNE003
     # fmt: on
 
 
 class BotCommandScopeDefault(BotCommandScope):
-    type = "default"
+    type = "default"  # noqa: A003,VNE003
 
 
 ReplyMarkupType = Union[

@@ -36,10 +36,10 @@ from consigliere.telegram.responses import SendPhotoResponse
 from consigliere.telegram.responses import SetWebhookResponse
 
 __models__: Set[Type[TelegramBotApiType]] = (
-        __models__base
-        | __models__entities
-        | __models__requests
-        | __models__responses
+    __models__base
+    | __models__entities  # noqa: W503
+    | __models__requests  # noqa: W503
+    | __models__responses  # noqa: W503
 )
 
 for _model in __models__:

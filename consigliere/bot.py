@@ -83,6 +83,9 @@ class Bot:
         :return: a BytesIO object with content of the file
         """
 
+        if not file.file_path:
+            raise self.RequestError(f"file {file} has no file_path set")
+
         return await self._download_file(file.file_path)
 
     async def getFile(self, file_id: str) -> File:
@@ -94,7 +97,8 @@ class Bot:
             via the link https://api.telegram.org/file/bot<token>/<file_path>,
             where <file_path> is taken from the response.
         It is guaranteed that the link will be valid for at least 1 hour.
-        When the link expires, a new one can be requested by calling getFile again.
+        When the link expires,
+            a new one can be requested by calling getFile again.
         https://core.telegram.org/bots/api#getfile
 
         :return: on success, a File object
@@ -122,18 +126,17 @@ class Bot:
         )
 
     async def sendMessage(
-            self,
-            *,
-            chat_id: Union[int, str],
-            text: str,
-            # TODO: add as enum: https://core.telegram.org/bots/api#formatting-options
-            parse_mode: Optional[str] = None,
-            entities: Optional[List[MessageEntity]] = None,
-            disable_web_page_preview: Optional[bool] = None,
-            disable_notification: Optional[bool] = None,
-            reply_to_message_id: Optional[int] = None,
-            allow_sending_without_reply: Optional[bool] = None,
-            reply_markup: Optional[ReplyMarkupType] = None,
+        self,
+        *,
+        chat_id: Union[int, str],
+        text: str,
+        parse_mode: Optional[str] = None,
+        entities: Optional[List[MessageEntity]] = None,
+        disable_web_page_preview: Optional[bool] = None,
+        disable_notification: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[ReplyMarkupType] = None,
     ) -> Message:
         """
         Use this method to send text messages.
@@ -150,10 +153,12 @@ class Bot:
         :param entities: A JSON-serialized list of special entities
             that appear in message text,
             which can be specified instead of parse_mode.
-        :param disable_web_page_preview: Disables link previews for links in this message.
+        :param disable_web_page_preview: Disables link previews
+            for links in this message.
         :param disable_notification: Sends the message silently.
             Users will receive a notification with no sound.
-        :param reply_to_message_id: If the message is a reply, ID of the original message.
+        :param reply_to_message_id: If the message is a reply,
+            ID of the original message.
         :param allow_sending_without_reply: Pass True,
             if the message should be sent
             even if the specified replied-to message is not found.
@@ -178,24 +183,23 @@ class Bot:
         )
 
         return await self._call_api(
-            "sendMessage", request, response_cls=SendMessageResponse,
+            "sendMessage",
+            request,
+            response_cls=SendMessageResponse,
         )
 
     async def sendPhoto(
-            self,
-            *,
-            chat_id: Union[int, str],
-            # TODO: check: The photo's width and height must not exceed 10000 in total.
-            # TODO: check: Width and height ratio must be at most 20
-            photo: Union[str, Path, IO],
-            caption: Optional[str] = None,  # 0-1024
-            # TODO: add as enum: https://core.telegram.org/bots/api#formatting-options
-            parse_mode: Optional[str] = None,
-            caption_entities: Optional[List[MessageEntity]] = None,
-            disable_notification: Optional[bool] = None,
-            reply_to_message_id: Optional[int] = None,
-            allow_sending_without_reply: Optional[bool] = None,
-            reply_markup: Optional[ReplyMarkupType] = None,
+        self,
+        *,
+        chat_id: Union[int, str],
+        photo: Union[str, Path, IO],
+        caption: Optional[str] = None,  # 0-1024
+        parse_mode: Optional[str] = None,
+        caption_entities: Optional[List[MessageEntity]] = None,
+        disable_notification: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[ReplyMarkupType] = None,
     ) -> Message:
         """
         Use this method to send photos.
@@ -224,7 +228,8 @@ class Bot:
             which can be specified instead of parse_mode.
         :param disable_notification: Sends the message silently.
             Users will receive a notification with no sound.
-        :param reply_to_message_id: If the message is a reply, ID of the original message.
+        :param reply_to_message_id: If the message is a reply,
+            ID of the original message.
         :param allow_sending_without_reply: Pass True,
             if the message should be sent
             even if the specified replied-to message is not found.
@@ -252,15 +257,17 @@ class Bot:
             "sendPhoto", request, response_cls=SendPhotoResponse
         )
 
-    _T = TypeVar("_T")  # don't worry about this: used as a generic type var in `_call_api`
+    _T = TypeVar(
+        "_T"
+    )  # don't worry about this: used as a generic type var in `_call_api`
 
-    async def _call_api(
-            self,
-            method: str,
-            request: Optional[Request] = None,
-            *,
-            response_cls: Type[Response[_T]] = Response[_T],
-    ) -> Optional[_T]:
+    async def _call_api(  # noqa: CCR001
+        self,
+        method: str,
+        request: Optional[Request] = None,
+        *,
+        response_cls: Type[Response[_T]] = Response[_T],
+    ) -> _T:
         """
         Performs the call to the Bot API returning a value of proper type.
         In case of error raises `Bot.RequestError`.
@@ -268,7 +275,8 @@ class Bot:
         https://core.telegram.org/bots/api#making-requests
 
         :param method: name of the supported Telegram Bot API method
-        :param request: request object, composed from input params of public method
+        :param request: request object,
+            composed from input params of public method
         :param response_cls: desired response class with actual result type
         :return: object of response class' result type
         """
@@ -276,7 +284,9 @@ class Bot:
         try:
             url = f"{self.api_url}/{method}"
 
-            request = request or Request()  # for methods which do not need request at all
+            request = (
+                request or Request()
+            )  # for methods which do not need request at all
 
             client: AsyncClient
             async with AsyncClient() as client:
@@ -284,10 +294,13 @@ class Bot:
                     # if files, data must be of multipart/form-data
                     # otherwise JSON bytes with Content-Type=application/json
                     data = request.dict() if files else request.json()
-                    headers = {} if files else {"Content-Type": "application/json"}
+                    headers = (
+                        {} if files else {"Content-Type": "application/json"}
+                    )
                     http_response: HttpResponse = await client.post(
                         url,
-                        data=data,
+                        # mypy can't into X if P else Y
+                        data=data,  # type: ignore
                         files=files,
                         headers=headers,
                     )
@@ -296,10 +309,21 @@ class Bot:
                 raise self.RequestError(http_response.content)
 
             payload = http_response.json()
-            response = response_cls.parse_obj(payload)  # actual&valid Telegram response
+            if not payload:
+                raise self.RequestError(
+                    f"unexpected empty payload on /{method}"
+                )
+
+            # actual&valid Telegram response
+            response = response_cls.parse_obj(payload)
 
             if not response.ok:
                 raise self.RequestError(response.description)
+
+            if response.result is None:
+                raise self.RequestError(
+                    f"unexpected null result on /{method} -> {response}"
+                )
 
             return response.result
 
@@ -317,7 +341,8 @@ class Bot:
         https://core.telegram.org/bots/api#file
 
         :param file_path: File path.
-            Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.
+            Use https://api.telegram.org/file/bot<token>/<file_path>
+            to get the file.
         :return: a BytesIO object with file content.
         """
 
