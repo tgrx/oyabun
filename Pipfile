@@ -16,6 +16,7 @@ pytest-mock = "*"
 python-dotenv = "*"
 twine = "*"
 typed-ast = { version = "*", markers = "python_version < '3.8'" }
+typing_extensions = { version = "*", markers = "python_version >= '3.10'" }
 
 [dev-packages]
 beautifulsoup4 = "*"
