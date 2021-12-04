@@ -127,7 +127,7 @@ class WebhookInfo(TelegramBotApiType):
     last_error_date: Optional[datetime] = Field(None, description="Optional. Unix time for the most recent error that happened when trying to deliver an update via webhook")
     last_error_message: Optional[str] = Field(None, description="Optional. Error message in human-readable format for the most recent error that happened when trying to deliver an update via webhook")
     max_connections: Optional[int] = Field(None, description="Optional. Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery")
-    allowed_updates: List[str] = Field(default_factory=list, description="Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member")
+    allowed_updates: Optional[List[str]] = Field(None, description="Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member")
     # fmt: on
 
 

@@ -24,10 +24,15 @@ from consigliere.telegram.entities import Update
 from consigliere.telegram.entities import User
 from consigliere.telegram.entities import WebhookInfo
 from consigliere.telegram.requests import __models__ as __models__requests
+from consigliere.telegram.requests import DeleteWebhookRequest
 from consigliere.telegram.requests import GetFileRequest
+from consigliere.telegram.requests import GetMeRequest
+from consigliere.telegram.requests import GetWebhookInfoRequest
 from consigliere.telegram.requests import SendMessageRequest
 from consigliere.telegram.requests import SendPhotoRequest
+from consigliere.telegram.requests import SetWebhookRequest
 from consigliere.telegram.responses import __models__ as __models__responses
+from consigliere.telegram.responses import DeleteWebhookResponse
 from consigliere.telegram.responses import GetFileResponse
 from consigliere.telegram.responses import GetMeResponse
 from consigliere.telegram.responses import GetWebhookInfoResponse
@@ -50,11 +55,15 @@ __all__ = (
     "BotCommandScope",
     "BotCommandScopeDefault",
     "Chat",
+    "DeleteWebhookRequest",
+    "DeleteWebhookResponse",
     "File",
     "ForceReply",
     "GetFileRequest",
     "GetFileResponse",
+    "GetMeRequest",
     "GetMeResponse",
+    "GetWebhookInfoRequest",
     "GetWebhookInfoResponse",
     "InlineKeyboardButton",
     "InlineKeyboardMarkup",
@@ -70,6 +79,7 @@ __all__ = (
     "SendMessageResponse",
     "SendPhotoRequest",
     "SendPhotoResponse",
+    "SetWebhookRequest",
     "SetWebhookResponse",
     "Update",
     "User",

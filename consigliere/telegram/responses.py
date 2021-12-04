@@ -35,7 +35,12 @@ class SetWebhookResponse(Response[bool]):
     result: bool = Field(False)
 
 
+class DeleteWebhookResponse(Response[bool]):
+    result: bool = Field(False)
+
+
 __models__: Set[Type[Response]] = {
+    DeleteWebhookResponse,
     GetFileResponse,
     GetMeResponse,
     GetWebhookInfoResponse,
@@ -46,6 +51,7 @@ __models__: Set[Type[Response]] = {
 
 __all__ = (
     "__models__",
+    "DeleteWebhookResponse",
     "GetFileResponse",
     "GetMeResponse",
     "GetWebhookInfoResponse",

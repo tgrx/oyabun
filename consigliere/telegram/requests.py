@@ -15,6 +15,10 @@ class GetFileRequest(Request):
     file_id: str = Field(..., description="File identifier to get info about")
 
 
+class GetMeRequest(Request):
+    pass
+
+
 class SendMessageRequest(Request):
     """
     Use this method to send text messages. On success, the sent Message is returned.
@@ -53,15 +57,38 @@ class SendPhotoRequest(Request):
     # fmt: on
 
 
+class SetWebhookRequest(Request):
+    url: str = Field(...)
+    certificate: Any = Field(None)
+    ip_address: Optional[str] = Field(None)
+    max_connections: Optional[int] = Field(None)
+    allowed_updates: Optional[List[str]] = Field(None)
+    drop_pending_updates: Optional[bool] = Field(None)
+
+
+class DeleteWebhookRequest(Request):
+    drop_pending_updates: Optional[bool] = Field(None)
+
+
+class GetWebhookInfoRequest(Request):
+    pass
+
+
 __models__: Set[Type[Request]] = {
+    DeleteWebhookRequest,
     GetFileRequest,
+    GetWebhookInfoRequest,
     SendMessageRequest,
     SendPhotoRequest,
+    SetWebhookRequest,
 }
 
 __all__ = (
     "__models__",
+    "DeleteWebhookRequest",
     "GetFileRequest",
+    "GetWebhookInfoRequest",
     "SendMessageRequest",
     "SendPhotoRequest",
+    "SetWebhookRequest",
 )

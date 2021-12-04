@@ -10,17 +10,22 @@ from typing import Union
 from httpx import AsyncClient
 from httpx import Response as HttpResponse
 
+from consigliere.telegram import DeleteWebhookResponse
 from consigliere.telegram import File
 from consigliere.telegram import GetFileRequest
 from consigliere.telegram import GetFileResponse
 from consigliere.telegram import GetMeResponse
+from consigliere.telegram import GetWebhookInfoResponse
 from consigliere.telegram import Message
 from consigliere.telegram import MessageEntity
 from consigliere.telegram import SendMessageRequest
 from consigliere.telegram import SendMessageResponse
 from consigliere.telegram import SendPhotoRequest
 from consigliere.telegram import SendPhotoResponse
+from consigliere.telegram import SetWebhookRequest
+from consigliere.telegram import SetWebhookResponse
 from consigliere.telegram import User
+from consigliere.telegram import WebhookInfo
 from consigliere.telegram.base import Request
 from consigliere.telegram.base import Response
 from consigliere.telegram.entities import ReplyMarkupType
@@ -123,6 +128,29 @@ class Bot:
         return await self._call_api(
             "getMe",
             response_cls=GetMeResponse,
+        )
+
+    async def getWebhookInfo(self) -> WebhookInfo:
+        return await self._call_api(
+            "getWebhookInfo",
+            response_cls=GetWebhookInfoResponse,
+        )
+
+    async def deleteWebhook(self) -> bool:
+        return await self._call_api(
+            "deleteWebhook",
+            response_cls=DeleteWebhookResponse,
+        )
+
+    async def setWebhook(self, *, url: str) -> bool:
+        request = SetWebhookRequest(
+            url=url,
+        )
+
+        return await self._call_api(
+            "setWebhook",
+            request,
+            response_cls=SetWebhookResponse,
         )
 
     async def sendMessage(
