@@ -22,3 +22,20 @@ A library for building Telegram apps.
 [![pytest](https://img.shields.io/github/pipenv/locked/dependency-version/tgrx/alpha/dev/pytest?color=white)](https://docs.pytest.org/en/6.2.x/)
 
 ---
+
+## Terms and shortcuts
+
+- API
+    [Telegram Bot API](https://core.telegram.org/bots/api)]
+
+## Mission
+
+The mission of this library is to provide a strict interface for the API.
+By *strict* we mean that all types and methods in the library interface maps to those described in the API docs.
+
+You won't meet any auxiliary stuff like sophisticated OOP patterns,
+obscure event loops and listeners and that like kind of stuff.
+
+API types are Pydantic models with strict type hints.
+API methods are pure Python functions which accept params with exactly the same type as described in API.
+Any optional field/param are marked as `Optional` in the code, so don't be afraid of tri-state bool types :)

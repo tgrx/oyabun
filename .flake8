@@ -9,6 +9,7 @@ exclude =
     .venv
     htmlcov
 per-file-ignores =
-    consigliere/scheme/base.py:E501
-    consigliere/scheme/entities.py:E501
-    consigliere/scheme/requests.py:E501
+    consigliere/bot.py:N802
+    consigliere/telegram/base.py:E501
+    consigliere/telegram/entities.py:E501
+    consigliere/telegram/requests.py:E501

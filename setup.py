@@ -24,6 +24,7 @@ VERSION = None
 
 # What packages are required for this module to be executed?
 REQUIRED = [
+    "httpx",
     "pydantic",
 ]
 
@@ -138,6 +139,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python",
         "Topic :: Communications :: Chat",

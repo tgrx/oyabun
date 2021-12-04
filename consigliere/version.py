@@ -70,11 +70,11 @@ version = Version(
     epoch=0,
     major=0,
     minor=0,
-    micro=1,
+    micro=3,
     a=None,
     b=None,
     rc=None,
-    post=1,
+    post=None,
     dev=None,
     local=None,
 )

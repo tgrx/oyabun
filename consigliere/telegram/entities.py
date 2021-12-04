@@ -1,13 +1,13 @@
 from datetime import datetime
 from typing import List
 from typing import Optional
+from typing import Set
+from typing import Type
 from typing import Union
 
 from pydantic import Field
 
-from .base import Str64
-from .base import TelegramBotApiType
-from .base import update_forward_refs
+from consigliere.telegram.base import TelegramBotApiType
 
 
 class User(TelegramBotApiType):
@@ -55,7 +55,21 @@ class MessageEntity(TelegramBotApiType):
     # fmt: on
 
 
-@update_forward_refs
+class PhotoSize(TelegramBotApiType):
+    """
+    This object represents one size of a photo or a file / sticker thumbnail.
+    https://core.telegram.org/bots/api#photosize
+    """
+
+    # fmt: off
+    file_id: str = Field(..., description="Identifier for this file, which can be used to download or reuse the file")
+    file_unique_id: str = Field(..., description="Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.")
+    width: int = Field(..., description="Photo width")
+    height: int = Field(..., description="Photo height")
+    file_size: Optional[int] = Field(None, description="File size")
+    # fmt: on
+
+
 class Message(TelegramBotApiType):
     """
     This object represents a message.
@@ -64,13 +78,16 @@ class Message(TelegramBotApiType):
 
     # fmt: off
     message_id: int = Field(..., description="Unique message identifier inside this chat")
-    from_: Optional[User] = Field(None)
-    date: datetime = Field(...)
-    chat: Chat = Field(...)
-    edit_date: Optional[datetime] = Field(None)
-    reply_to_message: Optional["Message"] = Field(None)
-    text: Optional[str] = Field(None)
-    entities: List[MessageEntity] = Field(default_factory=list)
+    from_: Optional[User] = Field(None, description="Sender, empty for messages sent to channels")
+    date: datetime = Field(..., description="Date the message was sent in Unix time")
+    chat: Chat = Field(..., description="Conversation the message belongs to")
+    edit_date: Optional[datetime] = Field(None, description="Date the message was last edited in Unix time")
+    reply_to_message: Optional["Message"] = Field(None, description="For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.")
+    text: Optional[str] = Field(None, description="For text messages, the actual UTF-8 text of the message, 0-4096 characters")
+    entities: Optional[List[MessageEntity]] = Field(None, description="For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text")
+    photo: Optional[List[PhotoSize]] = Field(None, description="Message is a photo, available sizes of the photo")
+    caption: Optional[str] = Field(None, description="Caption for the animation, audio, document, photo, video or voice, 0-1024 characters")
+    reply_markup: Optional["InlineKeyboardMarkup"] = Field(None, description="Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.")
     # fmt: on
 
     class Config:
@@ -110,7 +127,7 @@ class WebhookInfo(TelegramBotApiType):
     last_error_date: Optional[datetime] = Field(None, description="Optional. Unix time for the most recent error that happened when trying to deliver an update via webhook")
     last_error_message: Optional[str] = Field(None, description="Optional. Error message in human-readable format for the most recent error that happened when trying to deliver an update via webhook")
     max_connections: Optional[int] = Field(None, description="Optional. Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery")
-    allowed_updates: List[str] = Field(default_factory=list, description="Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member")
+    allowed_updates: Optional[List[str]] = Field(None, description="Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member")
     # fmt: on
 
 
@@ -124,11 +141,8 @@ class InlineKeyboardButton(TelegramBotApiType):
     # fmt: off
     text: str = Field(..., description="Label text on the button")
     url: Optional[str] = Field(None, description="Optional. HTTP or tg:// url to be opened when button is pressed")
-    callback_data: Optional[Str64] = Field(None, description="Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes")
+    callback_data: Optional[str] = Field(None, description="Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes", min_length=1, max_length=64)
     # fmt: on
-
-
-InlineKeyboardButtonRow = List[InlineKeyboardButton]
 
 
 class InlineKeyboardMarkup(TelegramBotApiType):
@@ -139,7 +153,7 @@ class InlineKeyboardMarkup(TelegramBotApiType):
     """
 
     # fmt: off
-    inline_keyboard: List[InlineKeyboardButtonRow] = Field(default_factory=list, description="Array of button rows, each represented by an Array of InlineKeyboardButton objects")
+    inline_keyboard: List[List[InlineKeyboardButton]] = Field(default_factory=list, description="Array of button rows, each represented by an Array of InlineKeyboardButton objects")
     # fmt: on
 
 
@@ -158,9 +172,6 @@ class KeyboardButton(TelegramBotApiType):
     # fmt: on
 
 
-KeyboardButtonRow = List[KeyboardButton]
-
-
 class ReplyKeyboardMarkup(TelegramBotApiType):
     """
     This object represents a custom keyboard with reply options
@@ -170,7 +181,7 @@ class ReplyKeyboardMarkup(TelegramBotApiType):
     """
 
     # fmt: off
-    keyboard: List[KeyboardButtonRow] = Field(default_factory=list, description="Array of button rows, each represented by an Array of KeyboardButton objects")
+    keyboard: List[List[KeyboardButton]] = Field(default_factory=list, description="Array of button rows, each represented by an Array of KeyboardButton objects")
     resize_keyboard: bool = Field(False, description="Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.")
     one_time_keyboard: bool = Field(False, description="Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat – the user can press a special button in the input field to see the custom keyboard again. Defaults to false.")
     # fmt: on
@@ -229,24 +240,75 @@ class ForceReply(TelegramBotApiType):
     # fmt: on
 
 
+class File(TelegramBotApiType):
+    # fmt: off
+    file_id: str = Field(..., description="Identifier for this file, which can be used to download or reuse the file.")
+    file_unique_id: str = Field(..., description="Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.")
+    file_size: Optional[int] = Field(None, description="Optional. File size, if known.")
+    file_path: Optional[str] = Field(None, description="Optional. File path. Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.")
+    # fmt: on
+
+
+class BotCommand(TelegramBotApiType):
+    # fmt: off
+    command: str = Field(..., min_length=1, max_length=32)
+    description: str = Field(..., min_length=3, max_length=256)
+    # fmt: on
+
+
+class BotCommandScope(TelegramBotApiType):
+    # fmt: off
+    type: str = Field(..., description="Scope type")  # noqa: A003,VNE003
+    # fmt: on
+
+
+class BotCommandScopeDefault(BotCommandScope):
+    type = "default"  # noqa: A003,VNE003
+
+
 ReplyMarkupType = Union[
+    ForceReply,
     InlineKeyboardMarkup,
     ReplyKeyboardMarkup,
     ReplyKeyboardRemove,
-    ForceReply,
 ]
 
+__models__: Set[Type[TelegramBotApiType]] = {
+    BotCommand,
+    BotCommandScope,
+    BotCommandScopeDefault,
+    Chat,
+    File,
+    ForceReply,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    KeyboardButton,
+    Message,
+    MessageEntity,
+    ReplyKeyboardMarkup,
+    ReplyKeyboardRemove,
+    Update,
+    User,
+    WebhookInfo,
+}
+
 __all__ = (
-    Chat.__name__,
-    ForceReply.__name__,
-    InlineKeyboardButton.__name__,
-    InlineKeyboardMarkup.__name__,
-    KeyboardButton.__name__,
-    Message.__name__,
-    MessageEntity.__name__,
-    ReplyKeyboardMarkup.__name__,
-    ReplyKeyboardRemove.__name__,
-    Update.__name__,
-    User.__name__,
-    WebhookInfo.__name__,
+    "__models__",
+    "BotCommand",
+    "BotCommandScope",
+    "BotCommandScopeDefault",
+    "Chat",
+    "File",
+    "ForceReply",
+    "InlineKeyboardButton",
+    "InlineKeyboardMarkup",
+    "KeyboardButton",
+    "Message",
+    "MessageEntity",
+    "ReplyKeyboardMarkup",
+    "ReplyKeyboardRemove",
+    "ReplyMarkupType",
+    "Update",
+    "User",
+    "WebhookInfo",
 )

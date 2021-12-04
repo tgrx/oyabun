@@ -8,6 +8,7 @@ atomicwrites = { version = "*", sys_platform = "== 'win32'" }
 build = "*"
 coverage = { extras = ["toml"], version = "*" }
 devtools = { extras = ["pygments"], version = "*" }
+httpx = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
@@ -15,6 +16,7 @@ pytest-mock = "*"
 python-dotenv = "*"
 twine = "*"
 typed-ast = { version = "*", markers = "python_version < '3.8'" }
+typing-extensions = "*"
 
 [dev-packages]
 beautifulsoup4 = "*"
@@ -48,6 +50,6 @@ ipython = "*"
 isort = "*"
 mypy = "*"
 pep8-naming = "*"
-pudb = "*"
+pudb = { version = "*", sys_platform = "!= 'win32'" }
 pydantic = { extras = ["dotenv"], version = "*" }
 pylint = "*"

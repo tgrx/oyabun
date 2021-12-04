@@ -1,10 +1,6 @@
-import json
-
-import pytest
 from pydantic import Field
-from pydantic import ValidationError
 
-from consigliere.scheme import base
+from consigliere.telegram import base
 
 
 def test_exclude_unset() -> None:
@@ -40,31 +36,3 @@ def test_response() -> None:
     assert base.Response.parse_obj({"ok": "off"}) == {"ok": False}
     assert base.Response.parse_obj({"ok": "no"}) == {"ok": False}
     assert base.Response.parse_obj({"ok": "false"}) == {"ok": False}
-
-
-def test_str64() -> None:
-    class Klass(base.TelegramBotApiType):
-        attr: base.Str64
-
-    assert Klass(attr="a").dict() == {"attr": "a"}
-
-    with pytest.raises(ValidationError) as err:
-        Klass()
-    data = json.loads(err.value.json())[0]
-    assert data["loc"] == ["attr"]
-    assert data["msg"] == "field required"
-    assert data["type"] == "value_error.missing"
-
-    with pytest.raises(ValidationError) as err:
-        Klass(attr="")
-    data = json.loads(err.value.json())[0]
-    assert data["loc"] == ["attr"]
-    assert data["msg"] == "ensure this value has at least 1 characters"
-    assert data["type"] == "value_error.any_str.min_length"
-
-    with pytest.raises(ValidationError) as err:
-        Klass(attr="a" * 65)
-    data = json.loads(err.value.json())[0]
-    assert data["loc"] == ["attr"]
-    assert data["msg"] == "ensure this value has at most 64 characters"
-    assert data["type"] == "value_error.any_str.max_length"
