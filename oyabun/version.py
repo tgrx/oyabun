@@ -16,7 +16,7 @@ class NumericComponent(StrictInt):
 
 class LocalComponent(StrictStr):
     min_length = 0
-    regex = re.compile(r"^[a-z0-9]{0,40}(?:[-_.][a-z0-9]{1,40}){0,4}$")
+    regex = re.compile(r"^[a-z\d]{0,40}(?:[-_.][a-z\d]{1,40}){0,4}$")
     strip_whitespace = True
 
 
@@ -67,10 +67,10 @@ class Version(BaseModel):
 
 
 version = Version(
-    epoch=0,
-    major=0,
-    minor=0,
-    micro=3,
+    epoch=NumericComponent(0),
+    major=NumericComponent(2022),
+    minor=NumericComponent(9),
+    micro=NumericComponent(1),
     a=None,
     b=None,
     rc=None,

@@ -1,5 +1,4 @@
 from typing import Optional
-from typing import Set
 from typing import Type
 
 from pydantic import Field
@@ -39,7 +38,7 @@ class DeleteWebhookResponse(Response[bool]):
     result: bool = Field(False)
 
 
-__models__: Set[Type[Response]] = {
+__models__: set[Type[Response]] = {
     DeleteWebhookResponse,
     GetFileResponse,
     GetMeResponse,

@@ -1,4 +1,3 @@
-from typing import Set
 from typing import Type
 
 from oyabun.telegram.base import __models__ as __models__base
@@ -40,7 +39,7 @@ from oyabun.telegram.responses import SendMessageResponse
 from oyabun.telegram.responses import SendPhotoResponse
 from oyabun.telegram.responses import SetWebhookResponse
 
-__models__: Set[Type[TelegramBotApiType]] = (
+__models__: set[Type[TelegramBotApiType]] = (
     __models__base
     | __models__entities  # noqa: W503
     | __models__requests  # noqa: W503

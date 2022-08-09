@@ -41,6 +41,7 @@ disallow_untyped_calls = true
 disallow_untyped_defs = true
 files = ["oyabun", "tests",]
 no_implicit_optional = true
+plugins = ["pydantic.mypy"]
 pretty = true
 python_version = "3.9"
 show_error_context = true
@@ -49,6 +50,12 @@ warn_redundant_casts = true
 warn_return_any = true
 warn_unused_configs = true
 warn_unused_ignores = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
 
 [tool.poetry]
 authors = ["Alexander Sidorov <alexander@sidorov.dev>"]
@@ -111,7 +118,9 @@ include = [
 ]
 
 [tool.poetry.dependencies]
+aiohttp = {extras = ["speedups"], version = "^3.8.1"}
 httpx = "^0.23.0"
+orjson = "^3.7.11"
 pydantic = {extras = ["dotenv"], version = "^1.9.1"}
 python = "^3.9"
 
@@ -119,6 +128,7 @@ python = "^3.9"
 black = "^22.6.0"
 devtools = {extras = ["pygments"], version = "^0.9.0"}
 dlint = "^0.12.0"
+fb-sapp = "^0.5.2"
 flake8 = "^4.0.1"
 flake8-annotations-complexity = "^0.0.7"
 flake8-bandit = "^3.0.0"
@@ -147,10 +157,12 @@ isort = "^5.10.1"
 mypy = "^0.971"
 pep8-naming = "^0.13.1"
 pudb = "^2022.1.2"
+pyre-check = "^0.9.15"
 pytest = "^7.1.2"
 pytest-asyncio = "^0.19.0"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.8.2"
+uvicorn = {extras = ["standard"], version = "^0.18.2"}
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
