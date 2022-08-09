@@ -75,7 +75,7 @@ jobs:
       - name: '📦 The library distribution is uploaded as an artifact.'
         uses: actions/upload-artifact@v2
         with:
-          name: consigliere-${{ steps.get-version.outputs.result }}
+          name: oyabun-${{ steps.get-version.outputs.result }}
           path: dist/
 
 
@@ -95,9 +95,9 @@ jobs:
           - 'ubuntu-latest'
           - 'windows-latest'
         python-version:
-          - '3.7'
           - '3.8'
           - '3.9'
+          - '3.10'
 
     runs-on: ${{ matrix.os }}
 
@@ -109,7 +109,7 @@ jobs:
       - name: '🪚 The library sources are deleted from the local code.'
         uses: JesseTG/rm@v1.0.2
         with:
-          path: consigliere
+          path: oyabun
 
       - name: '🐍 Python is set up.'
         uses: actions/setup-python@v2
@@ -137,7 +137,7 @@ jobs:
       - name: '📦 The library distribution artifact is downloaded.'
         uses: actions/download-artifact@v2
         with:
-          name: consigliere-${{ needs.dist.outputs.version }}
+          name: oyabun-${{ needs.dist.outputs.version }}
           path: dist/
 
       - name: '🚀 The library is installed from distribution'
@@ -172,7 +172,7 @@ jobs:
       - name: '📦 The library distribution artifact is downloaded.'
         uses: actions/download-artifact@v2
         with:
-          name: consigliere-${{ needs.dist.outputs.version }}
+          name: oyabun-${{ needs.dist.outputs.version }}
           path: dist/
 
       - name: '🔷 A new library version is uploaded on test PyPI.'
@@ -200,7 +200,7 @@ jobs:
       - name: '📦 The library distribution artifact is downloaded.'
         uses: actions/download-artifact@v2
         with:
-          name: consigliere-${{ needs.test-deploy.outputs.version }}
+          name: oyabun-${{ needs.test-deploy.outputs.version }}
           path: dist/
 
       - name: '💎 A new library version is uploaded on PyPI.'

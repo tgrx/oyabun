@@ -7,7 +7,7 @@ from typing import Union
 
 from pydantic import Field
 
-from consigliere.telegram.base import TelegramBotApiType
+from oyabun.telegram.base import TelegramBotApiType
 
 
 class User(TelegramBotApiType):

@@ -10,25 +10,25 @@ from typing import Union
 from httpx import AsyncClient
 from httpx import Response as HttpResponse
 
-from consigliere.telegram import DeleteWebhookResponse
-from consigliere.telegram import File
-from consigliere.telegram import GetFileRequest
-from consigliere.telegram import GetFileResponse
-from consigliere.telegram import GetMeResponse
-from consigliere.telegram import GetWebhookInfoResponse
-from consigliere.telegram import Message
-from consigliere.telegram import MessageEntity
-from consigliere.telegram import SendMessageRequest
-from consigliere.telegram import SendMessageResponse
-from consigliere.telegram import SendPhotoRequest
-from consigliere.telegram import SendPhotoResponse
-from consigliere.telegram import SetWebhookRequest
-from consigliere.telegram import SetWebhookResponse
-from consigliere.telegram import User
-from consigliere.telegram import WebhookInfo
-from consigliere.telegram.base import Request
-from consigliere.telegram.base import Response
-from consigliere.telegram.entities import ReplyMarkupType
+from oyabun.telegram import DeleteWebhookResponse
+from oyabun.telegram import File
+from oyabun.telegram import GetFileRequest
+from oyabun.telegram import GetFileResponse
+from oyabun.telegram import GetMeResponse
+from oyabun.telegram import GetWebhookInfoResponse
+from oyabun.telegram import Message
+from oyabun.telegram import MessageEntity
+from oyabun.telegram import SendMessageRequest
+from oyabun.telegram import SendMessageResponse
+from oyabun.telegram import SendPhotoRequest
+from oyabun.telegram import SendPhotoResponse
+from oyabun.telegram import SetWebhookRequest
+from oyabun.telegram import SetWebhookResponse
+from oyabun.telegram import User
+from oyabun.telegram import WebhookInfo
+from oyabun.telegram.base import Request
+from oyabun.telegram.base import Response
+from oyabun.telegram.entities import ReplyMarkupType
 
 
 class Bot:

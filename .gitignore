@@ -1,5 +1,6 @@
 **/*.egg-info
 **/*.ignore
+**/__pycache__
 *.bak
 *.log
 *.py[cod]
@@ -8,15 +9,8 @@
 .DS_Store
 .env
 .idea/
-.mypy_cache/
-.pytest_cache/
-.secrets.*
 .venv/
-__pycache__/
 build/
-config/.secrets/
-coverage.xml
 db.sqlite3
 dist/
-htmlcov/
 venv/

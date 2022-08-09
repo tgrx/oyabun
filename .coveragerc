@@ -1,19 +1,39 @@
 [run]
 branch = True
+data_file = .artifacts/coverage/data_file.db
 omit = \
-    tests/*
+	.artifacts/*
+	.git/*
+	.github/*
+	.run/*
+	.venv/*
+	tmp/*
 relative_files = True
-source = consigliere
+source = oyabun
 
 
 [report]
-fail_under = 50
+exclude_lines =
+	@(abc\.)?abstractmethod
+	class .*\bProtocol\):
+	def __repr__
+	if .*\.MODE_DEBUG
+	if 0:
+	if __name__ == .__main__.:
+	pragma: no cover
+	raise AssertionError
+	raise NotImplementedError
+fail_under = 70
 skip_covered = False
 skip_empty = True
 sort = -Cover
 
 
 [html]
+directory = .artifacts/coverage/html/
 skip_covered = False
 skip_empty = True
-title = Consigliere
+title = Oyabun
+
+[xml]
+output = .artifacts/coverage/report.xml

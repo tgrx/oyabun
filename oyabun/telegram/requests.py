@@ -7,8 +7,8 @@ from typing import Union
 
 from pydantic import Field
 
-from consigliere.telegram.base import Request
-from consigliere.telegram.entities import ReplyMarkupType
+from oyabun.telegram.base import Request
+from oyabun.telegram.entities import ReplyMarkupType
 
 
 class GetFileRequest(Request):

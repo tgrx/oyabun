@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from consigliere.telegram import base
+from oyabun.telegram import base
 
 
 def test_exclude_unset() -> None:
