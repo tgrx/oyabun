@@ -7,7 +7,7 @@ on:
 
 
 env:
-  CACHE_CUSTOM_KEY: '3'
+  CACHE_CUSTOM_KEY: '4'
   POETRY_VIRTUALENVS_CREATE: false
   POETRY_VIRTUALENVS_IN_PROJECT: false
 
@@ -71,6 +71,8 @@ jobs:
 
       - name: '🍺 The code passes all QA checks'
         run: |
+          which python
+          python -c 'import toml; print(toml)'
           make qa
 
       - name: '📝 The coverage report is uploaded to codecov.io'
