@@ -71,6 +71,8 @@ jobs:
 
       - name: '🍺 The code passes all QA checks'
         run: |
+          poetry run which python
+          poetry run python -c 'import toml; print(toml)'
           poetry run make qa
 
       - name: '📝 The coverage report is uploaded to codecov.io'
