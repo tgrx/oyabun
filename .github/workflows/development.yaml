@@ -7,7 +7,7 @@ on:
 
 
 env:
-  CACHE_CUSTOM_KEY: '11'
+  CACHE_CUSTOM_KEY: '12'
   POETRY_VIRTUALENVS_CREATE: false
   POETRY_VIRTUALENVS_IN_PROJECT: false
 
@@ -62,6 +62,8 @@ jobs:
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
           pip install --user poetry
+          python -c 'import poetry; print(poetry)'
+          python -m poetry debug
 
       - name: '🔋 The dependencies are installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
