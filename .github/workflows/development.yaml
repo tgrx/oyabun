@@ -72,7 +72,7 @@ jobs:
 
       - name: '🍺 The code passes all QA checks'
         run: |
-          make qa
+          poetry run make qa
 
       - name: '📝 The coverage report is uploaded to codecov.io'
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
