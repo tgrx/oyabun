@@ -1,12 +1,6 @@
 .PHONY: build upload-test upload get-version clean clean-python clean-dist
 .PHONY: format qa tests coverage code-typing code-format code-linters sh
 .PHONY: venv-dir venv venv-dev venv-deploy venv-deploy-all upgrade-venv
-.PHONY: verify-version
-
-
-verify-version:
-	$(call log, verify version consistency)
-	python -m oyabun.version
 
 
 get-version:
@@ -41,7 +35,7 @@ format:
 		|| exit 1
 
 
-qa: verify-version tests coverage code-typing code-format code-linters
+qa: tests coverage code-typing code-format code-linters
 	$(call log, QA checks)
 
 

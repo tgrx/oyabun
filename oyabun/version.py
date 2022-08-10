@@ -37,8 +37,3 @@ def verify_version() -> None:
         f"!= {VERSION!r} (in {this_file.as_posix()})"
     )
     assert version_pyproject_toml == VERSION, err
-
-
-if __name__ == "__main__":
-    verify_version()
-    print(VERSION)  # noqa: T201
