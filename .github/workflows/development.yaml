@@ -63,7 +63,7 @@ jobs:
         run: |
           pip install poetry
           python -c 'import poetry; print(poetry)'
-          python -m poetry debug
+          poetry debug
 
       - name: '🔋 The dependencies are installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
@@ -73,7 +73,6 @@ jobs:
 
       - name: '🍺 The code passes all QA checks'
         run: |
-          python -m poetry debug
           poetry build
           pip install dist/*.whl
           make qa
