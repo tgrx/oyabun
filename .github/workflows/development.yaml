@@ -7,7 +7,7 @@ on:
 
 
 env:
-  CACHE_CUSTOM_KEY: '12'
+  CACHE_CUSTOM_KEY: '13'
   POETRY_VIRTUALENVS_CREATE: false
   POETRY_VIRTUALENVS_IN_PROJECT: false
 
@@ -61,7 +61,7 @@ jobs:
       - name: '🪛 Poetry is installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
-          pip install --user poetry
+          pip install poetry
           python -c 'import poetry; print(poetry)'
           python -m poetry debug
 
