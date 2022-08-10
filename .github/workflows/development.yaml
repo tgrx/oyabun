@@ -7,7 +7,7 @@ on:
 
 
 env:
-  CACHE_CUSTOM_KEY: '1'
+  CACHE_CUSTOM_KEY: '2'
 
 
 jobs:
