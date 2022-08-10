@@ -71,7 +71,7 @@ jobs:
 
       - name: '🍺 The code passes all QA checks'
         run: |
-          which poetry
+          python -m poetry debug
           poetry build
           pip install dist/*.whl
           make qa
