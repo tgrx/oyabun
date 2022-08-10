@@ -28,6 +28,15 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    env:
+      CACHE_CUSTOM_KEY: '0'
+
+    outputs:
+      cache-key: ${{ steps.cache-key.outputs.value }}
+      python-location: ${{ env.pythonLocation }}
+      python-version: ${{ matrix.python-version }}
+      runs-on: ${{ matrix.os }}
+
     steps:
 
       - name: '🧱 The code is pulled from the repository.'
@@ -39,22 +48,28 @@ jobs:
           architecture: 'x64'
           python-version: ${{ matrix.python-version }}
 
+      - name: 🔑 Runtime cache key is calculated.
+        id: cache-key
+        run: |
+          echo "::set-output name=value::cache-runtime-${{ matrix.os }}-${{ env.pythonLocation }}-${{ hashFiles('poetry.lock') }}-${{ env.CACHE_CUSTOM_KEY }}"
+
       - name: '☁️ The whole Python is cached.'
         id: cache-python
         uses: actions/cache@v2
         with:
-          key: cache-python-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}-dev
+          key: ${{ steps.cache-key.outputs.value }}
           path: ${{ env.pythonLocation }}
 
-      - name: '🪛 Pipenv is installed.'
+      - name: '🪛 Poetry is installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
-          pip install pipenv
+          pip install pipx
+          pipx install poetry
 
       - name: '🔋 The development dependencies are installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
-          make venv-deploy-all
+          poetry install
 
       - name: '🍺 The code passes all QA checks'
         run: |

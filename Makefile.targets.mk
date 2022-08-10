@@ -1,21 +1,12 @@
 .PHONY: build upload-test upload get-version clean clean-python clean-dist
 .PHONY: format qa tests coverage code-typing code-format code-linters sh
 .PHONY: venv-dir venv venv-dev venv-deploy venv-deploy-all upgrade-venv
+.PHONY: verify-version
 
 
-#build: clean
-#	$(call log, building wheels and bdist)
-#	python -m build --sdist --wheel --outdir dist/ .
-#
-#
-#upload-test: build
-#	$(call log, uploading dist to test.pypi.org)
-#	python -m twine upload --repository testpypi dist/*
-#
-#
-#upload: build
-#	$(call log, uploading dist to pypi.org)
-#	python -m twine upload dist/*
+verify-version:
+	$(call log, verify version consistency)
+	python -m oyabun.version
 
 
 get-version:
@@ -44,15 +35,13 @@ format:
 	$(call log, reorganizing imports & formatting code)
 	isort --virtual-env="$(DIR_VENV)" \
 		"$(DIR_SRC)" \
-		"$(DIR_TESTS)" \
 		|| exit 1
 	black \
 		"$(DIR_SRC)" \
-		"$(DIR_TESTS)" \
 		|| exit 1
 
 
-qa: tests coverage code-typing code-format code-linters
+qa: verify-version tests coverage code-typing code-format code-linters
 	$(call log, QA checks)
 
 
@@ -76,11 +65,9 @@ code-format:
 	$(call log, checking code format)
 	isort --virtual-env="$(DIR_VENV)" --check-only \
 		"$(DIR_SRC)" \
-		"$(DIR_TESTS)" \
 		|| exit 1
 	black --check \
 		"$(DIR_SRC)" \
-		"$(DIR_TESTS)" \
 		|| exit 1
 
 
