@@ -28,7 +28,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     env:
-      CACHE_CUSTOM_KEY: '0'
+      CACHE_CUSTOM_KEY: '1'
 
     outputs:
       cache-key: ${{ steps.cache-key.outputs.value }}
