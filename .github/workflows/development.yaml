@@ -8,9 +8,10 @@ on:
 
 env:
   CACHE_CUSTOM_KEY: '6'
-  POETRY_VIRTUALENVS_CREATE: true
-  POETRY_VIRTUALENVS_IN_PROJECT: true
+  POETRY_VIRTUALENVS_CREATE: false
+  POETRY_VIRTUALENVS_IN_PROJECT: false
   POETRY_VIRTUALENVS_PATH: .
+  PYTHONPATH: .
 
 
 jobs:
@@ -64,20 +65,17 @@ jobs:
         run: |
           pip install pipx
           pipx install poetry
-          poetry export --dev --format=requirements.txt --output=requirements.txt --without-hashes
-          cat requirements.txt
 
       - name: '🔋 The dependencies are installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
+          poetry export --dev --format=requirements.txt --output=requirements.txt --without-hashes
+          cat requirements.txt
           pip install --requirement requirements.txt
 
       - name: '🍺 The code passes all QA checks'
         run: |
-          poetry install --no-dev
-          poetry run which python
-          poetry run python -c 'import toml; print(toml)'
-          poetry run make qa
+          make qa
 
       - name: '📝 The coverage report is uploaded to codecov.io'
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
