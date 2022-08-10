@@ -7,7 +7,7 @@ on:
 
 
 env:
-  CACHE_CUSTOM_KEY: '10'
+  CACHE_CUSTOM_KEY: '11'
   POETRY_VIRTUALENVS_CREATE: false
   POETRY_VIRTUALENVS_IN_PROJECT: false
 
@@ -61,14 +61,12 @@ jobs:
       - name: '🪛 Poetry is installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-          source $HOME/.poetry/env
+          pip install --user poetry
 
       - name: '🔋 The dependencies are installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
           poetry export --dev --format=requirements.txt --output=requirements.txt --without-hashes
-          cat requirements.txt
           pip install --requirement requirements.txt
 
       - name: '🍺 The code passes all QA checks'
