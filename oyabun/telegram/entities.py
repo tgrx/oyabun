@@ -73,7 +73,7 @@ class Message(TelegramBotApiType):
     """
 
     message_id: int = Field(...)
-    from_: Optional[User] = Field(None)
+    from_: Optional[User] = Field(None, alias="from")
     date: datetime = Field(...)
     chat: Chat = Field(...)
     edit_date: Optional[datetime] = Field(None)

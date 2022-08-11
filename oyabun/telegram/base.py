@@ -16,9 +16,17 @@ from pydantic import Field
 
 
 class TelegramBotApiType(BaseModel):
+    class Config:
+        allow_population_by_field_name = True
+
     def _prepare_export_kw(self, kw: dict[str, Any]) -> None:
-        kw["exclude_none"] = True
-        kw["exclude_unset"] = True
+        kw.update(
+            {
+                "by_alias": True,
+                "exclude_none": True,
+                "exclude_unset": True,
+            }
+        )
 
     def json(self, **kw: Any) -> str:  # noqa: A003, VNE003
         self._prepare_export_kw(kw)
