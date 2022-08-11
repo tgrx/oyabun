@@ -1,7 +1,6 @@
 from io import BytesIO
 from pathlib import Path
 from typing import IO
-from typing import List
 from typing import Optional
 from typing import Type
 from typing import TypeVar
@@ -10,30 +9,31 @@ from typing import Union
 from httpx import AsyncClient
 from httpx import Response as HttpResponse
 
-from consigliere.telegram import DeleteWebhookResponse
-from consigliere.telegram import File
-from consigliere.telegram import GetFileRequest
-from consigliere.telegram import GetFileResponse
-from consigliere.telegram import GetMeResponse
-from consigliere.telegram import GetWebhookInfoResponse
-from consigliere.telegram import Message
-from consigliere.telegram import MessageEntity
-from consigliere.telegram import SendMessageRequest
-from consigliere.telegram import SendMessageResponse
-from consigliere.telegram import SendPhotoRequest
-from consigliere.telegram import SendPhotoResponse
-from consigliere.telegram import SetWebhookRequest
-from consigliere.telegram import SetWebhookResponse
-from consigliere.telegram import User
-from consigliere.telegram import WebhookInfo
-from consigliere.telegram.base import Request
-from consigliere.telegram.base import Response
-from consigliere.telegram.entities import ReplyMarkupType
+from oyabun.telegram import DeleteWebhookResponse
+from oyabun.telegram import File
+from oyabun.telegram import GetFileRequest
+from oyabun.telegram import GetFileResponse
+from oyabun.telegram import GetMeResponse
+from oyabun.telegram import GetWebhookInfoResponse
+from oyabun.telegram import Message
+from oyabun.telegram import MessageEntity
+from oyabun.telegram import SendMessageRequest
+from oyabun.telegram import SendMessageResponse
+from oyabun.telegram import SendPhotoRequest
+from oyabun.telegram import SendPhotoResponse
+from oyabun.telegram import SetWebhookRequest
+from oyabun.telegram import SetWebhookResponse
+from oyabun.telegram import User
+from oyabun.telegram import WebhookInfo
+from oyabun.telegram.base import Request
+from oyabun.telegram.base import Response
+from oyabun.telegram.entities import ReplyMarkupType
 
 
 class Bot:
     """
     The class represents an entrypoint to communicate with Telegram Bot API.
+
     The methods are synchronized with those from official API doc.
 
     Usage: instantiate using bot token and go.
@@ -46,7 +46,7 @@ class Bot:
     class RequestError(RuntimeError):
         """
         A base exception for any internal error, including those
-            caused by malformed requests and invalid data.
+        caused by malformed requests and invalid data.
         """
 
         pass
@@ -54,6 +54,7 @@ class Bot:
     def __init__(self, token: str):
         """
         Sets up the new Bot instance.
+
         :param token: a bot token which BotFather gives to you.
         """
 
@@ -63,6 +64,7 @@ class Bot:
     def api_url(self) -> str:
         """
         An API URL to make requests to.
+
         :return: the completed API URL as a string
         """
 
@@ -71,7 +73,8 @@ class Bot:
     @property
     def file_url(self) -> str:
         """
-        An URL to download files from.
+        A URL to download files from.
+
         :return: the completed URL as a string
         """
 
@@ -85,6 +88,7 @@ class Bot:
         https://core.telegram.org/bots/api#file
 
         :param file: a File object
+
         :return: a BytesIO object with content of the file
         """
 
@@ -96,14 +100,19 @@ class Bot:
     async def getFile(self, file_id: str) -> File:
         """
         Use this method to get basic info about a file
-            and prepare it for downloading.
+        and prepare it for downloading.
+
         For the moment, bots can download files of up to 20MB in size.
+
         The file can then be downloaded
-            via the link https://api.telegram.org/file/bot<token>/<file_path>,
-            where <file_path> is taken from the response.
+        via the link https://api.telegram.org/file/bot<token>/<file_path>,
+        where <file_path> is taken from the response.
+
         It is guaranteed that the link will be valid for at least 1 hour.
+
         When the link expires,
-            a new one can be requested by calling getFile again.
+        a new one can be requested by calling getFile again.
+
         https://core.telegram.org/bots/api#getfile
 
         :return: on success, a File object
@@ -120,6 +129,7 @@ class Bot:
     async def getMe(self) -> User:
         """
         A simple method for testing your bot's auth token.
+
         https://core.telegram.org/bots/api#getme
 
         :return: basic information about the bot in form of a User object
@@ -159,7 +169,7 @@ class Bot:
         chat_id: Union[int, str],
         text: str,
         parse_mode: Optional[str] = None,
-        entities: Optional[List[MessageEntity]] = None,
+        entities: Optional[list[MessageEntity]] = None,
         disable_web_page_preview: Optional[bool] = None,
         disable_notification: Optional[bool] = None,
         reply_to_message_id: Optional[int] = None,
@@ -172,29 +182,38 @@ class Bot:
         https://core.telegram.org/bots/api#sendmessage
 
         :param chat_id: Unique identifier for the target chat
-            or username of the target channel
-            (in the format @channelusername).
+        or username of the target channel
+        (in the format @channelusername).
+
         :param text: Text of the message to be sent,
-            1-4096 characters after entities parsing.
+        1-4096 characters after entities parsing.
+
         :param parse_mode: Mode for parsing entities in the message text.
-            See formatting options for more details.
+        See formatting options for more details.
+
         :param entities: A JSON-serialized list of special entities
-            that appear in message text,
-            which can be specified instead of parse_mode.
+        that appear in message text,
+        which can be specified instead of parse_mode.
+
         :param disable_web_page_preview: Disables link previews
-            for links in this message.
+        for links in this message.
+
         :param disable_notification: Sends the message silently.
-            Users will receive a notification with no sound.
+        Users will receive a notification with no sound.
+
         :param reply_to_message_id: If the message is a reply,
-            ID of the original message.
+        ID of the original message.
+
         :param allow_sending_without_reply: Pass True,
-            if the message should be sent
-            even if the specified replied-to message is not found.
+        if the message should be sent
+        even if the specified replied-to message is not found.
+
         :param reply_markup: Additional interface options.
-            A JSON-serialized object for an inline keyboard,
-            custom reply keyboard,
-            instructions to remove reply keyboard
-            or to force a reply from the user.
+        A JSON-serialized object for an inline keyboard,
+        custom reply keyboard,
+        instructions to remove reply keyboard
+        or to force a reply from the user.
+
         :return: on success, the sent Message.
         """
 
@@ -223,7 +242,7 @@ class Bot:
         photo: Union[str, Path, IO],
         caption: Optional[str] = None,  # 0-1024
         parse_mode: Optional[str] = None,
-        caption_entities: Optional[List[MessageEntity]] = None,
+        caption_entities: Optional[list[MessageEntity]] = None,
         disable_notification: Optional[bool] = None,
         reply_to_message_id: Optional[int] = None,
         allow_sending_without_reply: Optional[bool] = None,
@@ -235,37 +254,47 @@ class Bot:
         https://core.telegram.org/bots/api#sendphoto
 
         :param chat_id: Unique identifier for the target chat
-            or username of the target channel
-            (in the format @channelusername).
+        or username of the target channel
+        (in the format @channelusername).
+
         :param photo: Photo to send.
-            Pass a file_id as String to send a photo
-            that exists on the Telegram servers (recommended),
-            pass an HTTP URL as a String for Telegram
-            to get a photo from the Internet,
-            or upload a new photo using multipart/form-data.
-            The photo must be at most 10 MB in size.
-            The photo's width and height must not exceed 10000 in total.
-            Width and height ratio must be at most 20.
+        Pass a file_id as String to send a photo
+        that exists on the Telegram servers (recommended),
+        pass an HTTP URL as a String for Telegram
+        to get a photo from the Internet,
+        or upload a new photo using multipart/form-data.
+
+        The photo must be at most 10 MB in size.
+        The photo's width and height must not exceed 10000 in total.
+        Width and height ratio must be at most 20.
+
         :param caption: Photo caption
-            (may also be used when resending photos by file_id),
-            0-1024 characters after entities parsing.
+        (may also be used when resending photos by file_id),
+        0-1024 characters after entities parsing.
+
         :param parse_mode: Mode for parsing entities in the message text.
-            See formatting options for more details.
+        See formatting options for more details.
+
         :param caption_entities: A JSON-serialized list of special entities
-            that appear in the caption,
-            which can be specified instead of parse_mode.
+        that appear in the caption,
+        which can be specified instead of parse_mode.
+
         :param disable_notification: Sends the message silently.
-            Users will receive a notification with no sound.
+        Users will receive a notification with no sound.
+
         :param reply_to_message_id: If the message is a reply,
-            ID of the original message.
+        ID of the original message.
+
         :param allow_sending_without_reply: Pass True,
-            if the message should be sent
-            even if the specified replied-to message is not found.
+        if the message should be sent
+        even if the specified replied-to message is not found.
+
         :param reply_markup: Additional interface options.
-            A JSON-serialized object for an inline keyboard,
-            custom reply keyboard,
-            instructions to remove reply keyboard
-            or to force a reply from the user.
+        A JSON-serialized object for an inline keyboard,
+        custom reply keyboard,
+        instructions to remove reply keyboard
+        or to force a reply from the user.
+
         :return: on success, the sent Message.
         """
 
@@ -303,9 +332,12 @@ class Bot:
         https://core.telegram.org/bots/api#making-requests
 
         :param method: name of the supported Telegram Bot API method
+
         :param request: request object,
-            composed from input params of public method
+        composed from input params of public method
+
         :param response_cls: desired response class with actual result type
+
         :return: object of response class' result type
         """
 
@@ -369,8 +401,9 @@ class Bot:
         https://core.telegram.org/bots/api#file
 
         :param file_path: File path.
-            Use https://api.telegram.org/file/bot<token>/<file_path>
-            to get the file.
+        Use https://api.telegram.org/file/bot<token>/<file_path>
+        to get the file.
+
         :return: a BytesIO object with file content.
         """
 

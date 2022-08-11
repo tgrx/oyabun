@@ -7,7 +7,9 @@ on:
 
 
 env:
-  PIPENV_VENV_IN_PROJECT: '1'
+  CACHE_CUSTOM_KEY: '13'
+  POETRY_VIRTUALENVS_CREATE: false
+  POETRY_VIRTUALENVS_IN_PROJECT: false
 
 
 jobs:
@@ -20,13 +22,17 @@ jobs:
         os:
           - 'macos-latest'
           - 'ubuntu-latest'
-          - 'windows-latest'
         python-version:
-          - '3.7'
-          - '3.8'
           - '3.9'
+          - '3.10'
 
     runs-on: ${{ matrix.os }}
+
+    outputs:
+      cache-key: ${{ steps.cache-key.outputs.value }}
+      python-location: ${{ env.pythonLocation }}
+      python-version: ${{ matrix.python-version }}
+      runs-on: ${{ matrix.os }}
 
     steps:
 
@@ -39,25 +45,35 @@ jobs:
           architecture: 'x64'
           python-version: ${{ matrix.python-version }}
 
+      - name: '🔑 Runtime cache key is calculated.'
+        id: cache-key
+        run: |
+          echo "::set-output name=value::cache-runtime-${{ matrix.os }}-${{ env.pythonLocation }}-${{ hashFiles('poetry.lock') }}-${{ env.CACHE_CUSTOM_KEY }}"
+
       - name: '☁️ The whole Python is cached.'
         id: cache-python
         uses: actions/cache@v2
         with:
-          key: cache-python-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}-dev
+          key: ${{ steps.cache-key.outputs.value }}
           path: ${{ env.pythonLocation }}
 
-      - name: '🪛 Pipenv is installed.'
+      - name: '🪛 Poetry is installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
-          pip install pipenv
+          pip install poetry
+          python -c 'import poetry; print(poetry)'
+          poetry debug
 
-      - name: '🔋 The development dependencies are installed.'
+      - name: '🔋 The dependencies are installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
-          make venv-deploy-all
+          poetry export --dev --format=requirements.txt --output=requirements.txt --without-hashes
+          pip install --requirement requirements.txt
 
       - name: '🍺 The code passes all QA checks'
         run: |
+          poetry build
+          pip install dist/*.whl
           make qa
 
       - name: '📝 The coverage report is uploaded to codecov.io'
@@ -65,6 +81,6 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           files: ./coverage.xml
-          name: consigliere
+          name: oyabun
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true

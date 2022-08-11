@@ -25,7 +25,7 @@ endif
 # independent variables
 
 DIR_REPO := $(realpath ./)
-DIR_VENV := $(shell pipenv --venv 2>/dev/null)
+DIR_VENV := $(shell poetry env info --path 2>/dev/null)
 
 # -----------------------------------------------
 # OS-depend variables
@@ -40,7 +40,8 @@ endif
 # -----------------------------------------------
 # Paths
 
-DIR_SRC := $(abspath $(DIR_REPO)/consigliere)
+DIR_ARTIFACTS := $(abspath $(DIR_REPO)/.artifacts)
+DIR_SRC := $(abspath $(DIR_REPO)/oyabun)
 DIR_TESTS := $(abspath $(DIR_REPO)/tests)
 
 

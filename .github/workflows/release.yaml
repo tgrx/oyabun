@@ -1,12 +1,14 @@
 name: 'Release'
 
 on:
-  pull_request:
-    branches:
-      - main
-  push:
-    tags:
-      - release-*
+  workflow_dispatch:
+
+#  pull_request:
+#    branches:
+#      - main
+#  push:
+#    tags:
+#      - release-*
 
 env:
   PIPENV_VENV_IN_PROJECT: '1'
@@ -15,6 +17,7 @@ env:
 jobs:
 
   dist:
+    if: github.actor == 'tgrx'
     name: 'The distribution is built.'
 
     outputs:
@@ -75,11 +78,12 @@ jobs:
       - name: '📦 The library distribution is uploaded as an artifact.'
         uses: actions/upload-artifact@v2
         with:
-          name: consigliere-${{ steps.get-version.outputs.result }}
+          name: oyabun-${{ steps.get-version.outputs.result }}
           path: dist/
 
 
   test-dist:
+    if: github.actor == 'tgrx'
     name: 'The library distribution passes all tests.'
 
     outputs:
@@ -95,9 +99,9 @@ jobs:
           - 'ubuntu-latest'
           - 'windows-latest'
         python-version:
-          - '3.7'
           - '3.8'
           - '3.9'
+          - '3.10'
 
     runs-on: ${{ matrix.os }}
 
@@ -109,7 +113,7 @@ jobs:
       - name: '🪚 The library sources are deleted from the local code.'
         uses: JesseTG/rm@v1.0.2
         with:
-          path: consigliere
+          path: oyabun
 
       - name: '🐍 Python is set up.'
         uses: actions/setup-python@v2
@@ -137,7 +141,7 @@ jobs:
       - name: '📦 The library distribution artifact is downloaded.'
         uses: actions/download-artifact@v2
         with:
-          name: consigliere-${{ needs.dist.outputs.version }}
+          name: oyabun-${{ needs.dist.outputs.version }}
           path: dist/
 
       - name: '🚀 The library is installed from distribution'
@@ -155,6 +159,7 @@ jobs:
 
 
   test-deploy:
+    if: github.actor == 'tgrx'
     name: 'The library is deployed on test PyPI.'
 
     if: ${{ startsWith(github.ref, 'refs/tags/release-') }}
@@ -172,7 +177,7 @@ jobs:
       - name: '📦 The library distribution artifact is downloaded.'
         uses: actions/download-artifact@v2
         with:
-          name: consigliere-${{ needs.dist.outputs.version }}
+          name: oyabun-${{ needs.dist.outputs.version }}
           path: dist/
 
       - name: '🔷 A new library version is uploaded on test PyPI.'
@@ -200,7 +205,7 @@ jobs:
       - name: '📦 The library distribution artifact is downloaded.'
         uses: actions/download-artifact@v2
         with:
-          name: consigliere-${{ needs.test-deploy.outputs.version }}
+          name: oyabun-${{ needs.test-deploy.outputs.version }}
           path: dist/
 
       - name: '💎 A new library version is uploaded on PyPI.'

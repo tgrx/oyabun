@@ -1,14 +1,13 @@
 from typing import Optional
-from typing import Set
 from typing import Type
 
 from pydantic import Field
 
-from consigliere.telegram import File
-from consigliere.telegram.base import Response
-from consigliere.telegram.entities import Message
-from consigliere.telegram.entities import User
-from consigliere.telegram.entities import WebhookInfo
+from oyabun.telegram import File
+from oyabun.telegram.base import Response
+from oyabun.telegram.entities import Message
+from oyabun.telegram.entities import User
+from oyabun.telegram.entities import WebhookInfo
 
 
 class GetFileResponse(Response[File]):
@@ -39,7 +38,7 @@ class DeleteWebhookResponse(Response[bool]):
     result: bool = Field(False)
 
 
-__models__: Set[Type[Response]] = {
+__models__: set[Type[Response]] = {
     DeleteWebhookResponse,
     GetFileResponse,
     GetMeResponse,

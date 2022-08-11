@@ -3,23 +3,8 @@
 .PHONY: venv-dir venv venv-dev venv-deploy venv-deploy-all upgrade-venv
 
 
-build: clean
-	$(call log, building wheels and bdist)
-	python -m build --sdist --wheel --outdir dist/ .
-
-
-upload-test: build
-	$(call log, uploading dist to test.pypi.org)
-	python -m twine upload --repository testpypi dist/*
-
-
-upload: build
-	$(call log, uploading dist to pypi.org)
-	python -m twine upload dist/*
-
-
 get-version:
-	@python -c "import consigliere as c; print(c.__version__)"
+	@python -c "import oyabun; print(oyabun.__version__)"
 
 
 clean: clean-python clean-dist
@@ -28,11 +13,9 @@ clean: clean-python clean-dist
 
 clean-python:
 	$(call log, cleaning python caches)
-	rm -rf .coverage
-	rm -rf .mypy_cache
-	rm -rf .pytest_cache
-	rm -rf coverage.xml
-	rm -rf htmlcov/
+	rm -rf "$(DIR_ARTIFACTS)/coverage"
+	rm -rf "$(DIR_ARTIFACTS)/mypy"
+	rm -rf "$(DIR_ARTIFACTS)/pytest"
 
 
 clean-dist:
@@ -46,11 +29,9 @@ format:
 	$(call log, reorganizing imports & formatting code)
 	isort --virtual-env="$(DIR_VENV)" \
 		"$(DIR_SRC)" \
-		"$(DIR_TESTS)" \
 		|| exit 1
 	black \
 		"$(DIR_SRC)" \
-		"$(DIR_TESTS)" \
 		|| exit 1
 
 
@@ -60,7 +41,7 @@ qa: tests coverage code-typing code-format code-linters
 
 tests: clean-python
 	$(call log, running tests)
-	python -m pytest
+	pytest
 
 
 coverage:
@@ -71,24 +52,22 @@ coverage:
 
 code-typing:
 	$(call log, checking code typing)
-	python -m mypy
+	mypy
 
 
 code-format:
 	$(call log, checking code format)
 	isort --virtual-env="$(DIR_VENV)" --check-only \
 		"$(DIR_SRC)" \
-		"$(DIR_TESTS)" \
 		|| exit 1
 	black --check \
 		"$(DIR_SRC)" \
-		"$(DIR_TESTS)" \
 		|| exit 1
 
 
 code-linters:
 	$(call log, linting)
-	python -m flake8
+	flake8
 
 
 sh:
@@ -96,31 +75,12 @@ sh:
 	ipython
 
 
-venv-dir:
-	$(call log, initializing venv directory)
-	test -d .venv || mkdir .venv
-
-
-venv: venv-dir
+venv:
 	$(call log, installing packages)
-	pipenv install
+	poetry env use "$(shell cat .python-version)"
+	poetry install --no-root
 
 
-venv-dev: venv-dir
-	$(call log, installing development packages)
-	pipenv install --dev
-
-
-venv-deploy: venv-dir
+venv-deploy:
 	$(call log, installing packages into system)
-	pipenv install --deploy --system
-
-
-venv-deploy-all: venv-dir
-	$(call log, installing all packages into system)
-	pipenv install --dev --deploy --system
-
-
-upgrade-venv: venv-dir
-	$(call log, upgrading all packages in virtualenv)
-	pipenv update --dev
+	poetry install

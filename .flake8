@@ -1,15 +1,15 @@
 [flake8]
-ignore = S101,B101
-max_cognitive_complexity = 12
 exclude =
+    .artifacts
+    .git
     .github
-    .mypy_cache
-    .pytest_cache
     .run
     .venv
-    htmlcov
+ignore = S101,B101
+max_annotations_complexity=4
+max_cognitive_complexity = 12
 per-file-ignores =
-    consigliere/bot.py:N802
-    consigliere/telegram/base.py:E501
-    consigliere/telegram/entities.py:E501
-    consigliere/telegram/requests.py:E501
+    oyabun/bot.py:N802
+    oyabun/telegram/base.py:E501
+    oyabun/telegram/entities.py:E501
+    oyabun/telegram/requests.py:E501
