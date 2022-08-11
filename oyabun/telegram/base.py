@@ -16,7 +16,7 @@ from pydantic import BaseModel
 from pydantic import Field
 
 
-def orjson_dumps(value, *, default):
+def orjson_dumps(value: Any, *, default: Any) -> str:
     return orjson.dumps(value, default=default).decode()
 
 
