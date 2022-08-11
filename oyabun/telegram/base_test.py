@@ -9,9 +9,9 @@ def test_exclude_unset() -> None:
         attr2: int = Field(0)
 
     assert Klass(attr1=1).dict() == {"attr1": 1}
-    assert Klass(attr1=1).json() == '{"attr1": 1}'
+    assert Klass(attr1=1).json() == '{"attr1":1}'
     assert Klass(attr1=1, attr2=2).dict() == {"attr1": 1, "attr2": 2}
-    assert Klass(attr1=1, attr2=2).json() == '{"attr1": 1, "attr2": 2}'
+    assert Klass(attr1=1, attr2=2).json() == '{"attr1":1, "attr2":2}'
 
 
 def test_request() -> None:
