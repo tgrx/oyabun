@@ -11,13 +11,20 @@ from typing import Type
 from typing import TypeVar
 from typing import Union
 
+import orjson
 from pydantic import BaseModel
 from pydantic import Field
+
+
+def orjson_dumps(value: Any, *, default: Any) -> str:
+    return orjson.dumps(value, default=default).decode()
 
 
 class TelegramBotApiType(BaseModel):
     class Config:
         allow_population_by_field_name = True
+        json_dumps = orjson_dumps
+        json_loads = orjson.loads
 
     def _prepare_export_kw(self, kw: dict[str, Any]) -> None:
         kw.update(
