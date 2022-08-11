@@ -17,6 +17,7 @@ from oyabun.telegram.entities import InlineKeyboardMarkup
 from oyabun.telegram.entities import KeyboardButton
 from oyabun.telegram.entities import Message
 from oyabun.telegram.entities import MessageEntity
+from oyabun.telegram.entities import PhotoSize
 from oyabun.telegram.entities import ReplyKeyboardMarkup
 from oyabun.telegram.entities import ReplyKeyboardRemove
 from oyabun.telegram.entities import Update
@@ -69,6 +70,7 @@ __all__ = (
     "KeyboardButton",
     "Message",
     "MessageEntity",
+    "PhotoSize",
     "ReplyKeyboardMarkup",
     "ReplyKeyboardRemove",
     "Request",
