@@ -14,6 +14,8 @@ from oyabun.telegram import File
 from oyabun.telegram import GetFileRequest
 from oyabun.telegram import GetFileResponse
 from oyabun.telegram import GetMeResponse
+from oyabun.telegram import GetUpdatesRequest
+from oyabun.telegram import GetUpdatesResponse
 from oyabun.telegram import GetWebhookInfoResponse
 from oyabun.telegram import Message
 from oyabun.telegram import MessageEntity
@@ -28,6 +30,7 @@ from oyabun.telegram import WebhookInfo
 from oyabun.telegram.base import Request
 from oyabun.telegram.base import Response
 from oyabun.telegram.entities import ReplyMarkupType
+from oyabun.telegram.entities import Update
 
 
 class Bot:
@@ -138,6 +141,28 @@ class Bot:
         return await self._call_api(
             "getMe",
             response_cls=GetMeResponse,
+        )
+
+    async def getUpdates(
+        self,
+        *,
+        offset: Optional[int] = None,
+        limit: Optional[int] = None,
+        timeout: Optional[int] = None,
+        allowed_updates: Optional[list[str]] = None,
+    ) -> list[Update]:
+        request = GetUpdatesRequest(
+            allowed_updates=allowed_updates,
+            limit=limit,
+            offset=offset,
+            timeout=timeout,
+        )
+
+        return await self._call_api(
+            "getUpdates",
+            request,
+            response_cls=GetUpdatesResponse,
+            timeout=timeout,
         )
 
     async def getWebhookInfo(self) -> WebhookInfo:
@@ -324,6 +349,7 @@ class Bot:
         request: Optional[Request] = None,
         *,
         response_cls: Type[Response[_T]] = Response[_T],
+        timeout: Optional[int] = None,
     ) -> _T:
         """
         Performs the call to the Bot API returning a value of proper type.
@@ -344,9 +370,8 @@ class Bot:
         try:
             url = f"{self.api_url}/{method}"
 
-            request = (
-                request or Request()
-            )  # for methods which do not need request at all
+            # for methods which do not need request at all
+            request = request or Request()
 
             client: AsyncClient
             async with AsyncClient() as client:
@@ -357,12 +382,18 @@ class Bot:
                     headers = (
                         {} if files else {"Content-Type": "application/json"}
                     )
+
+                    kw = {}
+                    if timeout:
+                        kw["timeout"] = timeout * 2
+
                     http_response: HttpResponse = await client.post(
                         url,
                         # mypy can't into X if P else Y
                         data=data,  # type: ignore
                         files=files,
                         headers=headers,
+                        **kw,  # type: ignore
                     )
 
             if http_response.status_code != 200:

@@ -6,6 +6,7 @@ from pydantic import Field
 from oyabun.telegram import File
 from oyabun.telegram.base import Response
 from oyabun.telegram.entities import Message
+from oyabun.telegram.entities import Update
 from oyabun.telegram.entities import User
 from oyabun.telegram.entities import WebhookInfo
 
@@ -20,6 +21,10 @@ class GetMeResponse(Response[User]):
 
 class GetWebhookInfoResponse(Response[WebhookInfo]):
     result: Optional[WebhookInfo] = Field(None)
+
+
+class GetUpdatesResponse(Response[list[Update]]):
+    result: list[Update] = Field(default_factory=list)
 
 
 class SendMessageResponse(Response[Message]):
@@ -43,6 +48,7 @@ __models__: set[Type[Response]] = {
     GetFileResponse,
     GetMeResponse,
     GetWebhookInfoResponse,
+    GetUpdatesResponse,
     SendMessageResponse,
     SendPhotoResponse,
     SetWebhookResponse,
@@ -53,6 +59,7 @@ __all__ = (
     "DeleteWebhookResponse",
     "GetFileResponse",
     "GetMeResponse",
+    "GetUpdatesResponse",
     "GetWebhookInfoResponse",
     "SendMessageResponse",
     "SendPhotoResponse",

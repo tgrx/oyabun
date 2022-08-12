@@ -18,6 +18,13 @@ class GetMeRequest(Request):
     pass
 
 
+class GetUpdatesRequest(Request):
+    offset: Optional[int] = Field(None)
+    limit: Optional[int] = Field(None, le=100, ge=1)
+    timeout: Optional[int] = Field(None, ge=0)
+    allowed_updates: Optional[list[str]] = Field(None)
+
+
 class SendMessageRequest(Request):
     chat_id: Union[int, str] = Field(...)
     text: str = Field(...)
@@ -63,6 +70,7 @@ __models__: set[Type[Request]] = {
     DeleteWebhookRequest,
     GetFileRequest,
     GetMeRequest,
+    GetUpdatesRequest,
     GetWebhookInfoRequest,
     SendMessageRequest,
     SendPhotoRequest,
@@ -75,6 +83,7 @@ __all__ = (
     "GetFileRequest",
     "GetMeRequest",
     "GetWebhookInfoRequest",
+    "GetUpdatesRequest",
     "SendMessageRequest",
     "SendPhotoRequest",
     "SetWebhookRequest",

@@ -27,6 +27,7 @@ from oyabun.telegram.requests import __models__ as __models__requests
 from oyabun.telegram.requests import DeleteWebhookRequest
 from oyabun.telegram.requests import GetFileRequest
 from oyabun.telegram.requests import GetMeRequest
+from oyabun.telegram.requests import GetUpdatesRequest
 from oyabun.telegram.requests import GetWebhookInfoRequest
 from oyabun.telegram.requests import SendMessageRequest
 from oyabun.telegram.requests import SendPhotoRequest
@@ -35,6 +36,7 @@ from oyabun.telegram.responses import __models__ as __models__responses
 from oyabun.telegram.responses import DeleteWebhookResponse
 from oyabun.telegram.responses import GetFileResponse
 from oyabun.telegram.responses import GetMeResponse
+from oyabun.telegram.responses import GetUpdatesResponse
 from oyabun.telegram.responses import GetWebhookInfoResponse
 from oyabun.telegram.responses import SendMessageResponse
 from oyabun.telegram.responses import SendPhotoResponse
@@ -63,6 +65,8 @@ __all__ = (
     "GetFileResponse",
     "GetMeRequest",
     "GetMeResponse",
+    "GetUpdatesRequest",
+    "GetUpdatesResponse",
     "GetWebhookInfoRequest",
     "GetWebhookInfoResponse",
     "InlineKeyboardButton",
