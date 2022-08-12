@@ -443,15 +443,15 @@ zstd = "*"
 
 [[package]]
 name = "filelock"
-version = "3.7.1"
+version = "3.8.0"
 description = "A platform independent file lock."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 
 [package.extras]
-docs = ["furo (>=2021.8.17b43)", "sphinx (>=4.1)", "sphinx-autodoc-typehints (>=1.12)"]
-testing = ["covdefaults (>=1.2.0)", "coverage (>=4)", "pytest (>=4)", "pytest-cov", "pytest-timeout (>=1.4.2)"]
+testing = ["pytest-timeout (>=2.1)", "pytest-cov (>=3)", "pytest (>=7.1.2)", "coverage (>=6.4.2)", "covdefaults (>=2.2)"]
+docs = ["sphinx-autodoc-typehints (>=1.19.1)", "sphinx (>=5.1.1)", "furo (>=2022.6.21)"]
 
 [[package]]
 name = "flake8"
@@ -600,7 +600,7 @@ pycodestyle = "*"
 
 [[package]]
 name = "flake8-eradicate"
-version = "1.2.1"
+version = "1.3.0"
 description = "Flake8 plugin to find commented out code"
 category = "dev"
 optional = false
@@ -609,7 +609,7 @@ python-versions = ">=3.6,<4.0"
 [package.dependencies]
 attrs = "*"
 eradicate = ">=2.0,<3.0"
-flake8 = ">=3.5,<5"
+flake8 = ">=3.5,<6"
 
 [[package]]
 name = "flake8-executable"
@@ -1297,7 +1297,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 
 [[package]]
 name = "pbr"
-version = "5.9.0"
+version = "5.10.0"
 description = "Python Build Reasonableness"
 category = "dev"
 optional = false
@@ -1347,7 +1347,7 @@ test = ["appdirs (==1.4.4)", "pytest-cov (>=2.7)", "pytest-mock (>=3.6)", "pytes
 
 [[package]]
 name = "plotly"
-version = "5.9.0"
+version = "5.10.0"
 description = "An open-source, interactive data visualization library for Python"
 category = "dev"
 optional = false
@@ -1639,7 +1639,7 @@ cli = ["click (>=5.0)"]
 
 [[package]]
 name = "pytz"
-version = "2022.1"
+version = "2022.2"
 description = "World timezone definitions, modern and historical"
 category = "dev"
 optional = false
@@ -2507,8 +2507,8 @@ fb-sapp = [
     {file = "fb_sapp-0.5.2-py3-none-any.whl", hash = "sha256:5ca63f9716c06173b22782b0d37017ada88e9b3e5df4c078f427b227bc533525"},
 ]
 filelock = [
-    {file = "filelock-3.7.1-py3-none-any.whl", hash = "sha256:37def7b658813cda163b56fc564cdc75e86d338246458c4c28ae84cabefa2404"},
-    {file = "filelock-3.7.1.tar.gz", hash = "sha256:3a0fd85166ad9dbab54c9aec96737b744106dc5f15c0b09a6744a445299fcf04"},
+    {file = "filelock-3.8.0-py3-none-any.whl", hash = "sha256:617eb4e5eedc82fc5f47b6d61e4d11cb837c56cb4544e39081099fa17ad109d4"},
+    {file = "filelock-3.8.0.tar.gz", hash = "sha256:55447caa666f2198c5b6b13a26d2084d26fa5b115c00d065664b2124680c4edc"},
 ]
 flake8 = [
     {file = "flake8-4.0.1-py2.py3-none-any.whl", hash = "sha256:479b1304f72536a55948cb40a32dce8bb0ffe3501e26eaf292c7e60eb5e0428d"},
@@ -2550,8 +2550,8 @@ flake8-debugger = [
     {file = "flake8_debugger-4.1.2-py3-none-any.whl", hash = "sha256:0a5e55aeddcc81da631ad9c8c366e7318998f83ff00985a49e6b3ecf61e571bf"},
 ]
 flake8-eradicate = [
-    {file = "flake8-eradicate-1.2.1.tar.gz", hash = "sha256:e486f8ab7e2dba3667223688e9239158fbf4ecaa88125e2283bcda81171412b7"},
-    {file = "flake8_eradicate-1.2.1-py3-none-any.whl", hash = "sha256:00d77faefb64cef18b3c1b48a004c3a2ad663aa3cf85650f422437d25ece6441"},
+    {file = "flake8-eradicate-1.3.0.tar.gz", hash = "sha256:e4c98f00d17dc8653e3388cac2624cd81e9735de2fd4a8dcf99029633ebd7a63"},
+    {file = "flake8_eradicate-1.3.0-py3-none-any.whl", hash = "sha256:85a71e0c5f4e07f7c6c5fec520483561fd6bd295417d622855bdeade99242e3d"},
 ]
 flake8-executable = [
     {file = "flake8-executable-2.1.1.tar.gz", hash = "sha256:c6230a089ad49dbeef049d8e1e89591d9823f06c829cd9d6b1ca83b4b1d7f54f"},
@@ -3084,8 +3084,8 @@ pathspec = [
     {file = "pathspec-0.9.0.tar.gz", hash = "sha256:e564499435a2673d586f6b2130bb5b95f04a3ba06f81b8f895b651a3c76aabb1"},
 ]
 pbr = [
-    {file = "pbr-5.9.0-py2.py3-none-any.whl", hash = "sha256:e547125940bcc052856ded43be8e101f63828c2d94239ffbe2b327ba3d5ccf0a"},
-    {file = "pbr-5.9.0.tar.gz", hash = "sha256:e8dca2f4b43560edef58813969f52a56cef023146cbb8931626db80e6c1c4308"},
+    {file = "pbr-5.10.0-py2.py3-none-any.whl", hash = "sha256:da3e18aac0a3c003e9eea1a81bd23e5a3a75d745670dcf736317b7d966887fdf"},
+    {file = "pbr-5.10.0.tar.gz", hash = "sha256:cfcc4ff8e698256fc17ea3ff796478b050852585aa5bae79ecd05b2ab7b39b9a"},
 ]
 pep8-naming = []
 pexpect = [
@@ -3101,8 +3101,8 @@ platformdirs = [
     {file = "platformdirs-2.5.2.tar.gz", hash = "sha256:58c8abb07dcb441e6ee4b11d8df0ac856038f944ab98b7be6b27b2a3c7feef19"},
 ]
 plotly = [
-    {file = "plotly-5.9.0-py2.py3-none-any.whl", hash = "sha256:9acf168915101caac82ed6da3390840c622d9d4e4a78cbe1260f52501efc3117"},
-    {file = "plotly-5.9.0.tar.gz", hash = "sha256:b0536e72bbc0b3cf169ac1fd00759d77aae7bb12ae378cdc75c5dc362f5de576"},
+    {file = "plotly-5.10.0-py2.py3-none-any.whl", hash = "sha256:989b13825cc974390aa0169479485d9257d37848a47bc63957251f8e1a7046ba"},
+    {file = "plotly-5.10.0.tar.gz", hash = "sha256:4d36d9859b7a153b273562deeed8c292587a472eb1fd57cd4158ec89d9defadb"},
 ]
 pluggy = [
     {file = "pluggy-1.0.0-py2.py3-none-any.whl", hash = "sha256:74134bbf457f031a36d68416e1509f34bd5ccc019f0bcc952c7b909d06b37bd3"},
@@ -3301,8 +3301,8 @@ python-dotenv = [
     {file = "python_dotenv-0.20.0-py3-none-any.whl", hash = "sha256:d92a187be61fe482e4fd675b6d52200e7be63a12b724abbf931a40ce4fa92938"},
 ]
 pytz = [
-    {file = "pytz-2022.1-py2.py3-none-any.whl", hash = "sha256:e68985985296d9a66a881eb3193b0906246245294a881e7c8afe623866ac6a5c"},
-    {file = "pytz-2022.1.tar.gz", hash = "sha256:1e760e2fe6a8163bc0b3d9a19c4f84342afa0a2affebfaa84b01b978a02ecaa7"},
+    {file = "pytz-2022.2-py2.py3-none-any.whl", hash = "sha256:d9b245e63af49c4e51afdec5402f56b99c0cb483a84a12bb8b7db980386baade"},
+    {file = "pytz-2022.2.tar.gz", hash = "sha256:bc824559e43e8ab983426a49525079d186b25372ff63aa3430ccd527d95edc3a"},
 ]
 pyyaml = [
     {file = "PyYAML-6.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d4db7c7aef085872ef65a8fd7d6d09a14ae91f691dec3e87ee5ee0539d516f53"},
