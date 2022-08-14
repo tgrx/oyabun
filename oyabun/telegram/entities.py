@@ -20,6 +20,68 @@ class User(TelegramBotApiType):
     first_name: str = Field(...)
     last_name: Optional[str] = Field(None)
     username: Optional[str] = Field(None)
+    language_code: Optional[str] = Field(None)
+    is_premium: Optional[bool] = Field(None)
+    added_to_attachment_menu: Optional[bool] = Field(None)
+    can_join_groups: Optional[bool] = Field(None)
+    can_read_all_group_messages: Optional[bool] = Field(None)
+    supports_inline_queries: Optional[bool] = Field(None)
+
+
+class ChatPhoto(TelegramBotApiType):
+    """
+    This object represents a chat photo.
+
+    https://core.telegram.org/bots/api#chatphoto
+    """
+
+    small_file_id: str = Field(...)
+    small_file_unique_id: str = Field(...)
+    big_file_id: str = Field(...)
+    big_file_unique_id: str = Field(...)
+
+
+class ChatPermissions(TelegramBotApiType):
+    """
+    Describes actions that a non-administrator user is allowed to take in a chat.
+
+    https://core.telegram.org/bots/api#chatpermissions
+    """
+
+    can_send_messages: Optional[bool] = Field(None)
+    can_send_media_messages: Optional[bool] = Field(None)
+    can_send_polls: Optional[bool] = Field(None)
+    can_send_other_messages: Optional[bool] = Field(None)
+    can_add_web_page_previews: Optional[bool] = Field(None)
+    can_change_info: Optional[bool] = Field(None)
+    can_invite_users: Optional[bool] = Field(None)
+    can_pin_messages: Optional[bool] = Field(None)
+
+
+class Location(TelegramBotApiType):
+    """
+    This object represents a point on the map.
+
+    https://core.telegram.org/bots/api#location
+    """
+
+    longitude: float = Field(...)
+    latitude: float = Field(...)
+    horizontal_accuracy: Optional[float] = Field(None, ge=0, le=1500)
+    live_period: Optional[int] = Field(None)
+    heading: Optional[int] = Field(None, ge=1, le=360)
+    proximity_alert_radius: Optional[int] = Field(None)
+
+
+class ChatLocation(TelegramBotApiType):
+    """
+    Represents a location to which a chat is connected.
+
+    https://core.telegram.org/bots/api#chatlocation
+    """
+
+    location: Location = Field(...)
+    address: str = Field(...)
 
 
 class Chat(TelegramBotApiType):
@@ -30,8 +92,28 @@ class Chat(TelegramBotApiType):
     """
 
     id: int = Field(...)  # noqa: A003, VNE003
+    type: str = Field(...)  # noqa: A003, VNE003
     title: Optional[str] = Field(None)
     username: Optional[str] = Field(None)
+    first_name: Optional[str] = Field(None)
+    last_name: Optional[str] = Field(None)
+    photo: Optional[ChatPhoto] = Field(None)
+    bio: Optional[str] = Field(None)
+    has_private_forwards: Optional[bool] = Field(None)
+    has_restricted_voice_and_video_messages: Optional[bool] = Field(None)
+    join_to_send_messages: Optional[bool] = Field(None)
+    join_by_request: Optional[bool] = Field(None)
+    description: Optional[bool] = Field(None)
+    invite_link: Optional[bool] = Field(None)
+    pinned_message: Optional["Message"] = Field(None)
+    permissions: Optional[ChatPermissions] = Field(None)
+    slow_mode_delay: Optional[int] = Field(None)
+    message_auto_delete_time: Optional[int] = Field(None)
+    has_protected_content: Optional[bool] = Field(None)
+    sticker_set_name: Optional[str] = Field(None)
+    can_set_sticker_set: Optional[bool] = Field(None)
+    linked_chat_id: Optional[int] = Field(None)
+    location: Optional[ChatLocation] = Field(None)
 
 
 class MessageEntity(TelegramBotApiType):
@@ -90,6 +172,38 @@ class Message(TelegramBotApiType):
         }
 
 
+class CallbackQuery(TelegramBotApiType):
+    """
+    This object represents an incoming callback query
+    from a callback button in an inline keyboard.
+
+    If the button that originated the query
+    was attached to a message sent by the bot,
+    the field message will be present.
+
+    If the button was attached to a message
+    sent via the bot (in inline mode),
+    the field inline_message_id will be present.
+
+    Exactly one of the fields data or game_short_name will be present.
+
+    https://core.telegram.org/bots/api#callbackquery
+    """
+
+    id: str = Field(...)  # noqa: A003,VNE003
+    from_: User = Field(..., alias="from")
+    message: Optional[Message] = Field(None)
+    inline_message_id: Optional[str] = Field(None)
+    chat_instance: str = Field(...)
+    data: Optional[str] = Field(None)
+    game_short_name: Optional[str] = Field(None)
+
+    class Config:
+        fields = {
+            "from_": "from",
+        }
+
+
 class Update(TelegramBotApiType):
     """
     This object represents an incoming update.
@@ -105,6 +219,7 @@ class Update(TelegramBotApiType):
     edited_message: Optional[Message] = Field(None)
     channel_post: Optional[Message] = Field(None)
     edited_channel_post: Optional[Message] = Field(None)
+    callback_query: Optional[CallbackQuery] = Field(None)
 
 
 class WebhookInfo(TelegramBotApiType):
@@ -291,12 +406,17 @@ __all__ = (
     "BotCommand",
     "BotCommandScope",
     "BotCommandScopeDefault",
+    "CallbackQuery",
     "Chat",
+    "ChatLocation",
+    "ChatPermissions",
+    "ChatPhoto",
     "File",
     "ForceReply",
     "InlineKeyboardButton",
     "InlineKeyboardMarkup",
     "KeyboardButton",
+    "Location",
     "Message",
     "MessageEntity",
     "PhotoSize",

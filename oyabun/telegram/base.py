@@ -23,6 +23,7 @@ def orjson_dumps(value: Any, *, default: Any) -> str:
 class TelegramBotApiType(BaseModel):
     class Config:
         allow_population_by_field_name = True
+        extra = "forbid"
         json_dumps = orjson_dumps
         json_loads = orjson.loads
 

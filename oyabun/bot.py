@@ -9,8 +9,13 @@ from typing import Union
 from httpx import AsyncClient
 from httpx import Response as HttpResponse
 
+from oyabun.telegram import AnswerCallbackQueryRequest
+from oyabun.telegram import AnswerCallbackQueryResponse
+from oyabun.telegram import Chat
 from oyabun.telegram import DeleteWebhookResponse
 from oyabun.telegram import File
+from oyabun.telegram import GetChatRequest
+from oyabun.telegram import GetChatResponse
 from oyabun.telegram import GetFileRequest
 from oyabun.telegram import GetFileResponse
 from oyabun.telegram import GetMeResponse
@@ -25,12 +30,12 @@ from oyabun.telegram import SendPhotoRequest
 from oyabun.telegram import SendPhotoResponse
 from oyabun.telegram import SetWebhookRequest
 from oyabun.telegram import SetWebhookResponse
+from oyabun.telegram import Update
 from oyabun.telegram import User
 from oyabun.telegram import WebhookInfo
 from oyabun.telegram.base import Request
 from oyabun.telegram.base import Response
 from oyabun.telegram.entities import ReplyMarkupType
-from oyabun.telegram.entities import Update
 
 
 class Bot:
@@ -83,7 +88,30 @@ class Bot:
 
         return f"{self.TELEGRAM_BOT_API_URL}/file/bot{self.__token}"
 
-    async def downloadFile(self, file: File) -> BytesIO:
+    async def answerCallbackQuery(
+        self,
+        *,
+        callback_query_id: str,
+        text: Optional[str] = None,
+        show_alert: Optional[bool] = None,
+        url: Optional[str] = None,
+        cache_time: Optional[int] = None,
+    ) -> bool:
+        request = AnswerCallbackQueryRequest(
+            cache_time=cache_time,
+            callback_query_id=callback_query_id,
+            show_alert=show_alert,
+            text=text,
+            url=url,
+        )
+
+        return await self._call_api(
+            "answerCallbackQuery",
+            request,
+            response_cls=AnswerCallbackQueryResponse,
+        )
+
+    async def downloadFile(self, *, file: File) -> BytesIO:
         """
         Downloads the file's content into the BytesIO object.
 
@@ -100,7 +128,28 @@ class Bot:
 
         return await self._download_file(file.file_path)
 
-    async def getFile(self, file_id: str) -> File:
+    async def getChat(self, *, chat_id: Union[int, str]) -> Chat:
+        """
+        Use this method to get up to date information about the chat
+        (current name of the user for one-on-one conversations,
+        current username of a user, group or channel, etc.).
+
+        Returns a Chat object on success.
+
+        https://core.telegram.org/bots/api#getchat
+        """
+
+        request = GetChatRequest(
+            chat_id=chat_id,
+        )
+
+        return await self._call_api(
+            "getChat",
+            request,
+            response_cls=GetChatResponse,
+        )
+
+    async def getFile(self, *, file_id: str) -> File:
         """
         Use this method to get basic info about a file
         and prepare it for downloading.

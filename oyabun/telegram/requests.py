@@ -10,6 +10,18 @@ from oyabun.telegram.entities import MessageEntity
 from oyabun.telegram.entities import ReplyMarkupType
 
 
+class AnswerCallbackQueryRequest(Request):
+    callback_query_id: str = Field(...)
+    text: Optional[str] = Field(None)
+    show_alert: Optional[bool] = Field(None)
+    url: Optional[str] = Field(None)
+    cache_time: Optional[int] = Field(None)
+
+
+class GetChatRequest(Request):
+    chat_id: Union[int, str] = Field(...)
+
+
 class GetFileRequest(Request):
     file_id: str = Field(...)
 
@@ -67,7 +79,9 @@ class GetWebhookInfoRequest(Request):
 
 
 __models__: set[Type[Request]] = {
+    AnswerCallbackQueryRequest,
     DeleteWebhookRequest,
+    GetChatRequest,
     GetFileRequest,
     GetMeRequest,
     GetUpdatesRequest,
@@ -79,11 +93,13 @@ __models__: set[Type[Request]] = {
 
 __all__ = (
     "__models__",
+    "AnswerCallbackQueryRequest",
     "DeleteWebhookRequest",
+    "GetChatRequest",
     "GetFileRequest",
     "GetMeRequest",
-    "GetWebhookInfoRequest",
     "GetUpdatesRequest",
+    "GetWebhookInfoRequest",
     "SendMessageRequest",
     "SendPhotoRequest",
     "SetWebhookRequest",

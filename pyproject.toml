@@ -54,6 +54,7 @@ warn_unused_ignores = true
 [[tool.mypy.overrides]]
 ignore_missing_imports = true
 module = [
+    "PIL",
     "toml",
 ]
 
@@ -163,6 +164,7 @@ ipython = "^8.4.0"
 isort = "^5.10.1"
 mypy = "^0.971"
 pep8-naming = "^0.13.1"
+Pillow = "^9.2.0"
 pudb = "^2022.1.2"
 pyre-check = "^0.9.15"
 pytest = "^7.1.2"
