@@ -16,6 +16,10 @@ class AnswerCallbackQueryResponse(Response[bool]):
     result: bool = Field(False)
 
 
+class DeleteWebhookResponse(Response[bool]):
+    result: bool = Field(False)
+
+
 class GetChatResponse(Response[Chat]):
     result: Optional[Chat] = Field(None)
 
@@ -28,12 +32,12 @@ class GetMeResponse(Response[User]):
     result: Optional[User] = Field(None)
 
 
-class GetWebhookInfoResponse(Response[WebhookInfo]):
-    result: Optional[WebhookInfo] = Field(None)
-
-
 class GetUpdatesResponse(Response[list[Update]]):
     result: list[Update] = Field(default_factory=list)
+
+
+class GetWebhookInfoResponse(Response[WebhookInfo]):
+    result: Optional[WebhookInfo] = Field(None)
 
 
 class SendMessageResponse(Response[Message]):
@@ -45,10 +49,6 @@ class SendPhotoResponse(Response[Message]):
 
 
 class SetWebhookResponse(Response[bool]):
-    result: bool = Field(False)
-
-
-class DeleteWebhookResponse(Response[bool]):
     result: bool = Field(False)
 
 

@@ -6,6 +6,7 @@ from oyabun.telegram.base import Response
 from oyabun.telegram.base import ResponseParameters
 from oyabun.telegram.base import TelegramBotApiType
 from oyabun.telegram.entities import __models__ as __models__entities
+from oyabun.telegram.entities import Audio
 from oyabun.telegram.entities import BotCommand
 from oyabun.telegram.entities import BotCommandScope
 from oyabun.telegram.entities import BotCommandScopeDefault
@@ -14,19 +15,25 @@ from oyabun.telegram.entities import Chat
 from oyabun.telegram.entities import ChatLocation
 from oyabun.telegram.entities import ChatPermissions
 from oyabun.telegram.entities import ChatPhoto
+from oyabun.telegram.entities import Document
 from oyabun.telegram.entities import File
 from oyabun.telegram.entities import ForceReply
 from oyabun.telegram.entities import InlineKeyboardButton
 from oyabun.telegram.entities import InlineKeyboardMarkup
 from oyabun.telegram.entities import KeyboardButton
 from oyabun.telegram.entities import Location
+from oyabun.telegram.entities import MaskPosition
 from oyabun.telegram.entities import Message
 from oyabun.telegram.entities import MessageEntity
 from oyabun.telegram.entities import PhotoSize
 from oyabun.telegram.entities import ReplyKeyboardMarkup
 from oyabun.telegram.entities import ReplyKeyboardRemove
+from oyabun.telegram.entities import Sticker
 from oyabun.telegram.entities import Update
 from oyabun.telegram.entities import User
+from oyabun.telegram.entities import Video
+from oyabun.telegram.entities import VideoNote
+from oyabun.telegram.entities import Voice
 from oyabun.telegram.entities import WebhookInfo
 from oyabun.telegram.requests import __models__ as __models__requests
 from oyabun.telegram.requests import AnswerCallbackQueryRequest
@@ -64,6 +71,7 @@ for _model in __models__:
 __all__ = (
     "AnswerCallbackQueryRequest",
     "AnswerCallbackQueryResponse",
+    "Audio",
     "BotCommand",
     "BotCommandScope",
     "BotCommandScopeDefault",
@@ -74,6 +82,7 @@ __all__ = (
     "ChatPhoto",
     "DeleteWebhookRequest",
     "DeleteWebhookResponse",
+    "Document",
     "File",
     "ForceReply",
     "GetChatRequest",
@@ -90,6 +99,7 @@ __all__ = (
     "InlineKeyboardMarkup",
     "KeyboardButton",
     "Location",
+    "MaskPosition",
     "Message",
     "MessageEntity",
     "PhotoSize",
@@ -104,7 +114,11 @@ __all__ = (
     "SendPhotoResponse",
     "SetWebhookRequest",
     "SetWebhookResponse",
+    "Sticker",
     "Update",
     "User",
+    "Video",
+    "VideoNote",
+    "Voice",
     "WebhookInfo",
 )
