@@ -9,7 +9,6 @@ from typing import Callable
 
 import aiosqlite
 import orjson
-import platformdirs
 from devtools import debug
 from dotenv import load_dotenv
 from PIL import Image
@@ -25,8 +24,12 @@ load_dotenv()
 token = os.getenv("TELEGRAM_BOT_TOKEN") or ""
 assert token, "cannot start: TELEGRAM_BOT_TOKEN is not set"
 
-db_file = Path(__file__).parent.parent.resolve() / ".artifacts" / "samurai.db"
-db_file = db_file.resolve()
+DIR_REPO = Path(__file__).parent.parent.resolve()
+
+DIR_ARTIFACTS = (DIR_REPO / ".artifacts").resolve()
+assert DIR_ARTIFACTS.is_dir()
+
+db_file = DIR_ARTIFACTS / "samurai.db"
 
 
 async def main() -> None:
@@ -209,9 +212,7 @@ _Юзер_
                 text="кнопка ок!",
             )
 
-        home = Path(platformdirs.user_documents_dir()).parent.resolve()
-        desktop = (home / "Desktop").resolve()
-        ph = desktop / "clearsee_timeouts.png"
+        ph = DIR_REPO / "lenna.png"
 
         await bot.sendPhoto(
             caption="Теперь жду фото от тебя.",
