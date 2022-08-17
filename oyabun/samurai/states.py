@@ -7,5 +7,5 @@ class State(enum.Enum):
     S_WAIT_FOR_PLAIN_TEXT = "01"
     S_WAIT_FOR_EDITING_TEXT = "02"
     S_SEND_PHOTO = "03"
-    S_04_PHOTO_TO_BOT = "04-photo-to-bot"
-    FINISHED = "99-finished"
+    S_WAIT_FOR_PHOTO = "04"
+    FINISHED = "99"

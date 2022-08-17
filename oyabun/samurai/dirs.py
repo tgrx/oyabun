@@ -9,3 +9,5 @@ DIR_OYABUN = DIR_SAMURAI.parent.resolve()
 DIR_REPO = DIR_OYABUN.parent.resolve()
 
 DIR_ARTIFACTS = (DIR_REPO / ".artifacts").resolve()
+
+DIR_TMP = (DIR_REPO / "tmp").resolve()
