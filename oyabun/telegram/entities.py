@@ -145,6 +145,17 @@ class ChatPhoto(TelegramBotApiType):
     small_file_unique_id: str = Field(...)
 
 
+class Dice(TelegramBotApiType):
+    """
+    This object represents an animated emoji that displays a random value.
+
+    https://core.telegram.org/bots/api#dice
+    """
+
+    emoji: str = Field(...)
+    value: int = Field(...)
+
+
 class Document(TelegramBotApiType):
     """
     This object represents a general file
@@ -289,6 +300,7 @@ class Message(TelegramBotApiType):
     caption: Optional[str] = Field(None)
     chat: Chat = Field(...)
     date: datetime = Field(...)
+    dice: Optional[Dice] = Field(None)
     document: Optional[Document] = Field(None)
     edit_date: Optional[datetime] = Field(None)
     entities: Optional[list["MessageEntity"]] = Field(None)
@@ -516,6 +528,7 @@ __models__: set[Type[TelegramBotApiType]] = {
     ChatLocation,
     ChatPermissions,
     ChatPhoto,
+    Dice,
     Document,
     File,
     ForceReply,
@@ -549,6 +562,7 @@ __all__ = (
     "ChatLocation",
     "ChatPermissions",
     "ChatPhoto",
+    "Dice",
     "Document",
     "File",
     "ForceReply",

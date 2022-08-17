@@ -1,25 +1,31 @@
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from os import cpu_count
+from typing import TypeVar
 from typing import Union
 
 import orjson
 
 from oyabun.samurai.dirs import DIR_ARTIFACTS
-from oyabun.samurai.states import State
+
+StateT = TypeVar("StateT")
 
 
 class Persistence:
     DB_FILE = DIR_ARTIFACTS / "samurai.json"
 
-    async def load_state(self, user_id: Union[str, int]) -> State:
+    async def load_state(self, user_id: Union[str, int]) -> StateT:
         db = await self._load_db()
-        value = db.get("user_states", {}).get(user_id) or State.UNKNOWN.value
-        return State(value)
+        state: StateT = db.get("user_states", {}).get(str(user_id))
+        return state
 
-    async def store_state(self, user_id: Union[str, int], state: State) -> None:
+    async def store_state(
+        self,
+        user_id: Union[str, int],
+        state: StateT,
+    ) -> None:
         db = await self._load_db()
-        db.setdefault("user_states", {})[user_id] = state.value
+        db.setdefault("user_states", {})[str(user_id)] = state
         await self._store_db(db)
 
     async def load_updates_offset(self) -> int:
@@ -32,20 +38,25 @@ class Persistence:
         db["updates_offset"] = updates_offset
         await self._store_db(db)
 
-    def __init__(self):
+    def __init__(self) -> None:
+        nr_cpus = cpu_count()
+        assert nr_cpus
+
         self.__executor = ThreadPoolExecutor(
-            max_workers=cpu_count() * 2 + 1,
+            max_workers=nr_cpus * 2 + 1,
             thread_name_prefix=self.__class__.__name__,
         )
 
     async def _load_db(self) -> dict:
-        def _do():
+        def _do() -> dict:
             if not self.DB_FILE.is_file():
                 return {}
 
             with self.DB_FILE.open("r") as stream:
                 try:
-                    return orjson.loads(stream.read())
+                    db = orjson.loads(stream.read())
+                    assert isinstance(db, dict)
+                    return db
                 except orjson.JSONDecodeError:
                     return {}
 
@@ -53,8 +64,12 @@ class Persistence:
         return await loop.run_in_executor(self.__executor, _do)
 
     async def _store_db(self, db: dict) -> None:
-        def _sync():
-            options = orjson.OPT_INDENT_2 | orjson.OPT_SORT_KEYS | orjson.OPT_APPEND_NEWLINE
+        def _sync() -> None:
+            options = (
+                orjson.OPT_INDENT_2
+                | orjson.OPT_SORT_KEYS  # noqa: W503
+                | orjson.OPT_APPEND_NEWLINE  # noqa: W503
+            )
             with self.DB_FILE.open("wb") as stream:
                 stream.write(orjson.dumps(db, option=options))
 

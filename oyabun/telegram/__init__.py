@@ -15,6 +15,7 @@ from oyabun.telegram.entities import Chat
 from oyabun.telegram.entities import ChatLocation
 from oyabun.telegram.entities import ChatPermissions
 from oyabun.telegram.entities import ChatPhoto
+from oyabun.telegram.entities import Dice
 from oyabun.telegram.entities import Document
 from oyabun.telegram.entities import File
 from oyabun.telegram.entities import ForceReply
@@ -82,6 +83,7 @@ __all__ = (
     "ChatPhoto",
     "DeleteWebhookRequest",
     "DeleteWebhookResponse",
+    "Dice",
     "Document",
     "File",
     "ForceReply",

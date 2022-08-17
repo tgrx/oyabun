@@ -6,8 +6,7 @@ omit = \
 	.git/*
 	.github/*
 	.run/*
-	.venv/*
-	oyabun/samurai.py
+	oyabun/samurai/*
 	tmp/*
 relative_files = True
 source = oyabun
