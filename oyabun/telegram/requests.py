@@ -6,6 +6,7 @@ from typing import Union
 from pydantic import Field
 
 from oyabun.telegram.base import Request
+from oyabun.telegram.entities import InlineKeyboardMarkup
 from oyabun.telegram.entities import MessageEntity
 from oyabun.telegram.entities import ReplyMarkupType
 
@@ -20,6 +21,17 @@ class AnswerCallbackQueryRequest(Request):
 
 class DeleteWebhookRequest(Request):
     drop_pending_updates: Optional[bool] = Field(None)
+
+
+class EditMessageTextRequest(Request):
+    chat_id: Optional[Union[int, str]] = Field(None)
+    disable_web_page_preview: Optional[bool] = Field(None)
+    entities: Optional[list[MessageEntity]] = Field(None)
+    inline_message_id: Optional[str] = Field(None)
+    message_id: Optional[int] = Field(None)
+    parse_mode: Optional[str] = Field(None)
+    reply_markup: Optional[InlineKeyboardMarkup] = Field(None)
+    text: str = Field(...)
 
 
 class GetChatRequest(Request):
@@ -81,6 +93,7 @@ class SetWebhookRequest(Request):
 __models__: set[Type[Request]] = {
     AnswerCallbackQueryRequest,
     DeleteWebhookRequest,
+    EditMessageTextRequest,
     GetChatRequest,
     GetFileRequest,
     GetMeRequest,
@@ -95,6 +108,7 @@ __all__ = (
     "__models__",
     "AnswerCallbackQueryRequest",
     "DeleteWebhookRequest",
+    "EditMessageTextRequest",
     "GetChatRequest",
     "GetFileRequest",
     "GetMeRequest",

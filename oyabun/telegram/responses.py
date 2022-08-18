@@ -1,5 +1,6 @@
 from typing import Optional
 from typing import Type
+from typing import Union
 
 from pydantic import Field
 
@@ -18,6 +19,10 @@ class AnswerCallbackQueryResponse(Response[bool]):
 
 class DeleteWebhookResponse(Response[bool]):
     result: bool = Field(False)
+
+
+class EditMessageTextResponse(Response[Union[Message, bool]]):
+    result: Optional[Union[Message, bool]] = Field(None)
 
 
 class GetChatResponse(Response[Chat]):
@@ -55,6 +60,7 @@ class SetWebhookResponse(Response[bool]):
 __models__: set[Type[Response]] = {
     AnswerCallbackQueryResponse,
     DeleteWebhookResponse,
+    EditMessageTextResponse,
     GetChatResponse,
     GetFileResponse,
     GetMeResponse,
@@ -69,6 +75,7 @@ __all__ = (
     "__models__",
     "AnswerCallbackQueryResponse",
     "DeleteWebhookResponse",
+    "EditMessageTextResponse",
     "GetChatResponse",
     "GetFileResponse",
     "GetMeResponse",

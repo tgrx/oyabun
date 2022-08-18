@@ -39,6 +39,7 @@ from oyabun.telegram.entities import WebhookInfo
 from oyabun.telegram.requests import __models__ as __models__requests
 from oyabun.telegram.requests import AnswerCallbackQueryRequest
 from oyabun.telegram.requests import DeleteWebhookRequest
+from oyabun.telegram.requests import EditMessageTextRequest
 from oyabun.telegram.requests import GetChatRequest
 from oyabun.telegram.requests import GetFileRequest
 from oyabun.telegram.requests import GetMeRequest
@@ -50,6 +51,7 @@ from oyabun.telegram.requests import SetWebhookRequest
 from oyabun.telegram.responses import __models__ as __models__responses
 from oyabun.telegram.responses import AnswerCallbackQueryResponse
 from oyabun.telegram.responses import DeleteWebhookResponse
+from oyabun.telegram.responses import EditMessageTextResponse
 from oyabun.telegram.responses import GetChatResponse
 from oyabun.telegram.responses import GetFileResponse
 from oyabun.telegram.responses import GetMeResponse
@@ -85,6 +87,8 @@ __all__ = (
     "DeleteWebhookResponse",
     "Dice",
     "Document",
+    "EditMessageTextRequest",
+    "EditMessageTextResponse",
     "File",
     "ForceReply",
     "GetChatRequest",
