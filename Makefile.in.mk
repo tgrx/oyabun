@@ -41,8 +41,8 @@ endif
 # Paths
 
 DIR_ARTIFACTS := $(abspath $(DIR_REPO)/.artifacts)
-DIR_SRC := $(abspath $(DIR_REPO)/oyabun)
-DIR_TESTS := $(abspath $(DIR_REPO)/tests)
+DIR_OYABUN := $(abspath $(DIR_REPO)/oyabun)
+DIR_SAMURAI := $(abspath $(DIR_REPO)/samurai)
 
 
 # -----------------------------------------------

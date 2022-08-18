@@ -6,8 +6,8 @@ from typing import Type
 from typing import TypeVar
 from typing import Union
 
-from httpx import AsyncClient
-from httpx import Response as HttpResponse
+import aiohttp
+import orjson
 
 from oyabun.telegram import AnswerCallbackQueryRequest
 from oyabun.telegram import AnswerCallbackQueryResponse
@@ -247,7 +247,7 @@ class Bot:
 
     async def getChat(self, *, chat_id: Union[int, str]) -> Chat:
         """
-        Use this method to get up to date information about the chat
+        Use this method to get up-to-date information about the chat
         (current name of the user for one-on-one conversations,
         current username of a user, group or channel, etc.).
 
@@ -297,7 +297,7 @@ class Bot:
 
     async def getMe(self) -> User:
         """
-        A simple method for testing your bot's auth token.
+        A simple method for testing your bot auth token.
 
         https://core.telegram.org/bots/api#getme
 
@@ -388,7 +388,7 @@ class Bot:
         instructions to remove reply keyboard
         or to force a reply from the user.
 
-        :return: on success, the sent Message.
+        :return: on success, the Message sent.
         """
 
         request = SendMessageRequest(
@@ -469,7 +469,7 @@ class Bot:
         instructions to remove reply keyboard
         or to force a reply from the user.
 
-        :return: on success, the sent Message.
+        :return: on success, the Message sent.
         """
 
         request = SendPhotoRequest(
@@ -520,21 +520,20 @@ class Bot:
         :param method: name of the supported Telegram Bot API method
 
         :param request: request object,
-        composed from input params of public method
+        composed of input params of public method
 
         :param response_cls: desired response class with actual result type
 
         :return: object of response class' result type
         """
 
-        try:
-            url = f"{self.api_url}/{method}"
+        url = f"{self.api_url}/{method}"
 
+        try:
             # for methods which do not need request at all
             request = request or Request()
 
-            client: AsyncClient
-            async with AsyncClient() as client:
+            async with aiohttp.ClientSession() as session:
                 with request.files() as files:
                     # if files, data must be of multipart/form-data
                     # otherwise JSON bytes with Content-Type=application/json
@@ -547,23 +546,24 @@ class Bot:
                     if timeout:
                         kw["timeout"] = timeout * 2
 
-                    http_response: HttpResponse = await client.post(
+                    req_ctx = session.post(
                         url,
-                        # mypy can't into X if P else Y
-                        data=data,  # type: ignore
+                        data=data,
                         files=files,
                         headers=headers,
-                        **kw,  # type: ignore
+                        **kw,
                     )
 
-            if http_response.status_code != 200:
-                raise self.RequestError(http_response.content)
+                    async with req_ctx as http_response:
+                        body = await http_response.read()
 
-            payload = http_response.json()
+                        if http_response.status != 200:
+                            raise self.RequestError(body.decode())
+
+            payload = orjson.loads(body)
             if not payload:
-                raise self.RequestError(
-                    f"unexpected empty payload on /{method}"
-                )
+                err = f"unexpected empty payload on /{method}"
+                raise self.RequestError(err)
 
             # actual&valid Telegram response
             response = response_cls.parse_obj(payload)
@@ -572,9 +572,8 @@ class Bot:
                 raise self.RequestError(response.description)
 
             if response.result is None:
-                raise self.RequestError(
-                    f"unexpected null result on /{method} -> {response}"
-                )
+                err = f"unexpected null result on /{method} -> {response}"
+                raise self.RequestError(err)
 
             return response.result
 
@@ -601,15 +600,14 @@ class Bot:
         try:
             url = f"{self.file_url}/{file_path}"
 
-            client: AsyncClient
-            async with AsyncClient() as client:
-                http_response: HttpResponse = await client.get(url)
-
-            if http_response.status_code != 200:
-                raise self.RequestError(http_response.content)
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as http_response:
+                    body = await http_response.read()
+                    if http_response.status != 200:
+                        raise self.RequestError(body.decode())
 
             buffer = BytesIO()
-            buffer.write(http_response.content)
+            buffer.write(body)
             buffer.seek(0)
 
             return buffer

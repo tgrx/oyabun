@@ -5,11 +5,11 @@ from typing import TypeVar
 from devtools import debug
 
 from oyabun.bot import Bot
+from oyabun.telegram import Chat
+from oyabun.telegram import Update
 from samurai.fsm.actions import AbstractAction
 from samurai.persistence import Persistence
 from samurai.util import json_dumps
-from oyabun.telegram import Chat
-from oyabun.telegram import Update
 
 StateT = TypeVar("StateT")
 

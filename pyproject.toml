@@ -93,8 +93,6 @@ classifiers = [
 exclude = [
     "*.pyc",
     "*.pyo",
-    "*.tests",
-    "*.tests.*",
     "*_test.*",
     "*~",
     ".artifacts/*",
@@ -113,8 +111,7 @@ exclude = [
     "Makefile*",
     "poetry.lock",
     "poetry.toml",
-    "tests.*",
-    "tests/*",
+    "samurai/*",
     "tmp/*",
 ]
 include = [
@@ -124,13 +121,11 @@ include = [
 
 [tool.poetry.dependencies]
 aiohttp = {extras = ["speedups"], version = "^3.8.1"}
-httpx = "^0.23.0"
 orjson = "^3.7.11"
-pydantic = {extras = ["dotenv"], version = "^1.9.1"}
+pydantic = "^1.9.1"
 python = "^3.9"
 
 [tool.poetry.dev-dependencies]
-aiosqlite = "^0.17.0"
 attrs = "^22.1.0"
 black = "^22.6.0"
 devtools = {extras = ["pygments"], version = "^0.9.0"}
@@ -171,7 +166,6 @@ pytest-asyncio = "^0.19.0"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.8.2"
 python-dotenv = "^0.20.0"
-uvicorn = {extras = ["standard"], version = "^0.18.2"}
 
 [build-system]
 build-backend = "poetry.core.masonry.api"

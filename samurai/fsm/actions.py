@@ -5,12 +5,12 @@ from devtools import debug
 from PIL import Image
 
 from oyabun.bot import Bot
-from samurai.dirs import DIR_REPO
-from samurai.dirs import DIR_TMP
-from samurai.util import json_dumps
 from oyabun.telegram import InlineKeyboardButton
 from oyabun.telegram import InlineKeyboardMarkup
 from oyabun.telegram import Update
+from samurai.dirs import DIR_REPO
+from samurai.dirs import DIR_TMP
+from samurai.util import json_dumps
 
 
 class AbstractAction(abc.ABC):

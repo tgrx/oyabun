@@ -1,5 +1,5 @@
 import pytest
 
 pytestmark = [
-    pytest.mark.asyncio
+    pytest.mark.asyncio,
 ]

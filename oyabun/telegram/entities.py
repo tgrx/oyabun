@@ -426,6 +426,30 @@ class Update(TelegramBotApiType):
     message: Optional[Message] = Field(None)
     update_id: int = Field(...)
 
+    def get_chat(self) -> Chat:
+        if self.message:
+            return self.message.chat
+
+        if self.edited_message:
+            return self.edited_message.chat
+
+        if (cbq := self.callback_query) and cbq.message:
+            return cbq.message.chat
+
+        raise ValueError(f"cannot get chat from {self}")
+
+    def get_user(self) -> "User":
+        if (obj := self.message) and obj.from_:
+            return obj.from_
+
+        if (obj := self.edited_message) and obj.from_:
+            return obj.from_
+
+        if self.callback_query:
+            return self.callback_query.from_
+
+        raise ValueError(f"cannot get user from {self}")
+
 
 class User(TelegramBotApiType):
     """
