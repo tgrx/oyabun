@@ -5,9 +5,9 @@ from typing import TypeVar
 from devtools import debug
 
 from oyabun.bot import Bot
-from oyabun.samurai.fsm.actions import AbstractAction
-from oyabun.samurai.persistence import Persistence
-from oyabun.samurai.util import json_dumps
+from samurai.fsm.actions import AbstractAction
+from samurai.persistence import Persistence
+from samurai.util import json_dumps
 from oyabun.telegram import Chat
 from oyabun.telegram import Update
 

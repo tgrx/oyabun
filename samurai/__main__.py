@@ -5,10 +5,10 @@ from devtools import debug
 from dotenv import load_dotenv
 
 from oyabun.bot import Bot
-from oyabun.samurai.fsm import actions
-from oyabun.samurai.fsm.machine import FSM
-from oyabun.samurai.persistence import Persistence
-from oyabun.samurai.states import State
+from samurai.fsm import actions
+from samurai.fsm.machine import FSM
+from samurai.persistence import Persistence
+from samurai.states import State
 from oyabun.telegram import User
 
 load_dotenv()

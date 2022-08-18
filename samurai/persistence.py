@@ -6,7 +6,7 @@ from typing import Union
 
 import orjson
 
-from oyabun.samurai.dirs import DIR_ARTIFACTS
+from samurai.dirs import DIR_ARTIFACTS
 
 StateT = TypeVar("StateT")
 
