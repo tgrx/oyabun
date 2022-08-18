@@ -23,6 +23,23 @@ class DeleteWebhookRequest(Request):
     drop_pending_updates: Optional[bool] = Field(None)
 
 
+class EditMessageCaptionRequest(Request):
+    caption: Optional[str] = Field(None)
+    caption_entities: Optional[list[MessageEntity]] = Field(None)
+    chat_id: Optional[Union[int, str]] = Field(None)
+    inline_message_id: Optional[str] = Field(None)
+    message_id: Optional[int] = Field(None)
+    parse_mode: Optional[str] = Field(None)
+    reply_markup: Optional[InlineKeyboardMarkup] = Field(None)
+
+
+class EditMessageReplyMarkupRequest(Request):
+    chat_id: Optional[Union[int, str]] = Field(None)
+    inline_message_id: Optional[str] = Field(None)
+    message_id: Optional[int] = Field(None)
+    reply_markup: Optional[InlineKeyboardMarkup] = Field(None)
+
+
 class EditMessageTextRequest(Request):
     chat_id: Optional[Union[int, str]] = Field(None)
     disable_web_page_preview: Optional[bool] = Field(None)
@@ -93,6 +110,8 @@ class SetWebhookRequest(Request):
 __models__: set[Type[Request]] = {
     AnswerCallbackQueryRequest,
     DeleteWebhookRequest,
+    EditMessageCaptionRequest,
+    EditMessageReplyMarkupRequest,
     EditMessageTextRequest,
     GetChatRequest,
     GetFileRequest,
@@ -108,6 +127,8 @@ __all__ = (
     "__models__",
     "AnswerCallbackQueryRequest",
     "DeleteWebhookRequest",
+    "EditMessageCaptionRequest",
+    "EditMessageReplyMarkupRequest",
     "EditMessageTextRequest",
     "GetChatRequest",
     "GetFileRequest",

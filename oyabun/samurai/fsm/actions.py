@@ -150,6 +150,16 @@ class SendPhoto(AbstractAction):
         message = update.callback_query.message
         assert message
 
+        await self._bot.editMessageReplyMarkup(
+            chat_id=message.chat.id,
+            message_id=message.message_id,
+            reply_markup=InlineKeyboardMarkup(
+                inline_keyboard=[
+                    [],
+                ],
+            ),
+        )
+
         await self._bot.sendPhoto(
             caption="Lena Forsén",
             chat_id=message.chat.id,
@@ -188,10 +198,15 @@ class ReplyWithProcessedPhoto(AbstractAction):
         with file_path.open("wb") as stream:
             image.save(stream)
 
-        await self._bot.sendPhoto(
-            caption="B & W",
+        sent = await self._bot.sendPhoto(
             chat_id=message.chat.id,
             photo=file_path,
+        )
+
+        await self._bot.editMessageCaption(
+            caption="Noir",
+            chat_id=sent.chat.id,
+            message_id=sent.message_id,
         )
 
         await self._bot.sendMessage(

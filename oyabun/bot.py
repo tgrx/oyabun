@@ -9,11 +9,16 @@ from typing import Union
 from httpx import AsyncClient
 from httpx import Response as HttpResponse
 
-from oyabun.telegram import AnswerCallbackQueryRequest, EditMessageTextResponse
+from oyabun.telegram import AnswerCallbackQueryRequest
 from oyabun.telegram import AnswerCallbackQueryResponse
 from oyabun.telegram import Chat
 from oyabun.telegram import DeleteWebhookResponse
+from oyabun.telegram import EditMessageCaptionRequest
+from oyabun.telegram import EditMessageCaptionResponse
+from oyabun.telegram import EditMessageReplyMarkupRequest
+from oyabun.telegram import EditMessageReplyMarkupResponse
 from oyabun.telegram import EditMessageTextRequest
+from oyabun.telegram import EditMessageTextResponse
 from oyabun.telegram import File
 from oyabun.telegram import GetChatRequest
 from oyabun.telegram import GetChatResponse
@@ -23,6 +28,7 @@ from oyabun.telegram import GetMeResponse
 from oyabun.telegram import GetUpdatesRequest
 from oyabun.telegram import GetUpdatesResponse
 from oyabun.telegram import GetWebhookInfoResponse
+from oyabun.telegram import InlineKeyboardMarkup
 from oyabun.telegram import Message
 from oyabun.telegram import MessageEntity
 from oyabun.telegram import SendMessageRequest
@@ -36,7 +42,6 @@ from oyabun.telegram import User
 from oyabun.telegram import WebhookInfo
 from oyabun.telegram.base import Request
 from oyabun.telegram.base import Response
-from oyabun.telegram.entities import InlineKeyboardMarkup
 from oyabun.telegram.entities import ReplyMarkupType
 
 
@@ -135,6 +140,72 @@ class Bot:
             raise self.RequestError(f"file {file} has no file_path set")
 
         return await self._download_file(file.file_path)
+
+    async def editMessageCaption(
+        self,
+        *,
+        caption: Optional[str] = None,
+        caption_entities: Optional[list[MessageEntity]] = None,
+        chat_id: Optional[Union[int, str]] = None,
+        inline_message_id: Optional[str] = None,
+        message_id: Optional[int] = None,
+        parse_mode: Optional[str] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Union[bool, Message]:
+        """
+        Use this method to edit captions of messages.
+
+        On success, if the edited message is not an inline message,
+        the edited Message is returned, otherwise True is returned.
+
+        https://core.telegram.org/bots/api#editmessagecaption
+        """
+
+        request = EditMessageCaptionRequest(
+            caption=caption,
+            caption_entities=caption_entities,
+            chat_id=chat_id,
+            inline_message_id=inline_message_id,
+            message_id=message_id,
+            parse_mode=parse_mode,
+            reply_markup=reply_markup,
+        )
+
+        return await self._call_api(
+            "editMessageCaption",
+            request,
+            response_cls=EditMessageCaptionResponse,
+        )
+
+    async def editMessageReplyMarkup(
+        self,
+        *,
+        chat_id: Optional[Union[int, str]] = None,
+        inline_message_id: Optional[str] = None,
+        message_id: Optional[int] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Union[bool, Message]:
+        """
+        Use this method to edit only the reply markup of messages.
+
+        On success, if the edited message is not an inline message,
+        the edited Message is returned, otherwise True is returned.
+
+        https://core.telegram.org/bots/api#editmessagereplymarkup
+        """
+
+        request = EditMessageReplyMarkupRequest(
+            chat_id=chat_id,
+            inline_message_id=inline_message_id,
+            message_id=message_id,
+            reply_markup=reply_markup,
+        )
+
+        return await self._call_api(
+            "editMessageReplyMarkup",
+            request,
+            response_cls=EditMessageReplyMarkupResponse,
+        )
 
     async def editMessageText(
         self,

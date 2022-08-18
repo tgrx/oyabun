@@ -21,6 +21,14 @@ class DeleteWebhookResponse(Response[bool]):
     result: bool = Field(False)
 
 
+class EditMessageCaptionResponse(Response[Union[Message, bool]]):
+    result: Optional[Union[Message, bool]] = Field(None)
+
+
+class EditMessageReplyMarkupResponse(Response[Union[Message, bool]]):
+    result: Optional[Union[Message, bool]] = Field(None)
+
+
 class EditMessageTextResponse(Response[Union[Message, bool]]):
     result: Optional[Union[Message, bool]] = Field(None)
 
@@ -60,6 +68,8 @@ class SetWebhookResponse(Response[bool]):
 __models__: set[Type[Response]] = {
     AnswerCallbackQueryResponse,
     DeleteWebhookResponse,
+    EditMessageCaptionResponse,
+    EditMessageReplyMarkupResponse,
     EditMessageTextResponse,
     GetChatResponse,
     GetFileResponse,
@@ -75,6 +85,8 @@ __all__ = (
     "__models__",
     "AnswerCallbackQueryResponse",
     "DeleteWebhookResponse",
+    "EditMessageCaptionResponse",
+    "EditMessageReplyMarkupResponse",
     "EditMessageTextResponse",
     "GetChatResponse",
     "GetFileResponse",
