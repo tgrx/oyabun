@@ -9,10 +9,11 @@ from typing import Union
 from httpx import AsyncClient
 from httpx import Response as HttpResponse
 
-from oyabun.telegram import AnswerCallbackQueryRequest
+from oyabun.telegram import AnswerCallbackQueryRequest, EditMessageTextResponse
 from oyabun.telegram import AnswerCallbackQueryResponse
 from oyabun.telegram import Chat
 from oyabun.telegram import DeleteWebhookResponse
+from oyabun.telegram import EditMessageTextRequest
 from oyabun.telegram import File
 from oyabun.telegram import GetChatRequest
 from oyabun.telegram import GetChatResponse
@@ -35,6 +36,7 @@ from oyabun.telegram import User
 from oyabun.telegram import WebhookInfo
 from oyabun.telegram.base import Request
 from oyabun.telegram.base import Response
+from oyabun.telegram.entities import InlineKeyboardMarkup
 from oyabun.telegram.entities import ReplyMarkupType
 
 
@@ -111,6 +113,12 @@ class Bot:
             response_cls=AnswerCallbackQueryResponse,
         )
 
+    async def deleteWebhook(self) -> bool:
+        return await self._call_api(
+            "deleteWebhook",
+            response_cls=DeleteWebhookResponse,
+        )
+
     async def downloadFile(self, *, file: File) -> BytesIO:
         """
         Downloads the file's content into the BytesIO object.
@@ -127,6 +135,44 @@ class Bot:
             raise self.RequestError(f"file {file} has no file_path set")
 
         return await self._download_file(file.file_path)
+
+    async def editMessageText(
+        self,
+        *,
+        chat_id: Optional[Union[int, str]] = None,
+        disable_web_page_preview: Optional[bool] = None,
+        entities: Optional[list[MessageEntity]] = None,
+        inline_message_id: Optional[str] = None,
+        message_id: Optional[int] = None,
+        parse_mode: Optional[str] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+        text: str,
+    ) -> Union[bool, Message]:
+        """
+        Use this method to edit text and game messages.
+
+        On success, if the edited message is not an inline message,
+        the edited Message is returned, otherwise True is returned.
+
+        https://core.telegram.org/bots/api#editmessagetext
+        """
+
+        request = EditMessageTextRequest(
+            chat_id=chat_id,
+            disable_web_page_preview=disable_web_page_preview,
+            entities=entities,
+            inline_message_id=inline_message_id,
+            message_id=message_id,
+            parse_mode=parse_mode,
+            reply_markup=reply_markup,
+            text=text,
+        )
+
+        return await self._call_api(
+            "editMessageText",
+            request,
+            response_cls=EditMessageTextResponse,
+        )
 
     async def getChat(self, *, chat_id: Union[int, str]) -> Chat:
         """
@@ -218,23 +264,6 @@ class Bot:
         return await self._call_api(
             "getWebhookInfo",
             response_cls=GetWebhookInfoResponse,
-        )
-
-    async def deleteWebhook(self) -> bool:
-        return await self._call_api(
-            "deleteWebhook",
-            response_cls=DeleteWebhookResponse,
-        )
-
-    async def setWebhook(self, *, url: str) -> bool:
-        request = SetWebhookRequest(
-            url=url,
-        )
-
-        return await self._call_api(
-            "setWebhook",
-            request,
-            response_cls=SetWebhookResponse,
         )
 
     async def sendMessage(
@@ -386,6 +415,17 @@ class Bot:
 
         return await self._call_api(
             "sendPhoto", request, response_cls=SendPhotoResponse
+        )
+
+    async def setWebhook(self, *, url: str) -> bool:
+        request = SetWebhookRequest(
+            url=url,
+        )
+
+        return await self._call_api(
+            "setWebhook",
+            request,
+            response_cls=SetWebhookResponse,
         )
 
     _T = TypeVar(

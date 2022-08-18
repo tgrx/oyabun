@@ -208,7 +208,15 @@ class Restart(AbstractAction):
         message = update.message
         assert message
 
-        await self._bot.sendMessage(
+        text = "If you want to restart the test, just type 'restart'."
+
+        sent = await self._bot.sendMessage(
             chat_id=message.chat.id,
-            text="If you want to restart the test, just type 'restart'.",
+            text=text,
+        )
+
+        await self._bot.editMessageText(
+            chat_id=sent.chat.id,
+            message_id=sent.message_id,
+            text=f"{text}.\n\nUPD: or use: /start",
         )
