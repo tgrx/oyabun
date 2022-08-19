@@ -4,7 +4,6 @@ from typing import IO
 from typing import Optional
 from typing import Type
 from typing import TypeVar
-from typing import Union
 
 import aiohttp
 import orjson
@@ -146,12 +145,12 @@ class Bot:
         *,
         caption: Optional[str] = None,
         caption_entities: Optional[list[MessageEntity]] = None,
-        chat_id: Optional[Union[int, str]] = None,
+        chat_id: Optional[int | str] = None,
         inline_message_id: Optional[str] = None,
         message_id: Optional[int] = None,
         parse_mode: Optional[str] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Union[bool, Message]:
+    ) -> bool | Message:
         """
         Use this method to edit captions of messages.
 
@@ -180,11 +179,11 @@ class Bot:
     async def editMessageReplyMarkup(
         self,
         *,
-        chat_id: Optional[Union[int, str]] = None,
+        chat_id: Optional[int | str] = None,
         inline_message_id: Optional[str] = None,
         message_id: Optional[int] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Union[bool, Message]:
+    ) -> bool | Message:
         """
         Use this method to edit only the reply markup of messages.
 
@@ -210,7 +209,7 @@ class Bot:
     async def editMessageText(
         self,
         *,
-        chat_id: Optional[Union[int, str]] = None,
+        chat_id: Optional[int | str] = None,
         disable_web_page_preview: Optional[bool] = None,
         entities: Optional[list[MessageEntity]] = None,
         inline_message_id: Optional[str] = None,
@@ -218,7 +217,7 @@ class Bot:
         parse_mode: Optional[str] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
         text: str,
-    ) -> Union[bool, Message]:
+    ) -> bool | Message:
         """
         Use this method to edit text and game messages.
 
@@ -245,7 +244,7 @@ class Bot:
             response_cls=EditMessageTextResponse,
         )
 
-    async def getChat(self, *, chat_id: Union[int, str]) -> Chat:
+    async def getChat(self, *, chat_id: int | str) -> Chat:
         """
         Use this method to get up-to-date information about the chat
         (current name of the user for one-on-one conversations,
@@ -340,7 +339,7 @@ class Bot:
     async def sendMessage(
         self,
         *,
-        chat_id: Union[int, str],
+        chat_id: int | str,
         text: str,
         parse_mode: Optional[str] = None,
         entities: Optional[list[MessageEntity]] = None,
@@ -412,8 +411,8 @@ class Bot:
     async def sendPhoto(
         self,
         *,
-        chat_id: Union[int, str],
-        photo: Union[str, Path, IO],
+        chat_id: int | str,
+        photo: str | Path | IO,
         caption: Optional[str] = None,  # 0-1024
         parse_mode: Optional[str] = None,
         caption_entities: Optional[list[MessageEntity]] = None,

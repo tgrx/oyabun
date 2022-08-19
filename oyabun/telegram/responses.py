@@ -1,6 +1,5 @@
 from typing import Optional
 from typing import Type
-from typing import Union
 
 from pydantic import Field
 
@@ -21,16 +20,16 @@ class DeleteWebhookResponse(Response[bool]):
     result: bool = Field(False)
 
 
-class EditMessageCaptionResponse(Response[Union[Message, bool]]):
-    result: Optional[Union[Message, bool]] = Field(None)
+class EditMessageCaptionResponse(Response[bool | Message]):
+    result: Optional[bool | Message] = Field(None)
 
 
-class EditMessageReplyMarkupResponse(Response[Union[Message, bool]]):
-    result: Optional[Union[Message, bool]] = Field(None)
+class EditMessageReplyMarkupResponse(Response[bool | Message]):
+    result: Optional[bool | Message] = Field(None)
 
 
-class EditMessageTextResponse(Response[Union[Message, bool]]):
-    result: Optional[Union[Message, bool]] = Field(None)
+class EditMessageTextResponse(Response[bool | Message]):
+    result: Optional[bool | Message] = Field(None)
 
 
 class GetChatResponse(Response[Chat]):

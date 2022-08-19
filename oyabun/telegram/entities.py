@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Optional
 from typing import Type
-from typing import Union
 
 from pydantic import Field
 
@@ -535,12 +534,12 @@ class WebhookInfo(TelegramBotApiType):
     url: str = Field(...)
 
 
-ReplyMarkupType = Union[
-    ForceReply,
-    InlineKeyboardMarkup,
-    ReplyKeyboardMarkup,
-    ReplyKeyboardRemove,
-]
+ReplyMarkupType = (
+    ForceReply
+    | InlineKeyboardMarkup  # noqa: W503
+    | ReplyKeyboardMarkup  # noqa: W503
+    | ReplyKeyboardRemove  # noqa: W503
+)
 
 __models__: set[Type[TelegramBotApiType]] = {
     Audio,

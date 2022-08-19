@@ -9,7 +9,6 @@ from typing import Iterator
 from typing import Optional
 from typing import Type
 from typing import TypeVar
-from typing import Union
 
 import orjson
 from pydantic import BaseModel
@@ -46,7 +45,7 @@ class TelegramBotApiType(BaseModel):
     def json(self, **kw: Any) -> str:  # noqa: A003, VNE003
         self._prepare_export_kw(kw)
 
-        value: Union[str, bytes] = super().json(**kw)
+        value: str | bytes = super().json(**kw)
         if isinstance(value, str):
             return value
 
@@ -62,7 +61,7 @@ class Request(TelegramBotApiType):
     def files(self) -> Iterator[dict[str, IO]]:
         opened_files: list[IO] = []
 
-        def open_file(_path_or_io: Union[Path, IO]) -> IO:
+        def open_file(_path_or_io: Path | IO) -> IO:
             if isinstance(_path_or_io, BytesIO):
                 return _path_or_io
             assert isinstance(_path_or_io, Path)
@@ -81,12 +80,12 @@ class Request(TelegramBotApiType):
             for fp in opened_files:
                 fp.close()
 
-    def _get_input_files(self) -> dict[str, Union[Path, IO]]:
+    def _get_input_files(self) -> dict[str, Path | IO]:
         fields_values: Generator[tuple[str, Any], None, None] = (
             (attr, getattr(self, attr, None)) for attr in self.__fields__
         )
 
-        fields_files: Generator[tuple[str, Union[Path, IO]], None, None] = (
+        fields_files: Generator[tuple[str, Path | IO], None, None] = (
             field_value
             for field_value in fields_values
             if isinstance(field_value[1], (Path, BytesIO))

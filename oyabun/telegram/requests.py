@@ -1,7 +1,6 @@
 from typing import Any
 from typing import Optional
 from typing import Type
-from typing import Union
 
 from pydantic import Field
 
@@ -26,7 +25,7 @@ class DeleteWebhookRequest(Request):
 class EditMessageCaptionRequest(Request):
     caption: Optional[str] = Field(None)
     caption_entities: Optional[list[MessageEntity]] = Field(None)
-    chat_id: Optional[Union[int, str]] = Field(None)
+    chat_id: Optional[int | str] = Field(None)
     inline_message_id: Optional[str] = Field(None)
     message_id: Optional[int] = Field(None)
     parse_mode: Optional[str] = Field(None)
@@ -34,14 +33,14 @@ class EditMessageCaptionRequest(Request):
 
 
 class EditMessageReplyMarkupRequest(Request):
-    chat_id: Optional[Union[int, str]] = Field(None)
+    chat_id: Optional[int | str] = Field(None)
     inline_message_id: Optional[str] = Field(None)
     message_id: Optional[int] = Field(None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(None)
 
 
 class EditMessageTextRequest(Request):
-    chat_id: Optional[Union[int, str]] = Field(None)
+    chat_id: Optional[int | str] = Field(None)
     disable_web_page_preview: Optional[bool] = Field(None)
     entities: Optional[list[MessageEntity]] = Field(None)
     inline_message_id: Optional[str] = Field(None)
@@ -52,7 +51,7 @@ class EditMessageTextRequest(Request):
 
 
 class GetChatRequest(Request):
-    chat_id: Union[int, str] = Field(...)
+    chat_id: int | str = Field(...)
 
 
 class GetFileRequest(Request):
@@ -76,7 +75,7 @@ class GetWebhookInfoRequest(Request):
 
 class SendMessageRequest(Request):
     allow_sending_without_reply: Optional[bool] = Field(None)
-    chat_id: Union[int, str] = Field(...)
+    chat_id: int | str = Field(...)
     disable_notification: Optional[bool] = Field(None)
     disable_web_page_preview: Optional[bool] = Field(None)
     entities: Optional[list[MessageEntity]] = Field(None)
@@ -90,7 +89,7 @@ class SendPhotoRequest(Request):
     allow_sending_without_reply: Optional[bool] = Field(None)
     caption: Optional[str] = Field(None)
     caption_entities: Optional[list[MessageEntity]] = Field(None)
-    chat_id: Union[int, str] = Field(...)
+    chat_id: int | str = Field(...)
     disable_notification: Optional[bool] = Field(None)
     parse_mode: Optional[str] = Field(None)
     photo: Any = Field(...)
