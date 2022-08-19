@@ -1,5 +1,7 @@
+from contextlib import asynccontextmanager
 from io import BytesIO
 from pathlib import Path
+from typing import AsyncGenerator
 from typing import IO
 from typing import Type
 from typing import TypeVar
@@ -64,14 +66,37 @@ class Bot:
 
         pass
 
-    def __init__(self, token: str):
+    def __init__(
+        self,
+        token: str,
+        *,
+        session: aiohttp.ClientSession | None = None,
+    ):
         """
         Sets up the new Bot instance.
 
         :param token: a bot token which BotFather gives to you.
+        :param session: existing ClientSession or None (bot will use its own)
         """
 
+        self.__session = session
         self.__token = token
+
+    @asynccontextmanager
+    async def client_session(
+        self,
+    ) -> AsyncGenerator[aiohttp.ClientSession, None]:
+        if self.__session:
+            yield self.__session
+            return
+
+        async with aiohttp.ClientSession() as session:
+            prev = self.__session
+            try:
+                self.__session = session
+                yield self.__session
+            finally:
+                self.__session = prev
 
     @property
     def api_url(self) -> str:
@@ -531,7 +556,7 @@ class Bot:
             # for methods which do not need the request at all
             request = request or Request()
 
-            async with aiohttp.ClientSession() as session:
+            async with self.client_session() as session:
                 data: aiohttp.FormData | bytes
 
                 with request.files() as files:
@@ -603,7 +628,7 @@ class Bot:
         try:
             url = f"{self.file_url}/{file_path}"
 
-            async with aiohttp.ClientSession() as session:
+            async with self.client_session() as session:
                 async with session.get(url) as http_response:
                     body = await http_response.read()
                     if http_response.status != 200:
