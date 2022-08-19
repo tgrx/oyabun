@@ -2,7 +2,7 @@
 
 _— the extreme path_
 
-A library for building Telegram apps.
+A library for building Telegram bots.
 
 ![shimizu no jirocho](https://github.com/tgrx/oyabun/raw/main/docs/img/shimizu_no_jirocho.jpg)
 
@@ -15,7 +15,7 @@ By *strict* we mean that all types and methods in the library interface
 are mapped to those described in the Telegram API docs.
 
 You won't meet any auxiliary stuff like sophisticated OOP/async patterns,
-obscure event loops and listeners and that like kind of stuff.
+obscure event loops and listeners and the kind of stuff like that.
 
 API types are Pydantic models with strict type hints.
 
