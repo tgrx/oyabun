@@ -1,7 +1,6 @@
 from io import BytesIO
 from pathlib import Path
 from typing import IO
-from typing import Optional
 from typing import Type
 from typing import TypeVar
 
@@ -98,10 +97,10 @@ class Bot:
         self,
         *,
         callback_query_id: str,
-        text: Optional[str] = None,
-        show_alert: Optional[bool] = None,
-        url: Optional[str] = None,
-        cache_time: Optional[int] = None,
+        text: None | str = None,
+        show_alert: None | bool = None,
+        url: None | str = None,
+        cache_time: None | int = None,
     ) -> bool:
         request = AnswerCallbackQueryRequest(
             cache_time=cache_time,
@@ -143,13 +142,13 @@ class Bot:
     async def editMessageCaption(
         self,
         *,
-        caption: Optional[str] = None,
-        caption_entities: Optional[list[MessageEntity]] = None,
-        chat_id: Optional[int | str] = None,
-        inline_message_id: Optional[str] = None,
-        message_id: Optional[int] = None,
-        parse_mode: Optional[str] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
+        caption: None | str = None,
+        caption_entities: None | list[MessageEntity] | None = None,
+        chat_id: None | int | str | None = None,
+        inline_message_id: None | str | None = None,
+        message_id: None | int | None = None,
+        parse_mode: None | str | None = None,
+        reply_markup: None | InlineKeyboardMarkup | None = None,
     ) -> bool | Message:
         """
         Use this method to edit captions of messages.
@@ -179,10 +178,10 @@ class Bot:
     async def editMessageReplyMarkup(
         self,
         *,
-        chat_id: Optional[int | str] = None,
-        inline_message_id: Optional[str] = None,
-        message_id: Optional[int] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
+        chat_id: None | int | str | None = None,
+        inline_message_id: None | str | None = None,
+        message_id: None | int | None = None,
+        reply_markup: None | InlineKeyboardMarkup | None = None,
     ) -> bool | Message:
         """
         Use this method to edit only the reply markup of messages.
@@ -209,13 +208,13 @@ class Bot:
     async def editMessageText(
         self,
         *,
-        chat_id: Optional[int | str] = None,
-        disable_web_page_preview: Optional[bool] = None,
-        entities: Optional[list[MessageEntity]] = None,
-        inline_message_id: Optional[str] = None,
-        message_id: Optional[int] = None,
-        parse_mode: Optional[str] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
+        chat_id: None | int | str | None = None,
+        disable_web_page_preview: None | bool = None,
+        entities: None | list[MessageEntity] = None,
+        inline_message_id: None | str = None,
+        message_id: None | int = None,
+        parse_mode: None | str = None,
+        reply_markup: None | InlineKeyboardMarkup = None,
         text: str,
     ) -> bool | Message:
         """
@@ -311,10 +310,10 @@ class Bot:
     async def getUpdates(
         self,
         *,
-        offset: Optional[int] = None,
-        limit: Optional[int] = None,
-        timeout: Optional[int] = None,
-        allowed_updates: Optional[list[str]] = None,
+        offset: None | int = None,
+        limit: None | int = None,
+        timeout: None | int = None,
+        allowed_updates: None | list[str] = None,
     ) -> list[Update]:
         request = GetUpdatesRequest(
             allowed_updates=allowed_updates,
@@ -341,13 +340,13 @@ class Bot:
         *,
         chat_id: int | str,
         text: str,
-        parse_mode: Optional[str] = None,
-        entities: Optional[list[MessageEntity]] = None,
-        disable_web_page_preview: Optional[bool] = None,
-        disable_notification: Optional[bool] = None,
-        reply_to_message_id: Optional[int] = None,
-        allow_sending_without_reply: Optional[bool] = None,
-        reply_markup: Optional[ReplyMarkupType] = None,
+        parse_mode: None | str = None,
+        entities: None | list[MessageEntity] = None,
+        disable_web_page_preview: None | bool = None,
+        disable_notification: None | bool = None,
+        reply_to_message_id: None | int = None,
+        allow_sending_without_reply: None | bool = None,
+        reply_markup: None | ReplyMarkupType = None,
     ) -> Message:
         """
         Use this method to send text messages.
@@ -413,13 +412,13 @@ class Bot:
         *,
         chat_id: int | str,
         photo: str | Path | IO,
-        caption: Optional[str] = None,  # 0-1024
-        parse_mode: Optional[str] = None,
-        caption_entities: Optional[list[MessageEntity]] = None,
-        disable_notification: Optional[bool] = None,
-        reply_to_message_id: Optional[int] = None,
-        allow_sending_without_reply: Optional[bool] = None,
-        reply_markup: Optional[ReplyMarkupType] = None,
+        caption: None | str = None,  # 0-1024
+        parse_mode: None | str = None,
+        caption_entities: None | list[MessageEntity] = None,
+        disable_notification: None | bool = None,
+        reply_to_message_id: None | int = None,
+        allow_sending_without_reply: None | bool = None,
+        reply_markup: None | ReplyMarkupType = None,
     ) -> Message:
         """
         Use this method to send photos.
@@ -505,10 +504,10 @@ class Bot:
     async def _call_api(  # noqa: CCR001
         self,
         method: str,
-        request: Optional[Request] = None,
+        request: None | Request = None,
         *,
         response_cls: Type[Response[_T]] = Response[_T],
-        timeout: Optional[int] = None,
+        timeout: None | int = None,
     ) -> _T:
         """
         Performs the call to the Bot API returning a value of proper type.

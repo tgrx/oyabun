@@ -17,13 +17,13 @@ class Audio(TelegramBotApiType):
 
     duration: int = Field(...)
     file_id: str = Field(...)
-    file_name: Optional[str] = Field(None)
-    file_size: Optional[int] = Field(None)
+    file_name: None | str = Field(None)
+    file_size: None | int = Field(None)
     file_unique_id: str = Field(...)
-    mime_type: Optional[str] = Field(None)
-    performer: Optional[str] = Field(None)
+    mime_type: None | str = Field(None)
+    performer: None | str = Field(None)
     thumb: Optional["PhotoSize"] = Field(None)
-    title: Optional[str] = Field(None)
+    title: None | str = Field(None)
 
 
 class BotCommand(TelegramBotApiType):
@@ -36,7 +36,7 @@ class BotCommandScope(TelegramBotApiType):
 
 
 class BotCommandScopeDefault(BotCommandScope):
-    type: str = "default"  # noqa: A003,VNE003
+    type: str = Field("default")  # noqa: A003,VNE003
 
 
 class CallbackQuery(TelegramBotApiType):
@@ -58,11 +58,11 @@ class CallbackQuery(TelegramBotApiType):
     """
 
     chat_instance: str = Field(...)
-    data: Optional[str] = Field(None)
+    data: None | str = Field(None)
     from_: "User" = Field(..., alias="from")
-    game_short_name: Optional[str] = Field(None)
+    game_short_name: None | str = Field(None)
     id: str = Field(...)  # noqa: A003,VNE003
-    inline_message_id: Optional[str] = Field(None)
+    inline_message_id: None | str = Field(None)
     message: Optional["Message"] = Field(None)
 
     class Config:
@@ -78,29 +78,29 @@ class Chat(TelegramBotApiType):
     https://core.telegram.org/bots/api#chat
     """
 
-    bio: Optional[str] = Field(None)
-    can_set_sticker_set: Optional[bool] = Field(None)
-    description: Optional[bool] = Field(None)
-    first_name: Optional[str] = Field(None)
-    has_private_forwards: Optional[bool] = Field(None)
-    has_protected_content: Optional[bool] = Field(None)
-    has_restricted_voice_and_video_messages: Optional[bool] = Field(None)
+    bio: None | str = Field(None)
+    can_set_sticker_set: None | bool = Field(None)
+    description: None | bool = Field(None)
+    first_name: None | str = Field(None)
+    has_private_forwards: None | bool = Field(None)
+    has_protected_content: None | bool = Field(None)
+    has_restricted_voice_and_video_messages: None | bool = Field(None)
     id: int = Field(...)  # noqa: A003, VNE003
-    invite_link: Optional[bool] = Field(None)
-    join_by_request: Optional[bool] = Field(None)
-    join_to_send_messages: Optional[bool] = Field(None)
-    last_name: Optional[str] = Field(None)
-    linked_chat_id: Optional[int] = Field(None)
+    invite_link: None | bool = Field(None)
+    join_by_request: None | bool = Field(None)
+    join_to_send_messages: None | bool = Field(None)
+    last_name: None | str = Field(None)
+    linked_chat_id: None | int = Field(None)
     location: Optional["ChatLocation"] = Field(None)
-    message_auto_delete_time: Optional[int] = Field(None)
+    message_auto_delete_time: None | int = Field(None)
     permissions: Optional["ChatPermissions"] = Field(None)
     photo: Optional["ChatPhoto"] = Field(None)
     pinned_message: Optional["Message"] = Field(None)
-    slow_mode_delay: Optional[int] = Field(None)
-    sticker_set_name: Optional[str] = Field(None)
-    title: Optional[str] = Field(None)
+    slow_mode_delay: None | int = Field(None)
+    sticker_set_name: None | str = Field(None)
+    title: None | str = Field(None)
     type: str = Field(...)  # noqa: A003, VNE003
-    username: Optional[str] = Field(None)
+    username: None | str = Field(None)
 
 
 class ChatLocation(TelegramBotApiType):
@@ -121,14 +121,14 @@ class ChatPermissions(TelegramBotApiType):
     https://core.telegram.org/bots/api#chatpermissions
     """
 
-    can_add_web_page_previews: Optional[bool] = Field(None)
-    can_change_info: Optional[bool] = Field(None)
-    can_invite_users: Optional[bool] = Field(None)
-    can_pin_messages: Optional[bool] = Field(None)
-    can_send_media_messages: Optional[bool] = Field(None)
-    can_send_messages: Optional[bool] = Field(None)
-    can_send_other_messages: Optional[bool] = Field(None)
-    can_send_polls: Optional[bool] = Field(None)
+    can_add_web_page_previews: None | bool = Field(None)
+    can_change_info: None | bool = Field(None)
+    can_invite_users: None | bool = Field(None)
+    can_pin_messages: None | bool = Field(None)
+    can_send_media_messages: None | bool = Field(None)
+    can_send_messages: None | bool = Field(None)
+    can_send_other_messages: None | bool = Field(None)
+    can_send_polls: None | bool = Field(None)
 
 
 class ChatPhoto(TelegramBotApiType):
@@ -164,17 +164,17 @@ class Document(TelegramBotApiType):
     """
 
     file_id: str = Field(...)
-    file_name: Optional[str] = Field(None)
-    file_size: Optional[int] = Field(None)
+    file_name: None | str = Field(None)
+    file_size: None | int = Field(None)
     file_unique_id: str = Field(...)
-    mime_type: Optional[str] = Field(None)
+    mime_type: None | str = Field(None)
     thumb: Optional["PhotoSize"] = Field(None)
 
 
 class File(TelegramBotApiType):
     file_id: str = Field(...)
-    file_path: Optional[str] = Field(None)
-    file_size: Optional[int] = Field(None)
+    file_path: None | str = Field(None)
+    file_size: None | int = Field(None)
     file_unique_id: str = Field(...)
 
 
@@ -226,9 +226,9 @@ class InlineKeyboardButton(TelegramBotApiType):
     https://core.telegram.org/bots/api#inlinekeyboardbutton
     """
 
-    callback_data: Optional[str] = Field(None, min_length=1, max_length=64)
+    callback_data: None | str = Field(None, min_length=1, max_length=64)
     text: str = Field(...)
-    url: Optional[str] = Field(None)
+    url: None | str = Field(None)
 
 
 class InlineKeyboardMarkup(TelegramBotApiType):
@@ -267,12 +267,12 @@ class Location(TelegramBotApiType):
     https://core.telegram.org/bots/api#location
     """
 
-    heading: Optional[int] = Field(None, ge=1, le=360)
-    horizontal_accuracy: Optional[float] = Field(None, ge=0, le=1500)
+    heading: None | int = Field(None, ge=1, le=360)
+    horizontal_accuracy: None | float = Field(None, ge=0, le=1500)
     latitude: float = Field(...)
-    live_period: Optional[int] = Field(None)
+    live_period: None | int = Field(None)
     longitude: float = Field(...)
-    proximity_alert_radius: Optional[int] = Field(None)
+    proximity_alert_radius: None | int = Field(None)
 
 
 class MaskPosition(TelegramBotApiType):
@@ -295,13 +295,13 @@ class Message(TelegramBotApiType):
     https://core.telegram.org/bots/api#message
     """
 
-    audio: Optional[Audio] = Field(None)
-    caption: Optional[str] = Field(None)
+    audio: None | Audio = Field(None)
+    caption: None | str = Field(None)
     chat: Chat = Field(...)
     date: datetime = Field(...)
-    dice: Optional[Dice] = Field(None)
-    document: Optional[Document] = Field(None)
-    edit_date: Optional[datetime] = Field(None)
+    dice: None | Dice = Field(None)
+    document: None | Document = Field(None)
+    edit_date: None | datetime = Field(None)
     entities: Optional[list["MessageEntity"]] = Field(None)
     from_: Optional["User"] = Field(None, alias="from")
     message_id: int = Field(...)
@@ -309,7 +309,7 @@ class Message(TelegramBotApiType):
     reply_markup: Optional["InlineKeyboardMarkup"] = Field(None)
     reply_to_message: Optional["Message"] = Field(None)
     sticker: Optional["Sticker"] = Field(None)
-    text: Optional[str] = Field(None)
+    text: None | str = Field(None)
     video: Optional["Video"] = Field(None)
     video_note: Optional["VideoNote"] = Field(None)
     voice: Optional["Voice"] = Field(None)
@@ -329,11 +329,11 @@ class MessageEntity(TelegramBotApiType):
     https://core.telegram.org/bots/api#messageentity
     """
 
-    language: Optional[str] = Field(None)
+    language: None | str = Field(None)
     length: int = Field(...)
     offset: int = Field(...)
     type: str = Field(...)  # noqa: A003, VNE003
-    url: Optional[str] = Field(None)
+    url: None | str = Field(None)
     user: Optional["User"] = Field(None)
 
 
@@ -345,7 +345,7 @@ class PhotoSize(TelegramBotApiType):
     """
 
     file_id: str = Field(...)
-    file_size: Optional[int] = Field(None)
+    file_size: None | int = Field(None)
     file_unique_id: str = Field(...)
     height: int = Field(...)
     width: int = Field(...)
@@ -391,19 +391,19 @@ class Sticker(TelegramBotApiType):
     https://core.telegram.org/bots/api#sticker
     """
 
-    custom_emoji_id: Optional[str] = Field(None)
-    emoji: Optional[str] = Field(None)
+    custom_emoji_id: None | str = Field(None)
+    emoji: None | str = Field(None)
     file_id: str = Field(...)
-    file_size: Optional[int] = Field(None)
+    file_size: None | int = Field(None)
     file_unique_id: str = Field(...)
     height: int = Field(...)
     is_animated: bool = Field(...)
-    is_premium: Optional[bool] = Field(None)
+    is_premium: None | bool = Field(None)
     is_video: bool = Field(...)
-    mask_position: Optional[MaskPosition] = Field(None)
-    premium_animation: Optional[File] = Field(None)
-    set_name: Optional[str] = Field(None)
-    thumb: Optional[PhotoSize] = Field(None)
+    mask_position: None | MaskPosition = Field(None)
+    premium_animation: None | File = Field(None)
+    set_name: None | str = Field(None)
+    thumb: None | PhotoSize = Field(None)
     type: str = Field(...)  # noqa: A003,VNE003
     width: int = Field(...)
 
@@ -418,11 +418,11 @@ class Update(TelegramBotApiType):
     https://core.telegram.org/bots/api#update
     """
 
-    callback_query: Optional[CallbackQuery] = Field(None)
-    channel_post: Optional[Message] = Field(None)
-    edited_channel_post: Optional[Message] = Field(None)
-    edited_message: Optional[Message] = Field(None)
-    message: Optional[Message] = Field(None)
+    callback_query: None | CallbackQuery = Field(None)
+    channel_post: None | Message = Field(None)
+    edited_channel_post: None | Message = Field(None)
+    edited_message: None | Message = Field(None)
+    message: None | Message = Field(None)
     update_id: int = Field(...)
 
     def get_chat(self) -> Chat:
@@ -457,17 +457,17 @@ class User(TelegramBotApiType):
     https://core.telegram.org/bots/api#user
     """
 
-    added_to_attachment_menu: Optional[bool] = Field(None)
-    can_join_groups: Optional[bool] = Field(None)
-    can_read_all_group_messages: Optional[bool] = Field(None)
+    added_to_attachment_menu: None | bool = Field(None)
+    can_join_groups: None | bool = Field(None)
+    can_read_all_group_messages: None | bool = Field(None)
     first_name: str = Field(...)
     id: int = Field(...)  # noqa: A003, VNE003
     is_bot: bool = Field(...)
-    is_premium: Optional[bool] = Field(None)
-    language_code: Optional[str] = Field(None)
-    last_name: Optional[str] = Field(None)
-    supports_inline_queries: Optional[bool] = Field(None)
-    username: Optional[str] = Field(None)
+    is_premium: None | bool = Field(None)
+    language_code: None | str = Field(None)
+    last_name: None | str = Field(None)
+    supports_inline_queries: None | bool = Field(None)
+    username: None | str = Field(None)
 
 
 class Video(TelegramBotApiType):
@@ -479,12 +479,12 @@ class Video(TelegramBotApiType):
 
     duration: int = Field(...)
     file_id: str = Field(...)
-    file_name: Optional[str] = Field(None)
-    file_size: Optional[int] = Field(None)
+    file_name: None | str = Field(None)
+    file_size: None | int = Field(None)
     file_unique_id: str = Field(...)
     height: int = Field(...)
-    mime_type: Optional[str] = Field(None)
-    thumb: Optional[PhotoSize] = Field(None)
+    mime_type: None | str = Field(None)
+    thumb: None | PhotoSize = Field(None)
     width: int = Field(...)
 
 
@@ -497,10 +497,10 @@ class VideoNote(TelegramBotApiType):
 
     duration: int = Field(...)
     file_id: str = Field(...)
-    file_size: Optional[int] = Field(None)
+    file_size: None | int = Field(None)
     file_unique_id: str = Field(...)
     length: int = Field(...)
-    thumb: Optional[PhotoSize] = Field(None)
+    thumb: None | PhotoSize = Field(None)
 
 
 class Voice(TelegramBotApiType):
@@ -512,9 +512,9 @@ class Voice(TelegramBotApiType):
 
     duration: int = Field(...)
     file_id: str = Field(...)
-    file_size: Optional[int] = Field(None)
+    file_size: None | int = Field(None)
     file_unique_id: str = Field(...)
-    mime_type: Optional[str] = Field(None)
+    mime_type: None | str = Field(None)
 
 
 class WebhookInfo(TelegramBotApiType):
@@ -524,12 +524,12 @@ class WebhookInfo(TelegramBotApiType):
     https://core.telegram.org/bots/api#webhookinfo
     """
 
-    allowed_updates: Optional[list[str]] = Field(None)
+    allowed_updates: list[str] | None = Field(None)
     has_custom_certificate: bool = Field(...)
-    ip_address: Optional[str] = Field(None)
-    last_error_date: Optional[datetime] = Field(None)
-    last_error_message: Optional[str] = Field(None)
-    max_connections: Optional[int] = Field(None)
+    ip_address: None | str = Field(None)
+    last_error_date: None | datetime = Field(None)
+    last_error_message: None | str = Field(None)
+    max_connections: None | int = Field(None)
     pending_update_count: int = Field(0)
     url: str = Field(...)
 

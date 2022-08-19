@@ -6,7 +6,6 @@ from typing import Generator
 from typing import Generic
 from typing import IO
 from typing import Iterator
-from typing import Optional
 from typing import Type
 from typing import TypeVar
 
@@ -99,8 +98,8 @@ class Request(TelegramBotApiType):
 
 
 class ResponseParameters(TelegramBotApiType):
-    migrate_to_chat_id: Optional[int] = Field(None)
-    retry_after: Optional[int] = Field(None)
+    migrate_to_chat_id: None | int = Field(None)
+    retry_after: None | int = Field(None)
 
 
 ResponseResultT = TypeVar("ResponseResultT")
@@ -127,10 +126,10 @@ class Response(Generic[ResponseResultT], TelegramBotApiType):
     """
 
     ok: bool = Field(...)
-    result: Optional[ResponseResultT] = Field(None)
-    error_code: Optional[int] = Field(None)
-    description: Optional[str] = Field(None)
-    parameters: Optional[ResponseParameters] = Field(None)
+    result: None | ResponseResultT = Field(None)
+    error_code: None | int = Field(None)
+    description: None | str = Field(None)
+    parameters: None | ResponseParameters = Field(None)
 
 
 BaseModelType = Type[BaseModel]

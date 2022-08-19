@@ -1,5 +1,4 @@
 from typing import Any
-from typing import Optional
 from typing import Type
 
 from pydantic import Field
@@ -11,42 +10,42 @@ from oyabun.telegram.entities import ReplyMarkupType
 
 
 class AnswerCallbackQueryRequest(Request):
-    cache_time: Optional[int] = Field(None)
+    cache_time: None | int = Field(None)
     callback_query_id: str = Field(...)
-    show_alert: Optional[bool] = Field(None)
-    text: Optional[str] = Field(None)
-    url: Optional[str] = Field(None)
+    show_alert: None | bool = Field(None)
+    text: None | str = Field(None)
+    url: None | str = Field(None)
 
 
 class DeleteWebhookRequest(Request):
-    drop_pending_updates: Optional[bool] = Field(None)
+    drop_pending_updates: None | bool = Field(None)
 
 
 class EditMessageCaptionRequest(Request):
-    caption: Optional[str] = Field(None)
-    caption_entities: Optional[list[MessageEntity]] = Field(None)
-    chat_id: Optional[int | str] = Field(None)
-    inline_message_id: Optional[str] = Field(None)
-    message_id: Optional[int] = Field(None)
-    parse_mode: Optional[str] = Field(None)
-    reply_markup: Optional[InlineKeyboardMarkup] = Field(None)
+    caption: None | str = Field(None)
+    caption_entities: None | list[MessageEntity] = Field(None)
+    chat_id: None | int | str = Field(None)
+    inline_message_id: None | str = Field(None)
+    message_id: None | int = Field(None)
+    parse_mode: None | str = Field(None)
+    reply_markup: None | InlineKeyboardMarkup = Field(None)
 
 
 class EditMessageReplyMarkupRequest(Request):
-    chat_id: Optional[int | str] = Field(None)
-    inline_message_id: Optional[str] = Field(None)
-    message_id: Optional[int] = Field(None)
-    reply_markup: Optional[InlineKeyboardMarkup] = Field(None)
+    chat_id: None | int | str = Field(None)
+    inline_message_id: None | str = Field(None)
+    message_id: None | int = Field(None)
+    reply_markup: None | InlineKeyboardMarkup = Field(None)
 
 
 class EditMessageTextRequest(Request):
-    chat_id: Optional[int | str] = Field(None)
-    disable_web_page_preview: Optional[bool] = Field(None)
-    entities: Optional[list[MessageEntity]] = Field(None)
-    inline_message_id: Optional[str] = Field(None)
-    message_id: Optional[int] = Field(None)
-    parse_mode: Optional[str] = Field(None)
-    reply_markup: Optional[InlineKeyboardMarkup] = Field(None)
+    chat_id: None | int | str = Field(None)
+    disable_web_page_preview: None | bool = Field(None)
+    entities: None | list[MessageEntity] = Field(None)
+    inline_message_id: None | str = Field(None)
+    message_id: None | int = Field(None)
+    parse_mode: None | str = Field(None)
+    reply_markup: None | InlineKeyboardMarkup = Field(None)
     text: str = Field(...)
 
 
@@ -63,10 +62,10 @@ class GetMeRequest(Request):
 
 
 class GetUpdatesRequest(Request):
-    allowed_updates: Optional[list[str]] = Field(None)
-    limit: Optional[int] = Field(None, le=100, ge=1)
-    offset: Optional[int] = Field(None)
-    timeout: Optional[int] = Field(None, ge=0)
+    allowed_updates: None | list[str] = Field(None)
+    limit: None | int = Field(None, le=100, ge=1)
+    offset: None | int = Field(None)
+    timeout: None | int = Field(None, ge=0)
 
 
 class GetWebhookInfoRequest(Request):
@@ -74,35 +73,35 @@ class GetWebhookInfoRequest(Request):
 
 
 class SendMessageRequest(Request):
-    allow_sending_without_reply: Optional[bool] = Field(None)
+    allow_sending_without_reply: None | bool = Field(None)
     chat_id: int | str = Field(...)
-    disable_notification: Optional[bool] = Field(None)
-    disable_web_page_preview: Optional[bool] = Field(None)
-    entities: Optional[list[MessageEntity]] = Field(None)
-    parse_mode: Optional[str] = Field(None)
-    reply_markup: Optional[ReplyMarkupType] = Field(None)
-    reply_to_message_id: Optional[int] = Field(None)
+    disable_notification: None | bool = Field(None)
+    disable_web_page_preview: None | bool = Field(None)
+    entities: None | list[MessageEntity] = Field(None)
+    parse_mode: None | str = Field(None)
+    reply_markup: None | ReplyMarkupType = Field(None)
+    reply_to_message_id: None | int = Field(None)
     text: str = Field(...)
 
 
 class SendPhotoRequest(Request):
-    allow_sending_without_reply: Optional[bool] = Field(None)
-    caption: Optional[str] = Field(None)
-    caption_entities: Optional[list[MessageEntity]] = Field(None)
+    allow_sending_without_reply: None | bool = Field(None)
+    caption: None | str = Field(None)
+    caption_entities: None | list[MessageEntity] = Field(None)
     chat_id: int | str = Field(...)
-    disable_notification: Optional[bool] = Field(None)
-    parse_mode: Optional[str] = Field(None)
+    disable_notification: None | bool = Field(None)
+    parse_mode: None | str = Field(None)
     photo: Any = Field(...)
-    reply_markup: Optional[ReplyMarkupType] = Field(None)
-    reply_to_message_id: Optional[int] = Field(None)
+    reply_markup: None | ReplyMarkupType = Field(None)
+    reply_to_message_id: None | int = Field(None)
 
 
 class SetWebhookRequest(Request):
-    allowed_updates: Optional[list[str]] = Field(None)
+    allowed_updates: None | list[str] = Field(None)
     certificate: Any = Field(None)
-    drop_pending_updates: Optional[bool] = Field(None)
-    ip_address: Optional[str] = Field(None)
-    max_connections: Optional[int] = Field(None)
+    drop_pending_updates: None | bool = Field(None)
+    ip_address: None | str = Field(None)
+    max_connections: None | int = Field(None)
     url: str = Field(...)
 
 
