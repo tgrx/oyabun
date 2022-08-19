@@ -1,13 +1,11 @@
 [tool.black]
 line-length = 79
-target-version = ["py39"]
+target-version = ["py310"]
 exclude = '''
   /(
       \.git
     | \.artifacts
-    | \.github
     | \.run
-    | \.venv
   )/
 '''
 
@@ -39,11 +37,11 @@ check_untyped_defs = true
 disallow_incomplete_defs = true
 disallow_untyped_calls = true
 disallow_untyped_defs = true
-files = ["oyabun"]
+files = ["oyabun", "samurai"]
 no_implicit_optional = true
 plugins = ["pydantic.mypy"]
 pretty = true
-python_version = "3.9"
+python_version = "3.10"
 show_error_context = true
 sqlite_cache = true
 warn_redundant_casts = true
@@ -54,6 +52,7 @@ warn_unused_ignores = true
 [[tool.mypy.overrides]]
 ignore_missing_imports = true
 module = [
+    "PIL",
     "toml",
 ]
 
@@ -84,7 +83,6 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python",
@@ -94,9 +92,7 @@ classifiers = [
 exclude = [
     "*.pyc",
     "*.pyo",
-    "*.tests",
-    "*.tests.*",
-    "*_test.*",
+    "*test*",
     "*~",
     ".artifacts/*",
     ".coveragerc",
@@ -114,8 +110,7 @@ exclude = [
     "Makefile*",
     "poetry.lock",
     "poetry.toml",
-    "tests.*",
-    "tests/*",
+    "samurai/*",
     "tmp/*",
 ]
 include = [
@@ -125,12 +120,12 @@ include = [
 
 [tool.poetry.dependencies]
 aiohttp = {extras = ["speedups"], version = "^3.8.1"}
-httpx = "^0.23.0"
 orjson = "^3.7.11"
-pydantic = {extras = ["dotenv"], version = "^1.9.1"}
-python = "^3.9"
+pydantic = "^1.9.1"
+python = "^3.10"
 
 [tool.poetry.dev-dependencies]
+attrs = "^22.1.0"
 black = "^22.6.0"
 devtools = {extras = ["pygments"], version = "^0.9.0"}
 dlint = "^0.12.0"
@@ -162,13 +157,15 @@ ipython = "^8.4.0"
 isort = "^5.10.1"
 mypy = "^0.971"
 pep8-naming = "^0.13.1"
+Pillow = "^9.2.0"
 pudb = "^2022.1.2"
 pyre-check = "^0.9.15"
 pytest = "^7.1.2"
+pytest-aiohttp = "^1.0.4"
 pytest-asyncio = "^0.19.0"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.8.2"
-uvicorn = {extras = ["standard"], version = "^0.18.2"}
+python-dotenv = "^0.20.0"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"

@@ -23,6 +23,7 @@ def orjson_dumps(value: Any, *, default: Any) -> str:
 class TelegramBotApiType(BaseModel):
     class Config:
         allow_population_by_field_name = True
+        extra = "forbid"
         json_dumps = orjson_dumps
         json_loads = orjson.loads
 
@@ -35,9 +36,21 @@ class TelegramBotApiType(BaseModel):
             }
         )
 
+    def jsonb(self, **kw: Any) -> bytes:  # noqa: A003, VNE003
+        value = self.json(**kw)
+        if isinstance(value, bytes):
+            return value
+
+        return value.encode()
+
     def json(self, **kw: Any) -> str:  # noqa: A003, VNE003
         self._prepare_export_kw(kw)
-        return super().json(**kw)
+
+        value: Union[str, bytes] = super().json(**kw)
+        if isinstance(value, str):
+            return value
+
+        return value.decode()
 
     def dict(self, **kw: Any) -> dict:  # noqa: A003, VNE003
         self._prepare_export_kw(kw)
@@ -46,7 +59,7 @@ class TelegramBotApiType(BaseModel):
 
 class Request(TelegramBotApiType):
     @contextmanager
-    def files(self) -> Iterator:
+    def files(self) -> Iterator[dict[str, IO]]:
         opened_files: list[IO] = []
 
         def open_file(_path_or_io: Union[Path, IO]) -> IO:
@@ -58,12 +71,12 @@ class Request(TelegramBotApiType):
             return _fp
 
         try:
-            fields_file_tuples = {
-                field: ("InputFile", open_file(value))
+            fields_streams = {
+                field: open_file(value)
                 for field, value in self._get_input_files().items()
             }
 
-            yield fields_file_tuples
+            yield fields_streams
         finally:
             for fp in opened_files:
                 fp.close()

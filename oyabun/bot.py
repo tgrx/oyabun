@@ -6,15 +6,29 @@ from typing import Type
 from typing import TypeVar
 from typing import Union
 
-from httpx import AsyncClient
-from httpx import Response as HttpResponse
+import aiohttp
+import orjson
 
+from oyabun.telegram import AnswerCallbackQueryRequest
+from oyabun.telegram import AnswerCallbackQueryResponse
+from oyabun.telegram import Chat
 from oyabun.telegram import DeleteWebhookResponse
+from oyabun.telegram import EditMessageCaptionRequest
+from oyabun.telegram import EditMessageCaptionResponse
+from oyabun.telegram import EditMessageReplyMarkupRequest
+from oyabun.telegram import EditMessageReplyMarkupResponse
+from oyabun.telegram import EditMessageTextRequest
+from oyabun.telegram import EditMessageTextResponse
 from oyabun.telegram import File
+from oyabun.telegram import GetChatRequest
+from oyabun.telegram import GetChatResponse
 from oyabun.telegram import GetFileRequest
 from oyabun.telegram import GetFileResponse
 from oyabun.telegram import GetMeResponse
+from oyabun.telegram import GetUpdatesRequest
+from oyabun.telegram import GetUpdatesResponse
 from oyabun.telegram import GetWebhookInfoResponse
+from oyabun.telegram import InlineKeyboardMarkup
 from oyabun.telegram import Message
 from oyabun.telegram import MessageEntity
 from oyabun.telegram import SendMessageRequest
@@ -23,6 +37,7 @@ from oyabun.telegram import SendPhotoRequest
 from oyabun.telegram import SendPhotoResponse
 from oyabun.telegram import SetWebhookRequest
 from oyabun.telegram import SetWebhookResponse
+from oyabun.telegram import Update
 from oyabun.telegram import User
 from oyabun.telegram import WebhookInfo
 from oyabun.telegram.base import Request
@@ -80,7 +95,36 @@ class Bot:
 
         return f"{self.TELEGRAM_BOT_API_URL}/file/bot{self.__token}"
 
-    async def downloadFile(self, file: File) -> BytesIO:
+    async def answerCallbackQuery(
+        self,
+        *,
+        callback_query_id: str,
+        text: Optional[str] = None,
+        show_alert: Optional[bool] = None,
+        url: Optional[str] = None,
+        cache_time: Optional[int] = None,
+    ) -> bool:
+        request = AnswerCallbackQueryRequest(
+            cache_time=cache_time,
+            callback_query_id=callback_query_id,
+            show_alert=show_alert,
+            text=text,
+            url=url,
+        )
+
+        return await self._call_api(
+            "answerCallbackQuery",
+            request,
+            response_cls=AnswerCallbackQueryResponse,
+        )
+
+    async def deleteWebhook(self) -> bool:
+        return await self._call_api(
+            "deleteWebhook",
+            response_cls=DeleteWebhookResponse,
+        )
+
+    async def downloadFile(self, *, file: File) -> BytesIO:
         """
         Downloads the file's content into the BytesIO object.
 
@@ -97,7 +141,132 @@ class Bot:
 
         return await self._download_file(file.file_path)
 
-    async def getFile(self, file_id: str) -> File:
+    async def editMessageCaption(
+        self,
+        *,
+        caption: Optional[str] = None,
+        caption_entities: Optional[list[MessageEntity]] = None,
+        chat_id: Optional[Union[int, str]] = None,
+        inline_message_id: Optional[str] = None,
+        message_id: Optional[int] = None,
+        parse_mode: Optional[str] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Union[bool, Message]:
+        """
+        Use this method to edit captions of messages.
+
+        On success, if the edited message is not an inline message,
+        the edited Message is returned, otherwise True is returned.
+
+        https://core.telegram.org/bots/api#editmessagecaption
+        """
+
+        request = EditMessageCaptionRequest(
+            caption=caption,
+            caption_entities=caption_entities,
+            chat_id=chat_id,
+            inline_message_id=inline_message_id,
+            message_id=message_id,
+            parse_mode=parse_mode,
+            reply_markup=reply_markup,
+        )
+
+        return await self._call_api(
+            "editMessageCaption",
+            request,
+            response_cls=EditMessageCaptionResponse,
+        )
+
+    async def editMessageReplyMarkup(
+        self,
+        *,
+        chat_id: Optional[Union[int, str]] = None,
+        inline_message_id: Optional[str] = None,
+        message_id: Optional[int] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Union[bool, Message]:
+        """
+        Use this method to edit only the reply markup of messages.
+
+        On success, if the edited message is not an inline message,
+        the edited Message is returned, otherwise True is returned.
+
+        https://core.telegram.org/bots/api#editmessagereplymarkup
+        """
+
+        request = EditMessageReplyMarkupRequest(
+            chat_id=chat_id,
+            inline_message_id=inline_message_id,
+            message_id=message_id,
+            reply_markup=reply_markup,
+        )
+
+        return await self._call_api(
+            "editMessageReplyMarkup",
+            request,
+            response_cls=EditMessageReplyMarkupResponse,
+        )
+
+    async def editMessageText(
+        self,
+        *,
+        chat_id: Optional[Union[int, str]] = None,
+        disable_web_page_preview: Optional[bool] = None,
+        entities: Optional[list[MessageEntity]] = None,
+        inline_message_id: Optional[str] = None,
+        message_id: Optional[int] = None,
+        parse_mode: Optional[str] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+        text: str,
+    ) -> Union[bool, Message]:
+        """
+        Use this method to edit text and game messages.
+
+        On success, if the edited message is not an inline message,
+        the edited Message is returned, otherwise True is returned.
+
+        https://core.telegram.org/bots/api#editmessagetext
+        """
+
+        request = EditMessageTextRequest(
+            chat_id=chat_id,
+            disable_web_page_preview=disable_web_page_preview,
+            entities=entities,
+            inline_message_id=inline_message_id,
+            message_id=message_id,
+            parse_mode=parse_mode,
+            reply_markup=reply_markup,
+            text=text,
+        )
+
+        return await self._call_api(
+            "editMessageText",
+            request,
+            response_cls=EditMessageTextResponse,
+        )
+
+    async def getChat(self, *, chat_id: Union[int, str]) -> Chat:
+        """
+        Use this method to get up-to-date information about the chat
+        (current name of the user for one-on-one conversations,
+        current username of a user, group or channel, etc.).
+
+        Returns a Chat object on success.
+
+        https://core.telegram.org/bots/api#getchat
+        """
+
+        request = GetChatRequest(
+            chat_id=chat_id,
+        )
+
+        return await self._call_api(
+            "getChat",
+            request,
+            response_cls=GetChatResponse,
+        )
+
+    async def getFile(self, *, file_id: str) -> File:
         """
         Use this method to get basic info about a file
         and prepare it for downloading.
@@ -128,7 +297,7 @@ class Bot:
 
     async def getMe(self) -> User:
         """
-        A simple method for testing your bot's auth token.
+        A simple method for testing your bot auth token.
 
         https://core.telegram.org/bots/api#getme
 
@@ -140,27 +309,32 @@ class Bot:
             response_cls=GetMeResponse,
         )
 
+    async def getUpdates(
+        self,
+        *,
+        offset: Optional[int] = None,
+        limit: Optional[int] = None,
+        timeout: Optional[int] = None,
+        allowed_updates: Optional[list[str]] = None,
+    ) -> list[Update]:
+        request = GetUpdatesRequest(
+            allowed_updates=allowed_updates,
+            limit=limit,
+            offset=offset,
+            timeout=timeout,
+        )
+
+        return await self._call_api(
+            "getUpdates",
+            request,
+            response_cls=GetUpdatesResponse,
+            timeout=timeout,
+        )
+
     async def getWebhookInfo(self) -> WebhookInfo:
         return await self._call_api(
             "getWebhookInfo",
             response_cls=GetWebhookInfoResponse,
-        )
-
-    async def deleteWebhook(self) -> bool:
-        return await self._call_api(
-            "deleteWebhook",
-            response_cls=DeleteWebhookResponse,
-        )
-
-    async def setWebhook(self, *, url: str) -> bool:
-        request = SetWebhookRequest(
-            url=url,
-        )
-
-        return await self._call_api(
-            "setWebhook",
-            request,
-            response_cls=SetWebhookResponse,
         )
 
     async def sendMessage(
@@ -214,7 +388,7 @@ class Bot:
         instructions to remove reply keyboard
         or to force a reply from the user.
 
-        :return: on success, the sent Message.
+        :return: on success, the Message sent.
         """
 
         request = SendMessageRequest(
@@ -295,7 +469,7 @@ class Bot:
         instructions to remove reply keyboard
         or to force a reply from the user.
 
-        :return: on success, the sent Message.
+        :return: on success, the Message sent.
         """
 
         request = SendPhotoRequest(
@@ -314,6 +488,17 @@ class Bot:
             "sendPhoto", request, response_cls=SendPhotoResponse
         )
 
+    async def setWebhook(self, *, url: str) -> bool:
+        request = SetWebhookRequest(
+            url=url,
+        )
+
+        return await self._call_api(
+            "setWebhook",
+            request,
+            response_cls=SetWebhookResponse,
+        )
+
     _T = TypeVar(
         "_T"
     )  # don't worry about this: used as a generic type var in `_call_api`
@@ -324,6 +509,7 @@ class Bot:
         request: Optional[Request] = None,
         *,
         response_cls: Type[Response[_T]] = Response[_T],
+        timeout: Optional[int] = None,
     ) -> _T:
         """
         Performs the call to the Bot API returning a value of proper type.
@@ -334,45 +520,55 @@ class Bot:
         :param method: name of the supported Telegram Bot API method
 
         :param request: request object,
-        composed from input params of public method
+        composed of input params of public method
 
         :param response_cls: desired response class with actual result type
 
         :return: object of response class' result type
         """
 
+        url = f"{self.api_url}/{method}"
+
         try:
-            url = f"{self.api_url}/{method}"
+            # for methods which do not need the request at all
+            request = request or Request()
 
-            request = (
-                request or Request()
-            )  # for methods which do not need request at all
+            async with aiohttp.ClientSession() as session:
+                data: aiohttp.FormData | bytes
 
-            client: AsyncClient
-            async with AsyncClient() as client:
                 with request.files() as files:
-                    # if files, data must be of multipart/form-data
-                    # otherwise JSON bytes with Content-Type=application/json
-                    data = request.dict() if files else request.json()
-                    headers = (
-                        {} if files else {"Content-Type": "application/json"}
-                    )
-                    http_response: HttpResponse = await client.post(
+                    if files:
+                        headers = {}
+                        data = aiohttp.FormData(
+                            {_f: str(_v) for _f, _v in request.dict().items()}
+                        )
+                        for field, stream in files.items():
+                            data.add_field(field, stream, filename="InputFile")
+                    else:
+                        headers = {"Content-Type": "application/json"}
+                        data = request.jsonb()
+
+                    kw = {}
+                    if timeout:
+                        kw["timeout"] = timeout * 2
+
+                    send_request = session.post(
                         url,
-                        # mypy can't into X if P else Y
-                        data=data,  # type: ignore
-                        files=files,
+                        data=data,
                         headers=headers,
+                        **kw,
                     )
 
-            if http_response.status_code != 200:
-                raise self.RequestError(http_response.content)
+                    async with send_request as http_response:
+                        body = await http_response.read()
 
-            payload = http_response.json()
+                        if http_response.status != 200:
+                            raise self.RequestError(body.decode())
+
+            payload = orjson.loads(body)
             if not payload:
-                raise self.RequestError(
-                    f"unexpected empty payload on /{method}"
-                )
+                err = f"unexpected empty payload on /{method}"
+                raise self.RequestError(err)
 
             # actual&valid Telegram response
             response = response_cls.parse_obj(payload)
@@ -381,9 +577,8 @@ class Bot:
                 raise self.RequestError(response.description)
 
             if response.result is None:
-                raise self.RequestError(
-                    f"unexpected null result on /{method} -> {response}"
-                )
+                err = f"unexpected null result on /{method} -> {response}"
+                raise self.RequestError(err)
 
             return response.result
 
@@ -410,15 +605,14 @@ class Bot:
         try:
             url = f"{self.file_url}/{file_path}"
 
-            client: AsyncClient
-            async with AsyncClient() as client:
-                http_response: HttpResponse = await client.get(url)
-
-            if http_response.status_code != 200:
-                raise self.RequestError(http_response.content)
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as http_response:
+                    body = await http_response.read()
+                    if http_response.status != 200:
+                        raise self.RequestError(body.decode())
 
             buffer = BytesIO()
-            buffer.write(http_response.content)
+            buffer.write(body)
             buffer.seek(0)
 
             return buffer

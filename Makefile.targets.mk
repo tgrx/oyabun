@@ -28,10 +28,12 @@ clean-dist:
 format:
 	$(call log, reorganizing imports & formatting code)
 	isort --virtual-env="$(DIR_VENV)" \
-		"$(DIR_SRC)" \
+		"$(DIR_OYABUN)" \
+		"$(DIR_SAMURAI)" \
 		|| exit 1
 	black \
-		"$(DIR_SRC)" \
+		"$(DIR_OYABUN)" \
+		"$(DIR_SAMURAI)" \
 		|| exit 1
 
 
@@ -58,10 +60,12 @@ code-typing:
 code-format:
 	$(call log, checking code format)
 	isort --virtual-env="$(DIR_VENV)" --check-only \
-		"$(DIR_SRC)" \
+		"$(DIR_OYABUN)" \
+		"$(DIR_SAMURAI)" \
 		|| exit 1
 	black --check \
-		"$(DIR_SRC)" \
+		"$(DIR_OYABUN)" \
+		"$(DIR_SAMURAI)" \
 		|| exit 1
 
 

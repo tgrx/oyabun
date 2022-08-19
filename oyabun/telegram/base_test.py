@@ -11,10 +11,15 @@ def test_exclude_unset() -> None:
         attr1: int = Field(...)
         attr2: int = Field(0)
 
-    assert Klass(attr1=1).dict() == {"attr1": 1}
-    assert Klass(attr1=1).json() == '{"attr1":1}'
-    assert Klass(attr1=1, attr2=2).dict() == {"attr1": 1, "attr2": 2}
-    assert Klass(attr1=1, attr2=2).json() == '{"attr1":1,"attr2":2}'
+    k1 = Klass(attr1=1)
+    assert k1.dict() == {"attr1": 1}
+    assert k1.json() == '{"attr1":1}'
+    assert k1.jsonb() == b'{"attr1":1}'
+
+    k2 = Klass(attr1=1, attr2=2)
+    assert k2.dict() == {"attr1": 1, "attr2": 2}
+    assert k2.json() == '{"attr1":1,"attr2":2}'
+    assert k2.jsonb() == b'{"attr1":1,"attr2":2}'
 
 
 def test_orjson_dumps() -> None:
@@ -49,18 +54,23 @@ def test_orjson_dumps() -> None:
 
     assert obj1.dict() == {"attr": ts}
     assert obj1.json() == '{"attr":"2022-08-12T02:45:10+00:00"}'
+    assert obj1.jsonb() == b'{"attr":"2022-08-12T02:45:10+00:00"}'
 
     assert obj2.dict() == {"attr": ts.replace(tzinfo=None)}
     assert obj2.json() == '{"attr":"2022-08-12T02:45:10"}'
+    assert obj2.jsonb() == b'{"attr":"2022-08-12T02:45:10"}'
 
     assert obj3.dict() == {"attr": ts}
     assert obj3.json() == '{"attr":"2022-08-12T02:45:10+00:00"}'
+    assert obj3.jsonb() == b'{"attr":"2022-08-12T02:45:10+00:00"}'
 
     assert obj4.dict() == {"attr": ts}
     assert obj4.json() == '{"attr":"2022-08-12T02:45:10+00:00"}'
+    assert obj4.jsonb() == b'{"attr":"2022-08-12T02:45:10+00:00"}'
 
     assert obj5.dict() == {"attr": ts}
     assert obj5.json() == '{"attr":"2022-08-12T02:45:10+00:00"}'
+    assert obj5.jsonb() == b'{"attr":"2022-08-12T02:45:10+00:00"}'
 
 
 def test_request() -> None:
