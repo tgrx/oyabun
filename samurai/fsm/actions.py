@@ -150,16 +150,6 @@ class SendPhoto(AbstractAction):
         message = update.callback_query.message
         assert message
 
-        await self._bot.editMessageReplyMarkup(
-            chat_id=message.chat.id,
-            message_id=message.message_id,
-            reply_markup=InlineKeyboardMarkup(
-                inline_keyboard=[
-                    [],
-                ],
-            ),
-        )
-
         await self._bot.sendPhoto(
             caption="Lena Forsén",
             chat_id=message.chat.id,
@@ -170,6 +160,16 @@ class SendPhoto(AbstractAction):
         await self._bot.sendMessage(
             chat_id=message.chat.id,
             text="Now please send me some of your picture:",
+        )
+
+        await self._bot.editMessageReplyMarkup(
+            chat_id=message.chat.id,
+            message_id=message.message_id,
+            reply_markup=InlineKeyboardMarkup(
+                inline_keyboard=[
+                    [],
+                ],
+            ),
         )
 
 

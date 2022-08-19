@@ -1,16 +1,10 @@
-**/*.egg-info
-**/*.ignore
 **/__pycache__
 *.bak
 *.log
 *.py[cod]
 *~
-.coverage
 .DS_Store
 .env
 .idea/
-.venv/
 build/
-db.sqlite3
 dist/
-venv/

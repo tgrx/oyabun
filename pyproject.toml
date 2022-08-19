@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 79
-target-version = ["py39"]
+target-version = ["py310"]
 exclude = '''
   /(
       \.git
@@ -37,11 +37,11 @@ check_untyped_defs = true
 disallow_incomplete_defs = true
 disallow_untyped_calls = true
 disallow_untyped_defs = true
-files = ["oyabun"]
+files = ["oyabun", "samurai"]
 no_implicit_optional = true
 plugins = ["pydantic.mypy"]
 pretty = true
-python_version = "3.9"
+python_version = "3.10"
 show_error_context = true
 sqlite_cache = true
 warn_redundant_casts = true
@@ -83,7 +83,6 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python",
@@ -93,7 +92,7 @@ classifiers = [
 exclude = [
     "*.pyc",
     "*.pyo",
-    "*_test.*",
+    "*test*",
     "*~",
     ".artifacts/*",
     ".coveragerc",
@@ -123,7 +122,7 @@ include = [
 aiohttp = {extras = ["speedups"], version = "^3.8.1"}
 orjson = "^3.7.11"
 pydantic = "^1.9.1"
-python = "^3.9"
+python = "^3.10"
 
 [tool.poetry.dev-dependencies]
 attrs = "^22.1.0"
@@ -162,6 +161,7 @@ Pillow = "^9.2.0"
 pudb = "^2022.1.2"
 pyre-check = "^0.9.15"
 pytest = "^7.1.2"
+pytest-aiohttp = "^1.0.4"
 pytest-asyncio = "^0.19.0"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.8.2"

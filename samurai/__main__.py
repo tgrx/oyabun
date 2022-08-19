@@ -55,7 +55,9 @@ async def main() -> None:
     fsm = FSM(db, bot)
 
     for state0, state1, action_cls in graph:
-        fsm.register(state0, state1, action_cls)
+        # TODO: un-ignore when this is resolved:  # noqa: T101
+        # https://github.com/python/mypy/issues/5374
+        fsm.register(state0, state1, action_cls)  # type: ignore
 
     while True:
         print("\n", "-" * 30, "cycle", "-" * 30)  # noqa: T201

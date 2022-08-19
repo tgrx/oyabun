@@ -1,8 +1,7 @@
+import traceback
 from typing import Any
 from typing import Type
 from typing import TypeVar
-
-from devtools import debug
 
 from oyabun.bot import Bot
 from oyabun.telegram import Chat
@@ -57,7 +56,7 @@ class FSM:
             except AbstractAction.NoReaction:
                 continue
             except AbstractAction.ReactionFailed as err:
-                debug(err)
+                traceback.print_exc()
 
                 await self._bot.sendMessage(
                     chat_id=chat.id,

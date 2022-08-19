@@ -530,31 +530,36 @@ class Bot:
         url = f"{self.api_url}/{method}"
 
         try:
-            # for methods which do not need request at all
+            # for methods which do not need the request at all
             request = request or Request()
 
             async with aiohttp.ClientSession() as session:
+                data: aiohttp.FormData | bytes
+
                 with request.files() as files:
-                    # if files, data must be of multipart/form-data
-                    # otherwise JSON bytes with Content-Type=application/json
-                    data = request.dict() if files else request.json()
-                    headers = (
-                        {} if files else {"Content-Type": "application/json"}
-                    )
+                    if files:
+                        headers = {}
+                        data = aiohttp.FormData(
+                            {_f: str(_v) for _f, _v in request.dict().items()}
+                        )
+                        for field, stream in files.items():
+                            data.add_field(field, stream, filename="InputFile")
+                    else:
+                        headers = {"Content-Type": "application/json"}
+                        data = request.jsonb()
 
                     kw = {}
                     if timeout:
                         kw["timeout"] = timeout * 2
 
-                    req_ctx = session.post(
+                    send_request = session.post(
                         url,
                         data=data,
-                        files=files,
                         headers=headers,
                         **kw,
                     )
 
-                    async with req_ctx as http_response:
+                    async with send_request as http_response:
                         body = await http_response.read()
 
                         if http_response.status != 200:
