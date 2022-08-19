@@ -8,7 +8,7 @@ from oyabun.bot import Bot
 from oyabun.telegram import InlineKeyboardButton
 from oyabun.telegram import InlineKeyboardMarkup
 from oyabun.telegram import Update
-from samurai.dirs import DIR_REPO
+from samurai.dirs import DIR_DOCS_IMG
 from samurai.dirs import DIR_TMP
 from samurai.util import json_dumps
 
@@ -144,7 +144,7 @@ class SendPhoto(AbstractAction):
     async def _react(self, update: Update) -> None:
         assert update.callback_query and update.callback_query.data
 
-        photo = (DIR_REPO / update.callback_query.data).resolve()
+        photo = (DIR_DOCS_IMG / update.callback_query.data).resolve()
         assert photo.is_file(), f"no file: {photo.as_posix()}"
 
         message = update.callback_query.message

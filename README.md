@@ -4,9 +4,9 @@ _— the extreme path_
 
 A library for building Telegram apps.
 
-![kabufuda](https://upload.wikimedia.org/wikipedia/commons/c/cc/Kabufuda_-_01.jpg)
+![shimizu no jirocho](https://github.com/tgrx/oyabun/raw/main/docs/img/shimizu_no_jirocho.jpg)
 
-![](https://github.com/tgrx/oyabun/actions/workflows/development.yaml/badge.svg?branch=main)
+![build status](https://github.com/tgrx/oyabun/actions/workflows/development.yaml/badge.svg?branch=main)
 
 ## Mission
 
