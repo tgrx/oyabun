@@ -526,7 +526,7 @@ class Bot:
         "_T"
     )  # don't worry about this: used as a generic type var in `_call_api`
 
-    async def _call_api(  # noqa: CCR001
+    async def _call_api(
         self,
         method: str,
         request: None | Request = None,
