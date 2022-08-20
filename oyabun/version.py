@@ -3,8 +3,8 @@ from typing import NamedTuple
 
 class VersionTuple(NamedTuple):
     major: int = 2022
-    minor: int = 9
-    micro: int = 1
+    minor: int = 8
+    micro: int = 20
 
     def __str__(self) -> str:
         return f"{self.major}.{self.minor}.{self.micro}"

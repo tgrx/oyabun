@@ -59,29 +59,30 @@ async def main() -> None:
         # https://github.com/python/mypy/issues/5374
         fsm.register(state0, state1, action_cls)  # type: ignore
 
-    while True:
-        print("\n", "-" * 30, "cycle", "-" * 30)  # noqa: T201
+    async with bot.client_session():
+        while True:
+            print("\n", "-" * 30, "cycle", "-" * 30)  # noqa: T201
 
-        offset = await db.load_updates_offset()
-        debug(offset)
+            offset = await db.load_updates_offset()
+            debug(offset)
 
-        updates = await bot.getUpdates(offset=offset, timeout=30)
-        if not updates:
-            continue
+            updates = await bot.getUpdates(offset=offset, timeout=30)
+            if not updates:
+                continue
 
-        for update in updates:
-            user = update.get_user()
+            for update in updates:
+                user = update.get_user()
 
-            _state = await db.load_state(user.id)
-            state = State(_state) if _state else State.NOT_STARTED
+                _state = await db.load_state(user.id)
+                state = State(_state) if _state else State.NOT_STARTED
 
-            next_state = await fsm.transit(state, update)
-            await db.store_state(user.id, next_state.value)
+                next_state = await fsm.transit(state, update)
+                await db.store_state(user.id, next_state.value)
 
-            offset = max(offset, update.update_id) + 1
-            await db.store_updates_offset(offset)
+                offset = max(offset, update.update_id) + 1
+                await db.store_updates_offset(offset)
 
-        await asyncio.sleep(4)
+            await asyncio.sleep(4)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,10 @@
+from contextlib import asynccontextmanager
 from io import BytesIO
 from pathlib import Path
+from typing import AsyncGenerator
 from typing import IO
-from typing import Optional
 from typing import Type
 from typing import TypeVar
-from typing import Union
 
 import aiohttp
 import orjson
@@ -66,14 +66,37 @@ class Bot:
 
         pass
 
-    def __init__(self, token: str):
+    def __init__(
+        self,
+        token: str,
+        *,
+        session: aiohttp.ClientSession | None = None,
+    ):
         """
         Sets up the new Bot instance.
 
         :param token: a bot token which BotFather gives to you.
+        :param session: existing ClientSession or None (bot will use its own)
         """
 
+        self.__session = session
         self.__token = token
+
+    @asynccontextmanager
+    async def client_session(
+        self,
+    ) -> AsyncGenerator[aiohttp.ClientSession, None]:
+        if self.__session:
+            yield self.__session
+            return
+
+        async with aiohttp.ClientSession() as session:
+            prev = self.__session
+            try:
+                self.__session = session
+                yield self.__session
+            finally:
+                self.__session = prev
 
     @property
     def api_url(self) -> str:
@@ -99,10 +122,10 @@ class Bot:
         self,
         *,
         callback_query_id: str,
-        text: Optional[str] = None,
-        show_alert: Optional[bool] = None,
-        url: Optional[str] = None,
-        cache_time: Optional[int] = None,
+        text: None | str = None,
+        show_alert: None | bool = None,
+        url: None | str = None,
+        cache_time: None | int = None,
     ) -> bool:
         request = AnswerCallbackQueryRequest(
             cache_time=cache_time,
@@ -144,14 +167,14 @@ class Bot:
     async def editMessageCaption(
         self,
         *,
-        caption: Optional[str] = None,
-        caption_entities: Optional[list[MessageEntity]] = None,
-        chat_id: Optional[Union[int, str]] = None,
-        inline_message_id: Optional[str] = None,
-        message_id: Optional[int] = None,
-        parse_mode: Optional[str] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Union[bool, Message]:
+        caption: None | str = None,
+        caption_entities: None | list[MessageEntity] | None = None,
+        chat_id: None | int | str | None = None,
+        inline_message_id: None | str | None = None,
+        message_id: None | int | None = None,
+        parse_mode: None | str | None = None,
+        reply_markup: None | InlineKeyboardMarkup | None = None,
+    ) -> bool | Message:
         """
         Use this method to edit captions of messages.
 
@@ -180,11 +203,11 @@ class Bot:
     async def editMessageReplyMarkup(
         self,
         *,
-        chat_id: Optional[Union[int, str]] = None,
-        inline_message_id: Optional[str] = None,
-        message_id: Optional[int] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Union[bool, Message]:
+        chat_id: None | int | str | None = None,
+        inline_message_id: None | str | None = None,
+        message_id: None | int | None = None,
+        reply_markup: None | InlineKeyboardMarkup | None = None,
+    ) -> bool | Message:
         """
         Use this method to edit only the reply markup of messages.
 
@@ -210,15 +233,15 @@ class Bot:
     async def editMessageText(
         self,
         *,
-        chat_id: Optional[Union[int, str]] = None,
-        disable_web_page_preview: Optional[bool] = None,
-        entities: Optional[list[MessageEntity]] = None,
-        inline_message_id: Optional[str] = None,
-        message_id: Optional[int] = None,
-        parse_mode: Optional[str] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
+        chat_id: None | int | str | None = None,
+        disable_web_page_preview: None | bool = None,
+        entities: None | list[MessageEntity] = None,
+        inline_message_id: None | str = None,
+        message_id: None | int = None,
+        parse_mode: None | str = None,
+        reply_markup: None | InlineKeyboardMarkup = None,
         text: str,
-    ) -> Union[bool, Message]:
+    ) -> bool | Message:
         """
         Use this method to edit text and game messages.
 
@@ -245,7 +268,7 @@ class Bot:
             response_cls=EditMessageTextResponse,
         )
 
-    async def getChat(self, *, chat_id: Union[int, str]) -> Chat:
+    async def getChat(self, *, chat_id: int | str) -> Chat:
         """
         Use this method to get up-to-date information about the chat
         (current name of the user for one-on-one conversations,
@@ -312,10 +335,10 @@ class Bot:
     async def getUpdates(
         self,
         *,
-        offset: Optional[int] = None,
-        limit: Optional[int] = None,
-        timeout: Optional[int] = None,
-        allowed_updates: Optional[list[str]] = None,
+        offset: None | int = None,
+        limit: None | int = None,
+        timeout: None | int = None,
+        allowed_updates: None | list[str] = None,
     ) -> list[Update]:
         request = GetUpdatesRequest(
             allowed_updates=allowed_updates,
@@ -340,15 +363,15 @@ class Bot:
     async def sendMessage(
         self,
         *,
-        chat_id: Union[int, str],
+        chat_id: int | str,
         text: str,
-        parse_mode: Optional[str] = None,
-        entities: Optional[list[MessageEntity]] = None,
-        disable_web_page_preview: Optional[bool] = None,
-        disable_notification: Optional[bool] = None,
-        reply_to_message_id: Optional[int] = None,
-        allow_sending_without_reply: Optional[bool] = None,
-        reply_markup: Optional[ReplyMarkupType] = None,
+        parse_mode: None | str = None,
+        entities: None | list[MessageEntity] = None,
+        disable_web_page_preview: None | bool = None,
+        disable_notification: None | bool = None,
+        reply_to_message_id: None | int = None,
+        allow_sending_without_reply: None | bool = None,
+        reply_markup: None | ReplyMarkupType = None,
     ) -> Message:
         """
         Use this method to send text messages.
@@ -412,15 +435,15 @@ class Bot:
     async def sendPhoto(
         self,
         *,
-        chat_id: Union[int, str],
-        photo: Union[str, Path, IO],
-        caption: Optional[str] = None,  # 0-1024
-        parse_mode: Optional[str] = None,
-        caption_entities: Optional[list[MessageEntity]] = None,
-        disable_notification: Optional[bool] = None,
-        reply_to_message_id: Optional[int] = None,
-        allow_sending_without_reply: Optional[bool] = None,
-        reply_markup: Optional[ReplyMarkupType] = None,
+        chat_id: int | str,
+        photo: str | Path | IO,
+        caption: None | str = None,  # 0-1024
+        parse_mode: None | str = None,
+        caption_entities: None | list[MessageEntity] = None,
+        disable_notification: None | bool = None,
+        reply_to_message_id: None | int = None,
+        allow_sending_without_reply: None | bool = None,
+        reply_markup: None | ReplyMarkupType = None,
     ) -> Message:
         """
         Use this method to send photos.
@@ -503,13 +526,13 @@ class Bot:
         "_T"
     )  # don't worry about this: used as a generic type var in `_call_api`
 
-    async def _call_api(  # noqa: CCR001
+    async def _call_api(
         self,
         method: str,
-        request: Optional[Request] = None,
+        request: None | Request = None,
         *,
         response_cls: Type[Response[_T]] = Response[_T],
-        timeout: Optional[int] = None,
+        timeout: None | int = None,
     ) -> _T:
         """
         Performs the call to the Bot API returning a value of proper type.
@@ -533,7 +556,7 @@ class Bot:
             # for methods which do not need the request at all
             request = request or Request()
 
-            async with aiohttp.ClientSession() as session:
+            async with self.client_session() as session:
                 data: aiohttp.FormData | bytes
 
                 with request.files() as files:
@@ -605,7 +628,7 @@ class Bot:
         try:
             url = f"{self.file_url}/{file_path}"
 
-            async with aiohttp.ClientSession() as session:
+            async with self.client_session() as session:
                 async with session.get(url) as http_response:
                     body = await http_response.read()
                     if http_response.status != 200:

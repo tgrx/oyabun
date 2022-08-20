@@ -24,6 +24,7 @@ async def test_bot() -> AsyncGenerator[Bot, None]:
     bot = Bot(token=tg.get_telegram_bot_api_token())
     bot.TELEGRAM_BOT_API_URL = str(server.make_url(""))
 
-    yield bot
+    async with bot.client_session():
+        yield bot
 
     await server.close()

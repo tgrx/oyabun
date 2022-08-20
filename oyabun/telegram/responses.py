@@ -1,6 +1,4 @@
-from typing import Optional
 from typing import Type
-from typing import Union
 
 from pydantic import Field
 
@@ -21,28 +19,28 @@ class DeleteWebhookResponse(Response[bool]):
     result: bool = Field(False)
 
 
-class EditMessageCaptionResponse(Response[Union[Message, bool]]):
-    result: Optional[Union[Message, bool]] = Field(None)
+class EditMessageCaptionResponse(Response[bool | Message]):
+    result: None | bool | Message = Field(None)
 
 
-class EditMessageReplyMarkupResponse(Response[Union[Message, bool]]):
-    result: Optional[Union[Message, bool]] = Field(None)
+class EditMessageReplyMarkupResponse(Response[bool | Message]):
+    result: None | bool | Message = Field(None)
 
 
-class EditMessageTextResponse(Response[Union[Message, bool]]):
-    result: Optional[Union[Message, bool]] = Field(None)
+class EditMessageTextResponse(Response[bool | Message]):
+    result: None | bool | Message = Field(None)
 
 
 class GetChatResponse(Response[Chat]):
-    result: Optional[Chat] = Field(None)
+    result: None | Chat = Field(None)
 
 
 class GetFileResponse(Response[File]):
-    result: Optional[File] = Field(None)
+    result: None | File = Field(None)
 
 
 class GetMeResponse(Response[User]):
-    result: Optional[User] = Field(None)
+    result: None | User = Field(None)
 
 
 class GetUpdatesResponse(Response[list[Update]]):
@@ -50,15 +48,15 @@ class GetUpdatesResponse(Response[list[Update]]):
 
 
 class GetWebhookInfoResponse(Response[WebhookInfo]):
-    result: Optional[WebhookInfo] = Field(None)
+    result: None | WebhookInfo = Field(None)
 
 
 class SendMessageResponse(Response[Message]):
-    result: Optional[Message] = Field(None)
+    result: None | Message = Field(None)
 
 
 class SendPhotoResponse(Response[Message]):
-    result: Optional[Message] = Field(None)
+    result: None | Message = Field(None)
 
 
 class SetWebhookResponse(Response[bool]):

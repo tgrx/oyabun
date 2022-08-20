@@ -1,7 +1,6 @@
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from os import cpu_count
-from typing import Union
 
 import orjson
 
@@ -11,16 +10,12 @@ from samurai.dirs import DIR_ARTIFACTS
 class Persistence:
     DB_FILE = DIR_ARTIFACTS / "samurai.json"
 
-    async def load_state(self, user_id: Union[str, int]) -> str:
+    async def load_state(self, user_id: str | int) -> str:
         db = await self._load_db()
         state: str = db.get("user_states", {}).get(str(user_id))
         return state
 
-    async def store_state(
-        self,
-        user_id: Union[str, int],
-        state: str,
-    ) -> None:
+    async def store_state(self, user_id: str | int, state: str) -> None:
         db = await self._load_db()
         db.setdefault("user_states", {})[str(user_id)] = state
         await self._store_db(db)
