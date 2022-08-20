@@ -9,7 +9,7 @@ omit = \
 	samurai/*
 	tmp/*
 relative_files = True
-source = oyabun
+source = oyabun,tests
 
 
 [report]

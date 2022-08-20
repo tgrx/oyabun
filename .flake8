@@ -4,13 +4,14 @@ exclude =
     .git
     .github
     .run
+    dist
 ignore = S101,B101
 max_annotations_complexity = 4
 max_cognitive_complexity = 12
 per-file-ignores =
     oyabun/bot.py:N802
-    oyabun/bot_test.py:N802
-    oyabun/bot_test_app.py:N802
     oyabun/telegram/base.py:E501
     oyabun/telegram/entities.py:E501
     oyabun/telegram/requests.py:E501
+    tests/bot_test.py:N802
+    tests/bot_test_app.py:N802

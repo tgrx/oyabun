@@ -7,7 +7,7 @@ import pytest_asyncio
 from aiohttp.test_utils import TestServer
 
 from oyabun.bot import Bot
-from oyabun.bot_test_app import TelegramApp
+from tests.bot_test_app import TelegramApp
 
 
 @pytest.fixture(scope="session")

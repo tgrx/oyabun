@@ -1,4 +1,4 @@
-from .base import TelegramBotApiType
+from oyabun.telegram.base import TelegramBotApiType
 
 
 def test_photosize_importable_from_pkg() -> None:

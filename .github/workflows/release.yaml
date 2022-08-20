@@ -1,17 +1,14 @@
-name: 'Release'
+name: Release
+
 
 on:
   workflow_dispatch:
 
-#  pull_request:
-#    branches:
-#      - main
-#  push:
-#    tags:
-#      - release-*
 
 env:
-  PIPENV_VENV_IN_PROJECT: '1'
+  CACHE_CUSTOM_KEY: '0'
+  POETRY_VIRTUALENVS_CREATE: false
+  POETRY_VIRTUALENVS_IN_PROJECT: false
 
 
 jobs:
@@ -34,46 +31,30 @@ jobs:
         uses: actions/setup-python@v2
         with:
           architecture: 'x64'
-          python-version: '3.9'
+          python-version: '3.10'
 
       - name: '☁️ The whole Python is cached.'
         id: cache-python
         uses: actions/cache@v2
         with:
-          key: cache-python-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}-dev
+          key: cache-python-dist-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('poetry.lock') }}-${{ env.CACHE_CUSTOM_KEY }}"
           path: ${{ env.pythonLocation }}
 
-      - name: '🪛 Pipenv is installed.'
+      - name: '🪛 Poetry is installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
-          pip install pipenv
-
-      - name: '🔋 The development dependencies are installed.'
-        if: ${{ !steps.cache-python.outputs.cache-hit }}
-        run: |
-          make venv-deploy-all
+          pip install poetry
+          python -c 'import poetry; print(poetry)'
+          poetry debug
 
       - name: '📚 The library distribution is built.'
         run: |
-          make build
+          make get-version dist
 
       - name: '🏷 The library version is set as the output.'
         id: get-version
         run: |
           echo "::set-output name=result::$(make get-version)"
-
-      - name: '🚦 The tag points to the actual library version.'
-        if: ${{ startsWith(github.ref, 'refs/tags/release-') }}
-        uses: actions/github-script@v3
-        with:
-          script: |
-            const tag = "${{github.ref}}".replace('refs/tags/', '');
-            const tagVersion = tag.replace('release-', '');
-            const libraryVersion = "${{steps.get-version.outputs.result}}";
-            if (tagVersion != libraryVersion) {
-              const errorMessage = `tag "${tag}" =/=> library version "${libraryVersion}"`;
-              core.setFailed(errorMessage);
-            }
 
       - name: '📦 The library distribution is uploaded as an artifact.'
         uses: actions/upload-artifact@v2
@@ -97,10 +78,7 @@ jobs:
         os:
           - 'macos-latest'
           - 'ubuntu-latest'
-          - 'windows-latest'
         python-version:
-          - '3.8'
-          - '3.9'
           - '3.10'
 
     runs-on: ${{ matrix.os }}
@@ -125,18 +103,15 @@ jobs:
         id: cache-python
         uses: actions/cache@v2
         with:
-          key: cache-python-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('Pipfile.lock') }}
+          key: cache-python-test-dist-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('poetry.lock') }}-${{ env.CACHE_CUSTOM_KEY }}"
           path: ${{ env.pythonLocation }}
 
-      - name: '🪛 Pipenv is installed.'
+      - name: '🪛 Poetry is installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
-          pip install pipenv
-
-      - name: '🛢 The dependencies are installed.'
-        if: ${{ !steps.cache-python.outputs.cache-hit }}
-        run: |
-          make venv-deploy
+          pip install poetry
+          python -c 'import poetry; print(poetry)'
+          poetry debug
 
       - name: '📦 The library distribution artifact is downloaded.'
         uses: actions/download-artifact@v2
@@ -147,12 +122,17 @@ jobs:
       - name: '🚀 The library is installed from distribution'
         if: ${{ !contains(matrix.os, 'windows') }}
         run: |
-          pip install dist/consigliere-${{ needs.dist.outputs.version }}.tar.gz
+          pip install dist/oyabun-${{ needs.dist.outputs.version }}.tar.gz
 
-      - name: '🦽 The library is installed from distribution'
-        if: ${{ contains(matrix.os, 'windows') }}
+      - name: '🚀 The library version is correct'
         run: |
-          pip install dist\consigliere-${{ needs.dist.outputs.version }}.tar.gz
+          make get-version
+
+      - name: '🛢 The dev dependencies are installed.'
+        if: ${{ !steps.cache-python.outputs.cache-hit }}
+        run: |
+          poetry export --dev --format=requirements.txt --output=requirements.txt --without-hashes
+          pip install --requirement requirements.txt
 
       - name: '🚦 The library distribution passes all tests.'
         run: make tests
@@ -161,8 +141,6 @@ jobs:
   test-deploy:
     if: github.actor == 'tgrx'
     name: 'The library is deployed on test PyPI.'
-
-    if: ${{ startsWith(github.ref, 'refs/tags/release-') }}
 
     outputs:
       version: ${{ needs.dist.outputs.version }}
@@ -190,9 +168,8 @@ jobs:
 
 
   deploy:
+    if: github.actor == 'tgrx'
     name: 'The library is deployed on PyPI.'
-
-    if: ${{ startsWith(github.ref, 'refs/tags/release-') }}
 
     needs:
       - test-dist
