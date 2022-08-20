@@ -1,4 +1,4 @@
-.PHONY: dist upload-test upload get-version clean clean-python clean-dist
+.PHONY: dist get-version clean clean-python clean-dist
 .PHONY: format qa tests coverage code-typing code-format code-linters sh
 .PHONY: venv-dir venv venv-dev venv-deploy venv-deploy-all upgrade-venv
 
