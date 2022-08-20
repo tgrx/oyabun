@@ -1,4 +1,4 @@
-.PHONY: build upload-test upload get-version clean clean-python clean-dist
+.PHONY: dist upload-test upload get-version clean clean-python clean-dist
 .PHONY: format qa tests coverage code-typing code-format code-linters sh
 .PHONY: venv-dir venv venv-dev venv-deploy venv-deploy-all upgrade-venv
 
@@ -23,7 +23,12 @@ clean-dist:
 	rm -rf *.egg-info
 	rm -rf build/
 	rm -rf dist/
-	
+
+
+dist: clean-dist
+	$(call log, building distribution)
+	poetry build --no-interaction
+
 
 format:
 	$(call log, reorganizing imports & formatting code)
@@ -83,8 +88,3 @@ venv:
 	$(call log, installing packages)
 	poetry env use "$(shell cat .python-version)"
 	poetry install --no-root
-
-
-venv-deploy:
-	$(call log, installing packages into system)
-	poetry install
