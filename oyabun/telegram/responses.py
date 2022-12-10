@@ -15,6 +15,10 @@ class AnswerCallbackQueryResponse(Response[bool]):
     result: bool = Field(False)
 
 
+class DeleteMessageResponse(Response[bool]):
+    result: bool = Field(False)
+
+
 class DeleteWebhookResponse(Response[bool]):
     result: bool = Field(False)
 
@@ -65,6 +69,7 @@ class SetWebhookResponse(Response[bool]):
 
 __models__: set[Type[Response]] = {
     AnswerCallbackQueryResponse,
+    DeleteMessageResponse,
     DeleteWebhookResponse,
     EditMessageCaptionResponse,
     EditMessageReplyMarkupResponse,
@@ -82,6 +87,7 @@ __models__: set[Type[Response]] = {
 __all__ = (
     "__models__",
     "AnswerCallbackQueryResponse",
+    "DeleteMessageResponse",
     "DeleteWebhookResponse",
     "EditMessageCaptionResponse",
     "EditMessageReplyMarkupResponse",

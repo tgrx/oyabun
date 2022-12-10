@@ -1,5 +1,58 @@
 # CHANGELOG
 
+---
+
+## 2022.12.12
+
+Partial support for [Telegram Bot API 6.3](https://core.telegram.org/bots/api#november-5-2022)
+
+### Added
+
+#### Methods
+
+- deleteMessage
+
+#### Entities
+
+##### Chat
+
+- active_usernames
+- emoji_status_custom_emoji_id
+- is_forum
+
+##### Message
+
+- author_signature
+- forward_date
+- forward_from
+- forward_from_chat
+- forward_from_message_id
+- forward_sender_name
+- forward_signature
+- has_protected_content
+- is_automatic_forward
+- is_topic_message
+- left_chat_member
+- media_group_id
+- message_thread_id
+- new_chat_members
+- new_chat_photo
+- new_chat_title
+- sender_chat
+- via_bot
+
+#### Requests and Responses models
+
+##### Requests
+
+- DeleteMessageRequest
+
+##### Responses
+
+- DeleteMessageResponse
+
+---
+
 ## 2022.08.20
 
 ### Compatibility break-ups

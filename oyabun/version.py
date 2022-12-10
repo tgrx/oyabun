@@ -4,8 +4,8 @@ from typing import NamedTuple
 
 class VersionTuple(NamedTuple):
     major: int = 2022
-    minor: int = 8
-    micro: int = 20
+    minor: int = 12
+    micro: int = 12
     dev: None | int = None
 
     def __str__(self) -> str:
@@ -22,7 +22,7 @@ VERSION = str(version)
 
 def verify_version() -> None:
     # TODO: change to tomllib in Python 3.11  # noqa: T101
-    import toml
+    import tomlkit
 
     this_file = Path(__file__)
     repo = this_file.parent.parent.resolve()
@@ -33,7 +33,7 @@ def verify_version() -> None:
 
     assert pyproject_toml.is_file()
     with pyproject_toml.open("r") as stream:
-        data = toml.load(stream)
+        data = tomlkit.loads(stream.read())
 
     version_pyproject_toml = (
         data.get("tool", {}).get("poetry", {}).get("version")

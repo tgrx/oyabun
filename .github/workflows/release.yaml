@@ -25,10 +25,10 @@ jobs:
     steps:
 
       - name: '🧱 The code is pulled from the repository.'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: '🐍 Python is set up.'
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           architecture: 'x64'
           python-version: '3.10'
@@ -37,7 +37,7 @@ jobs:
         id: cache-python
         uses: actions/cache@v2
         with:
-          key: cache-python-dist-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('poetry.lock') }}-${{ env.CACHE_CUSTOM_KEY }}"
+          key: dist-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('poetry.lock') }}-${{ env.CACHE_CUSTOM_KEY }}"
           path: ${{ env.pythonLocation }}
 
       - name: '🪛 Poetry is installed.'
@@ -45,7 +45,7 @@ jobs:
         run: |
           pip install poetry
           python -c 'import poetry; print(poetry)'
-          poetry debug
+          poetry debug info
 
       - name: '📚 The library distribution is built.'
         run: |
@@ -54,7 +54,7 @@ jobs:
       - name: '🏷 The library version is set as the output.'
         id: get-version
         run: |
-          echo "::set-output name=result::$(make get-version)"
+          echo "result=$(make get-version)" >> $GITHUB_OUTPUT
 
       - name: '📦 The library distribution is uploaded as an artifact.'
         uses: actions/upload-artifact@v2
@@ -103,7 +103,7 @@ jobs:
         id: cache-python
         uses: actions/cache@v2
         with:
-          key: cache-python-test-dist-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('poetry.lock') }}-${{ env.CACHE_CUSTOM_KEY }}"
+          key: test-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('poetry.lock') }}-${{ env.CACHE_CUSTOM_KEY }}"
           path: ${{ env.pythonLocation }}
 
       - name: '🪛 Poetry is installed.'
@@ -111,7 +111,7 @@ jobs:
         run: |
           pip install poetry
           python -c 'import poetry; print(poetry)'
-          poetry debug
+          poetry debug info
 
       - name: '📦 The library distribution artifact is downloaded.'
         uses: actions/download-artifact@v2
@@ -131,7 +131,7 @@ jobs:
       - name: '🛢 The dev dependencies are installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
-          poetry export --dev --format=requirements.txt --output=requirements.txt --without-hashes
+          poetry export --with dev --format=requirements.txt --output=requirements.txt --without-hashes
           pip install --requirement requirements.txt
 
       - name: '🚦 The library distribution passes all tests.'

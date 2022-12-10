@@ -38,6 +38,7 @@ from oyabun.telegram.entities import Voice
 from oyabun.telegram.entities import WebhookInfo
 from oyabun.telegram.requests import __models__ as __models__requests
 from oyabun.telegram.requests import AnswerCallbackQueryRequest
+from oyabun.telegram.requests import DeleteMessageRequest
 from oyabun.telegram.requests import DeleteWebhookRequest
 from oyabun.telegram.requests import EditMessageCaptionRequest
 from oyabun.telegram.requests import EditMessageReplyMarkupRequest
@@ -52,6 +53,7 @@ from oyabun.telegram.requests import SendPhotoRequest
 from oyabun.telegram.requests import SetWebhookRequest
 from oyabun.telegram.responses import __models__ as __models__responses
 from oyabun.telegram.responses import AnswerCallbackQueryResponse
+from oyabun.telegram.responses import DeleteMessageResponse
 from oyabun.telegram.responses import DeleteWebhookResponse
 from oyabun.telegram.responses import EditMessageCaptionResponse
 from oyabun.telegram.responses import EditMessageReplyMarkupResponse
@@ -87,6 +89,8 @@ __all__ = (
     "ChatLocation",
     "ChatPermissions",
     "ChatPhoto",
+    "DeleteMessageRequest",
+    "DeleteMessageResponse",
     "DeleteWebhookRequest",
     "DeleteWebhookResponse",
     "Dice",

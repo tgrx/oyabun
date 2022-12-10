@@ -172,6 +172,11 @@ class SendPhoto(AbstractAction):
             ),
         )
 
+        await self._bot.deleteMessage(
+            chat_id=message.chat.id,
+            message_id=message.message_id,
+        )
+
 
 class ReplyWithProcessedPhoto(AbstractAction):
     async def _ensure_reaction_on(self, update: Update) -> None:

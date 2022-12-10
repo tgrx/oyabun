@@ -53,7 +53,6 @@ warn_unused_ignores = true
 ignore_missing_imports = true
 module = [
     "PIL",
-    "toml",
 ]
 
 [tool.pydantic-mypy]
@@ -68,7 +67,7 @@ maintainers = ["Alexander Sidorov <alexander@sidorov.dev>"]
 description = "Telegram library with strict API"
 license = "MIT"
 name = "oyabun"
-version = "2022.8.20"
+version = "2022.12.12"
 readme = "README.md"
 repository = "https://github.com/tgrx/oyabun"
 keywords = ["telegram"]
@@ -123,12 +122,11 @@ orjson = "^3.7.11"
 pydantic = "^1.9.1"
 python = "^3.10"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 attrs = "^22.1.0"
 black = "^22.6.0"
 devtools = {extras = ["pygments"], version = "^0.9.0"}
 dlint = "^0.12.0"
-fb-sapp = "^0.5.2"
 flake8 = "^4.0.1"
 flake8-annotations-complexity = "^0.0.7"
 flake8-bandit = "^3.0.0"
@@ -154,17 +152,17 @@ flake8-simplify = "^0.19.3"
 flake8-variables-names = "^0.0.5"
 ipython = "^8.4.0"
 isort = "^5.10.1"
-mypy = "^0.971"
+mypy = "^0.991"
 pep8-naming = "^0.13.1"
 Pillow = "^9.2.0"
 pudb = "^2022.1.2"
-pyre-check = "^0.9.15"
 pytest = "^7.1.2"
 pytest-aiohttp = "^1.0.4"
 pytest-asyncio = "^0.19.0"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.8.2"
 python-dotenv = "^0.20.0"
+tomlkit = "^0.11.6"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"

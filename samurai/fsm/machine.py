@@ -15,7 +15,6 @@ class FSM:
     def __init__(self, db: Persistence, bot: Bot):
         self._bot = bot
         self._db: Persistence = db
-        self._actions: dict[Type[AbstractAction], AbstractAction] = {}
         self._stt: dict[tuple[Any, Any], AbstractAction] = {}
 
     def register(

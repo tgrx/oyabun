@@ -17,6 +17,11 @@ class AnswerCallbackQueryRequest(Request):
     url: None | str = Field(None)
 
 
+class DeleteMessageRequest(Request):
+    chat_id: int | str = Field(...)
+    message_id: int = Field(...)
+
+
 class DeleteWebhookRequest(Request):
     drop_pending_updates: None | bool = Field(None)
 
@@ -107,6 +112,7 @@ class SetWebhookRequest(Request):
 
 __models__: set[Type[Request]] = {
     AnswerCallbackQueryRequest,
+    DeleteMessageRequest,
     DeleteWebhookRequest,
     EditMessageCaptionRequest,
     EditMessageReplyMarkupRequest,
@@ -124,6 +130,7 @@ __models__: set[Type[Request]] = {
 __all__ = (
     "__models__",
     "AnswerCallbackQueryRequest",
+    "DeleteMessageRequest",
     "DeleteWebhookRequest",
     "EditMessageCaptionRequest",
     "EditMessageReplyMarkupRequest",
