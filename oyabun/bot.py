@@ -148,7 +148,7 @@ class Bot:
         *,
         chat_id: int | str,
         message_id: int,
-    ):
+    ) -> bool:
         request = DeleteMessageRequest(
             chat_id=chat_id,
             message_id=message_id,
