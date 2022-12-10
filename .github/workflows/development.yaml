@@ -66,7 +66,7 @@ jobs:
       - name: '🔋 The dependencies are installed.'
         if: ${{ !steps.cache-python.outputs.cache-hit }}
         run: |
-          poetry export --dev --format=requirements.txt --output=requirements.txt --without-hashes
+          poetry export --with dev --format=requirements.txt --output=requirements.txt --without-hashes
           pip install --requirement requirements.txt
 
       - name: '🍺 The code passes all QA checks'
