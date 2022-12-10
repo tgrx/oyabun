@@ -35,7 +35,7 @@ jobs:
 
       - name: '☁️ The whole Python is cached.'
         id: cache-python
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           key: dist-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('poetry.lock') }}-${{ env.CACHE_CUSTOM_KEY }}"
           path: ${{ env.pythonLocation }}
@@ -57,7 +57,7 @@ jobs:
           echo "result=$(make get-version)" >> $GITHUB_OUTPUT
 
       - name: '📦 The library distribution is uploaded as an artifact.'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: oyabun-${{ steps.get-version.outputs.result }}
           path: dist/
@@ -86,22 +86,22 @@ jobs:
     steps:
 
       - name: '🧱 The code is pulled from the repository.'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: '🪚 The library sources are deleted from the local code.'
-        uses: JesseTG/rm@v1.0.2
+        uses: JesseTG/rm@v1.0.3
         with:
           path: oyabun
 
       - name: '🐍 Python is set up.'
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           architecture: 'x64'
           python-version: ${{ matrix.python-version }}
 
       - name: '☁️ The whole Python is cached.'
         id: cache-python
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           key: test-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('poetry.lock') }}-${{ env.CACHE_CUSTOM_KEY }}"
           path: ${{ env.pythonLocation }}
@@ -114,7 +114,7 @@ jobs:
           poetry debug info
 
       - name: '📦 The library distribution artifact is downloaded.'
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: oyabun-${{ needs.dist.outputs.version }}
           path: dist/
@@ -153,7 +153,7 @@ jobs:
     steps:
 
       - name: '📦 The library distribution artifact is downloaded.'
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: oyabun-${{ needs.dist.outputs.version }}
           path: dist/
@@ -180,7 +180,7 @@ jobs:
     steps:
 
       - name: '📦 The library distribution artifact is downloaded.'
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: oyabun-${{ needs.test-deploy.outputs.version }}
           path: dist/
