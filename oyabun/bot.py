@@ -12,6 +12,8 @@ import orjson
 from oyabun.telegram import AnswerCallbackQueryRequest
 from oyabun.telegram import AnswerCallbackQueryResponse
 from oyabun.telegram import Chat
+from oyabun.telegram import DeleteMessageRequest
+from oyabun.telegram import DeleteMessageResponse
 from oyabun.telegram import DeleteWebhookResponse
 from oyabun.telegram import EditMessageCaptionRequest
 from oyabun.telegram import EditMessageCaptionResponse
@@ -139,6 +141,23 @@ class Bot:
             "answerCallbackQuery",
             request,
             response_cls=AnswerCallbackQueryResponse,
+        )
+
+    async def deleteMessage(
+        self,
+        *,
+        chat_id: int | str,
+        message_id: int,
+    ):
+        request = DeleteMessageRequest(
+            chat_id=chat_id,
+            message_id=message_id,
+        )
+
+        return await self._call_api(
+            "deleteMessage",
+            request,
+            response_cls=DeleteMessageResponse,
         )
 
     async def deleteWebhook(self) -> bool:
