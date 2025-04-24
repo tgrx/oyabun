@@ -1,8 +1,0 @@
-paths:
-  - oyabun
-paths-ignore:
-  - .artifacts/
-  - tmp/
-  - build/
-  - dist/
- 

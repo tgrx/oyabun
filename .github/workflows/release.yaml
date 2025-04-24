@@ -25,13 +25,13 @@ jobs:
     steps:
 
       - name: '🧱 The code is pulled from the repository.'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: '🐍 Python is set up.'
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           architecture: 'x64'
-          python-version: '3.10'
+          python-version: '3.12.10'
 
       - name: '☁️ The whole Python is cached.'
         id: cache-python
@@ -49,7 +49,7 @@ jobs:
 
       - name: '📚 The library distribution is built.'
         run: |
-          make get-version dist
+          poetry build
 
       - name: '🏷 The library version is set as the output.'
         id: get-version
@@ -79,22 +79,21 @@ jobs:
           - 'macos-latest'
           - 'ubuntu-latest'
         python-version:
-          - '3.10'
+          - '3.12.10'
 
     runs-on: ${{ matrix.os }}
 
     steps:
 
       - name: '🧱 The code is pulled from the repository.'
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
       - name: '🪚 The library sources are deleted from the local code.'
         uses: JesseTG/rm@v1.0.3
         with:
           path: oyabun
 
       - name: '🐍 Python is set up.'
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           architecture: 'x64'
           python-version: ${{ matrix.python-version }}

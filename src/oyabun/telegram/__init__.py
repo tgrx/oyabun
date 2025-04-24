@@ -1,17 +1,14 @@
-from typing import Type
-
-from oyabun.telegram.base import __models__ as __models__base
 from oyabun.telegram.base import Request
 from oyabun.telegram.base import Response
 from oyabun.telegram.base import ResponseParameters
 from oyabun.telegram.base import TelegramBotApiType
-from oyabun.telegram.entities import __models__ as __models__entities
+from oyabun.telegram.base import __models__ as __models__base
 from oyabun.telegram.entities import Audio
 from oyabun.telegram.entities import BotCommand
 from oyabun.telegram.entities import BotCommandScope
 from oyabun.telegram.entities import BotCommandScopeDefault
 from oyabun.telegram.entities import CallbackQuery
-from oyabun.telegram.entities import Chat
+from oyabun.telegram.entities import ChatFullInfo
 from oyabun.telegram.entities import ChatLocation
 from oyabun.telegram.entities import ChatPermissions
 from oyabun.telegram.entities import ChatPhoto
@@ -36,7 +33,7 @@ from oyabun.telegram.entities import Video
 from oyabun.telegram.entities import VideoNote
 from oyabun.telegram.entities import Voice
 from oyabun.telegram.entities import WebhookInfo
-from oyabun.telegram.requests import __models__ as __models__requests
+from oyabun.telegram.entities import __models__ as __models__entities
 from oyabun.telegram.requests import AnswerCallbackQueryRequest
 from oyabun.telegram.requests import DeleteMessageRequest
 from oyabun.telegram.requests import DeleteWebhookRequest
@@ -51,7 +48,7 @@ from oyabun.telegram.requests import GetWebhookInfoRequest
 from oyabun.telegram.requests import SendMessageRequest
 from oyabun.telegram.requests import SendPhotoRequest
 from oyabun.telegram.requests import SetWebhookRequest
-from oyabun.telegram.responses import __models__ as __models__responses
+from oyabun.telegram.requests import __models__ as __models__requests
 from oyabun.telegram.responses import AnswerCallbackQueryResponse
 from oyabun.telegram.responses import DeleteMessageResponse
 from oyabun.telegram.responses import DeleteWebhookResponse
@@ -66,16 +63,17 @@ from oyabun.telegram.responses import GetWebhookInfoResponse
 from oyabun.telegram.responses import SendMessageResponse
 from oyabun.telegram.responses import SendPhotoResponse
 from oyabun.telegram.responses import SetWebhookResponse
+from oyabun.telegram.responses import __models__ as __models__responses
 
-__models__: set[Type[TelegramBotApiType]] = (
+__models__: set[type[TelegramBotApiType]] = (
     __models__base
-    | __models__entities  # noqa: W503
-    | __models__requests  # noqa: W503
-    | __models__responses  # noqa: W503
+    | __models__entities
+    | __models__requests
+    | __models__responses
 )
 
 for _model in __models__:
-    _model.update_forward_refs()
+    _model.model_rebuild()
 
 __all__ = (
     "AnswerCallbackQueryRequest",
@@ -85,7 +83,7 @@ __all__ = (
     "BotCommandScope",
     "BotCommandScopeDefault",
     "CallbackQuery",
-    "Chat",
+    "ChatFullInfo",
     "ChatLocation",
     "ChatPermissions",
     "ChatPhoto",

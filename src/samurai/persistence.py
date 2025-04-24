@@ -1,14 +1,12 @@
 import asyncio
+import json
 from concurrent.futures import ThreadPoolExecutor
 from os import cpu_count
-
-import orjson
-
-from samurai.dirs import DIR_ARTIFACTS
+from samurai.dirs import DIR_LOCAL
 
 
 class Persistence:
-    DB_FILE = DIR_ARTIFACTS / "samurai.json"
+    DB_FILE = DIR_LOCAL / "samurai.json"
 
     async def load_state(self, user_id: str | int) -> str:
         db = await self._load_db()
@@ -46,10 +44,10 @@ class Persistence:
 
             with self.DB_FILE.open("r") as stream:
                 try:
-                    db = orjson.loads(stream.read())
+                    db = json.loads(stream.read())
                     assert isinstance(db, dict)
                     return db
-                except orjson.JSONDecodeError:
+                except json.JSONDecodeError:
                     return {}
 
         loop = asyncio.get_running_loop()
@@ -57,13 +55,14 @@ class Persistence:
 
     async def _store_db(self, db: dict) -> None:
         def _sync() -> None:
-            options = (
-                orjson.OPT_INDENT_2
-                | orjson.OPT_SORT_KEYS  # noqa: W503
-                | orjson.OPT_APPEND_NEWLINE  # noqa: W503
-            )
             with self.DB_FILE.open("wb") as stream:
-                stream.write(orjson.dumps(db, option=options))
+                stream.write(
+                    json.dumps(
+                        db,
+                        indent=2,
+                        sort_keys=True,
+                    ).encode("utf-8")
+                )
 
         loop = asyncio.get_running_loop()
         await loop.run_in_executor(self.__executor, _sync)

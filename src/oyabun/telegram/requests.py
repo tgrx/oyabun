@@ -1,12 +1,9 @@
-from typing import Any
-from typing import Type
-
-from pydantic import Field
-
 from oyabun.telegram.base import Request
 from oyabun.telegram.entities import InlineKeyboardMarkup
 from oyabun.telegram.entities import MessageEntity
 from oyabun.telegram.entities import ReplyMarkupType
+from pydantic import Field
+from typing import Any
 
 
 class AnswerCallbackQueryRequest(Request):
@@ -110,7 +107,7 @@ class SetWebhookRequest(Request):
     url: str = Field(...)
 
 
-__models__: set[Type[Request]] = {
+__models__: set[type[Request]] = {
     AnswerCallbackQueryRequest,
     DeleteMessageRequest,
     DeleteWebhookRequest,
@@ -126,21 +123,3 @@ __models__: set[Type[Request]] = {
     SendPhotoRequest,
     SetWebhookRequest,
 }
-
-__all__ = (
-    "__models__",
-    "AnswerCallbackQueryRequest",
-    "DeleteMessageRequest",
-    "DeleteWebhookRequest",
-    "EditMessageCaptionRequest",
-    "EditMessageReplyMarkupRequest",
-    "EditMessageTextRequest",
-    "GetChatRequest",
-    "GetFileRequest",
-    "GetMeRequest",
-    "GetUpdatesRequest",
-    "GetWebhookInfoRequest",
-    "SendMessageRequest",
-    "SendPhotoRequest",
-    "SetWebhookRequest",
-)

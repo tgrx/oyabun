@@ -1,16 +1,13 @@
 import abc
 import asyncio
-
 from devtools import debug
-from PIL import Image
-
 from oyabun.bot import Bot
 from oyabun.telegram import InlineKeyboardButton
 from oyabun.telegram import InlineKeyboardMarkup
 from oyabun.telegram import Update
+from PIL import Image
 from samurai.dirs import DIR_DOCS_IMG
 from samurai.dirs import DIR_TMP
-from samurai.util import json_dumps
 
 
 class AbstractAction(abc.ABC):
@@ -62,9 +59,9 @@ class Start(AbstractAction):
         replies = (
             "Let's begin the test\\.",
             "I'll send you some debug info about internals\\.",
-            f"*Bot*\n\n```{json_dumps(me.dict())}```",
-            f"*Chat*\n\n```{json_dumps(chat.dict())}```",
-            f"*Webhook*\n\n```{json_dumps(whi.dict())}```",
+            f"*Bot*\n\n```{me.model_dump_json()}```",
+            f"*Chat*\n\n```{chat.model_dump()}```",
+            f"*Webhook*\n\n```{whi.model_dump()}```",
             "Now please send me some plain text:",
         )
 
@@ -136,8 +133,8 @@ class SendPhoto(AbstractAction):
     async def _ensure_reaction_on(self, update: Update) -> None:
         if (
             not update.callback_query
-            or not update.callback_query.message  # noqa: W503
-            or not update.callback_query.data  # noqa: W503
+            or not update.callback_query.message
+            or not update.callback_query.data
         ):
             raise self.NoReaction
 

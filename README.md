@@ -8,6 +8,10 @@ A library for building Telegram bots.
 
 ![build status](https://github.com/tgrx/oyabun/actions/workflows/development.yaml/badge.svg?branch=main)
 
+![pypi](https://img.shields.io/pypi/v/oyabun)
+![python support](https://img.shields.io/pypi/pyversions/oyabun)
+![sloc](https://img.shields.io/tokei/lines/github/tgrx/oyabun)
+
 ## Mission
 
 The mission of this library is to provide a strict interface for the API.

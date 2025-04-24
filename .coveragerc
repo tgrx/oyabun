@@ -1,12 +1,13 @@
 [run]
 branch = True
-data_file = .artifacts/coverage/data_file.db
+data_file = /home/developer/caches/coverage/data_file.db
 omit = \
-	.artifacts/*
 	.git/*
 	.github/*
-	.run/*
-	samurai/*
+	.local/*
+	.venv/*
+	dist/*
+	src/samurai/*
 	tmp/*
 relative_files = True
 source = oyabun,tests
@@ -30,10 +31,10 @@ sort = -Cover
 
 
 [html]
-directory = .artifacts/coverage/html/
+directory = /home/developer/caches/coverage/html/
 skip_covered = False
 skip_empty = True
 title = Oyabun
 
 [xml]
-output = .artifacts/coverage/report.xml
+output = /home/developer/caches/coverage/report.xml

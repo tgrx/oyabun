@@ -1,17 +1,10 @@
+import aiohttp
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from io import BytesIO
-from pathlib import Path
-from typing import AsyncGenerator
-from typing import IO
-from typing import Type
-from typing import TypeVar
-
-import aiohttp
-import orjson
-
 from oyabun.telegram import AnswerCallbackQueryRequest
 from oyabun.telegram import AnswerCallbackQueryResponse
-from oyabun.telegram import Chat
+from oyabun.telegram import ChatFullInfo
 from oyabun.telegram import DeleteMessageRequest
 from oyabun.telegram import DeleteMessageResponse
 from oyabun.telegram import DeleteWebhookResponse
@@ -45,6 +38,8 @@ from oyabun.telegram import WebhookInfo
 from oyabun.telegram.base import Request
 from oyabun.telegram.base import Response
 from oyabun.telegram.entities import ReplyMarkupType
+from pathlib import Path
+from typing import IO
 
 
 class Bot:
@@ -65,8 +60,6 @@ class Bot:
         A base exception for any internal error, including those
         caused by malformed requests and invalid data.
         """
-
-        pass
 
     def __init__(
         self,
@@ -186,13 +179,13 @@ class Bot:
     async def editMessageCaption(
         self,
         *,
-        caption: None | str = None,
-        caption_entities: None | list[MessageEntity] | None = None,
-        chat_id: None | int | str | None = None,
-        inline_message_id: None | str | None = None,
-        message_id: None | int | None = None,
-        parse_mode: None | str | None = None,
-        reply_markup: None | InlineKeyboardMarkup | None = None,
+        caption: str | None = None,
+        caption_entities: list[MessageEntity] | None = None,
+        chat_id: int | str | None = None,
+        inline_message_id: str | None = None,
+        message_id: int | None = None,
+        parse_mode: str | None = None,
+        reply_markup: InlineKeyboardMarkup | None = None,
     ) -> bool | Message:
         """
         Use this method to edit captions of messages.
@@ -222,10 +215,10 @@ class Bot:
     async def editMessageReplyMarkup(
         self,
         *,
-        chat_id: None | int | str | None = None,
-        inline_message_id: None | str | None = None,
-        message_id: None | int | None = None,
-        reply_markup: None | InlineKeyboardMarkup | None = None,
+        chat_id: int | str | None = None,
+        inline_message_id: str | None = None,
+        message_id: int | None = None,
+        reply_markup: InlineKeyboardMarkup | None = None,
     ) -> bool | Message:
         """
         Use this method to edit only the reply markup of messages.
@@ -252,13 +245,13 @@ class Bot:
     async def editMessageText(
         self,
         *,
-        chat_id: None | int | str | None = None,
-        disable_web_page_preview: None | bool = None,
-        entities: None | list[MessageEntity] = None,
-        inline_message_id: None | str = None,
-        message_id: None | int = None,
-        parse_mode: None | str = None,
-        reply_markup: None | InlineKeyboardMarkup = None,
+        chat_id: int | str | None = None,
+        disable_web_page_preview: bool | None = None,
+        entities: list[MessageEntity] | None = None,
+        inline_message_id: str | None = None,
+        message_id: int | None = None,
+        parse_mode: str | None = None,
+        reply_markup: InlineKeyboardMarkup | None = None,
         text: str,
     ) -> bool | Message:
         """
@@ -287,7 +280,7 @@ class Bot:
             response_cls=EditMessageTextResponse,
         )
 
-    async def getChat(self, *, chat_id: int | str) -> Chat:
+    async def getChat(self, *, chat_id: int | str) -> ChatFullInfo:
         """
         Use this method to get up-to-date information about the chat
         (current name of the user for one-on-one conversations,
@@ -356,7 +349,7 @@ class Bot:
         *,
         offset: None | int = None,
         limit: None | int = None,
-        timeout: None | int = None,
+        timeout: None | int = None,  # noqa: ASYNC109
         allowed_updates: None | list[str] = None,
     ) -> list[Update]:
         request = GetUpdatesRequest(
@@ -541,18 +534,14 @@ class Bot:
             response_cls=SetWebhookResponse,
         )
 
-    _T = TypeVar(
-        "_T"
-    )  # don't worry about this: used as a generic type var in `_call_api`
-
-    async def _call_api(
+    async def _call_api[T](
         self,
         method: str,
         request: None | Request = None,
         *,
-        response_cls: Type[Response[_T]] = Response[_T],
-        timeout: None | int = None,
-    ) -> _T:
+        response_cls: type[Response[T]],
+        timeout: None | int = None,  # noqa: ASYNC109
+    ) -> T:
         """
         Performs the call to the Bot API returning a value of proper type.
         In case of error raises `Bot.RequestError`.
@@ -588,7 +577,7 @@ class Bot:
                             data.add_field(field, stream, filename="InputFile")
                     else:
                         headers = {"Content-Type": "application/json"}
-                        data = request.jsonb()
+                        data = request.model_dump_jsonb()
 
                     kw = {}
                     if timeout:
@@ -598,7 +587,7 @@ class Bot:
                         url,
                         data=data,
                         headers=headers,
-                        **kw,
+                        **kw,  # type: ignore[arg-type]
                     )
 
                     async with send_request as http_response:
@@ -607,13 +596,12 @@ class Bot:
                         if http_response.status != 200:
                             raise self.RequestError(body.decode())
 
-            payload = orjson.loads(body)
-            if not payload:
+            if not body:
                 err = f"unexpected empty payload on /{method}"
                 raise self.RequestError(err)
 
             # actual&valid Telegram response
-            response = response_cls.parse_obj(payload)
+            response = response_cls.model_validate_json(body)
 
             if not response.ok:
                 raise self.RequestError(response.description)

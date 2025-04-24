@@ -1,0 +1,47 @@
+{
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "containerEnv": {
+    "HOSTNAME": "oyabun-development",
+    "POETRY_CACHE_DIR": "/home/developer/caches/poetry"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "ms-python.python"
+      ],
+      "settings": {
+        "extensions.verifySignature": false,
+        "json.schemaDownload.enable": true,
+        "python.analysis.autoSearchPaths": false,
+        "python.analysis.extraPaths": [
+          "${workspaceFolder}/src/"
+        ],
+        "python.autoComplete.extraPaths": [
+          "${workspaceFolder}/src/"
+        ],
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.languageServer": "Pylance",
+        "python.terminal.activateEnvironment": false,
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false
+      }
+    }
+  },
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/developer/.ssh,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/.local/devcontainer-developer-home,target=/home/developer,type=bind,consistency=cached"
+  ],
+  "name": "Oyabun Telegram Bot API library",
+  "overrideCommand": true,
+  "postCreateCommand": "poetry install",
+  "runArgs": [
+    "--hostname=oyabun-development",
+    "--name=oyabun-development",
+    "--no-healthcheck"
+  ],
+  "workspaceFolder": "/app/",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind"
+}

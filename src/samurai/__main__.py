@@ -1,16 +1,11 @@
 import asyncio
 import os
-
 from devtools import debug
-from dotenv import load_dotenv
-
 from oyabun.bot import Bot
 from samurai.fsm import actions
 from samurai.fsm.machine import FSM
 from samurai.persistence import Persistence
 from samurai.states import State
-
-load_dotenv()
 
 token = os.getenv("TELEGRAM_BOT_TOKEN") or ""
 assert token, "cannot start: TELEGRAM_BOT_TOKEN is not set"
@@ -55,9 +50,7 @@ async def main() -> None:
     fsm = FSM(db, bot)
 
     for state0, state1, action_cls in graph:
-        # TODO: un-ignore when this is resolved:  # noqa: T101
-        # https://github.com/python/mypy/issues/5374
-        fsm.register(state0, state1, action_cls)  # type: ignore
+        fsm.register(state0, state1, action_cls)
 
     async with bot.client_session():
         while True:
