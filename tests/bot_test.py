@@ -1,5 +1,4 @@
 import pytest
-
 from oyabun.bot import Bot
 
 pytestmark = [

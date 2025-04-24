@@ -3,9 +3,9 @@ from typing import NamedTuple
 
 
 class VersionTuple(NamedTuple):
-    major: int = 2022
-    minor: int = 12
-    micro: int = 12
+    major: int = 2025
+    minor: int = 4
+    micro: int = 20
     dev: None | int = None
 
     def __str__(self) -> str:
@@ -21,11 +21,11 @@ VERSION = str(version)
 
 
 def verify_version() -> None:
-    # TODO: change to tomllib in Python 3.11  # noqa: T101
+    # TODO(refactoring): change to tomllib in Python 3.11
     import tomlkit
 
     this_file = Path(__file__)
-    repo = this_file.parent.parent.resolve()
+    repo = this_file.parent.parent.parent.resolve()
     pyproject_toml = repo / "pyproject.toml"
     if "oyabun" not in pyproject_toml.as_posix():
         # ignore for site-packages installations

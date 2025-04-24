@@ -1,13 +1,11 @@
-from functools import wraps
-from typing import Any
-from typing import Callable
-from uuid import uuid4
-
 from aiohttp import web
-
+from collections.abc import Callable
+from functools import wraps
 from oyabun.telegram import Response
 from oyabun.telegram import User
 from oyabun.telegram.base import TelegramBotApiType
+from typing import Any
+from uuid import uuid4
 
 _method_handlers: dict[str, Callable] = {}
 
@@ -21,14 +19,14 @@ def api_method(handler: Callable) -> Callable:
                 ok=True,
                 result=obj,
             )
-        except Exception as err:
+        except Exception as err:  # noqa: BLE001
             rs = Response(
                 description=str(err),
                 error_code=-1,
                 ok=False,
             )
 
-        return web.json_response(body=rs.jsonb())
+        return web.json_response(body=rs.model_dump_jsonb())
 
     _method_handlers[handler.__name__] = wrapped
     return wrapped
@@ -41,7 +39,7 @@ async def answerCallbackQuery(request: web.Request) -> bool:
     cbq_id = rq.get("callback_query_id")
     assert cbq_id
 
-    return bool(cbq_id == "cbq")  # noqa: SIM901
+    return bool(cbq_id == "cbq")
 
 
 @api_method

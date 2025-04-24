@@ -1,10 +1,10 @@
 from datetime import datetime
-from typing import Optional
-from typing import Type
-
-from pydantic import Field
-
 from oyabun.telegram.base import TelegramBotApiType
+from pydantic import ConfigDict
+from pydantic import Field
+from typing import Annotated
+from typing import Literal
+from typing import Optional
 
 
 class Audio(TelegramBotApiType):
@@ -32,11 +32,11 @@ class BotCommand(TelegramBotApiType):
 
 
 class BotCommandScope(TelegramBotApiType):
-    type: str = Field(...)  # noqa: A003,VNE003
+    type: str = Field(...)
 
 
 class BotCommandScopeDefault(BotCommandScope):
-    type: str = Field("default")  # noqa: A003,VNE003
+    type: str = Field("default")
 
 
 class CallbackQuery(TelegramBotApiType):
@@ -57,37 +57,130 @@ class CallbackQuery(TelegramBotApiType):
     https://core.telegram.org/bots/api#callbackquery
     """
 
-    chat_instance: str = Field(...)
-    data: None | str = Field(None)
-    from_: "User" = Field(..., alias="from")
-    game_short_name: None | str = Field(None)
-    id: str = Field(...)  # noqa: A003,VNE003
-    inline_message_id: None | str = Field(None)
-    message: Optional["Message"] = Field(None)
+    chat_instance: str
+    data: None | str = None
+    from_: Annotated["User", Field(alias="from")]
+    game_short_name: None | str = None
+    id: str
+    inline_message_id: None | str = None
+    message: Optional["Message"] = None
 
-    class Config:
-        fields = {
-            "from_": "from",
-        }
+
+class Location(TelegramBotApiType):
+    """
+    This object represents a point on the map.
+
+    https://core.telegram.org/bots/api#location
+    """
+
+    heading: None | int = Field(None, ge=1, le=360)
+    horizontal_accuracy: None | float = Field(None, ge=0, le=1500)
+    latitude: float = Field(...)
+    live_period: None | int = Field(None)
+    longitude: float = Field(...)
+    proximity_alert_radius: None | int = Field(None)
+
+
+class AcceptedGiftTypes(TelegramBotApiType):
+    limited_gifts: bool
+    premium_subscription: bool
+    unique_gifts: bool
+    unlimited_gifts: bool
+
+
+class ReactionTypeEmoji(TelegramBotApiType):
+    emoji: str
+    type: Literal["emoji"] = "emoji"
+
+
+class ReactionTypeCustomEmoji(TelegramBotApiType):
+    custom_emoji_id: str
+    type: Literal["custom_emoji"] = "custom_emoji"
+
+
+class ReactionTypePaid(TelegramBotApiType):
+    type: Literal["paid"] = "paid"
+
+
+ReactionType = ReactionTypeEmoji | ReactionTypeCustomEmoji | ReactionTypePaid
+
+
+class Birthdate(TelegramBotApiType):
+    day: int
+    month: int
+    year: int | None
+
+
+class BusinessIntro(TelegramBotApiType):
+    # TODO(impl): remove and populate api
+    model_config = ConfigDict(extra="ignore")
+
+    title: str | None = None
+    message: str | None = None
+
+
+class BusinessLocation(TelegramBotApiType):
+    address: str
+    location: Location | None = None
+
+
+class BusinessOpeningHoursInterval(TelegramBotApiType):
+    opening_minute: int
+    closing_minute: int
+
+
+class BusinessOpeningHours(TelegramBotApiType):
+    time_zone_name: str
+    opening_hours: list[BusinessOpeningHoursInterval]
 
 
 class Chat(TelegramBotApiType):
+    first_name: None | str = Field(None)
+    id: int
+    is_forum: None | bool = Field(None)
+    last_name: None | str = Field(None)
+    title: None | str = Field(None)
+    type: str
+    username: None | str = Field(None)
+
+
+class ChatLocation(TelegramBotApiType):
+    address: str = Field(...)
+    location: Location
+
+
+class ChatFullInfo(TelegramBotApiType):
     """
     This object represents a chat.
 
     https://core.telegram.org/bots/api#chat
     """
 
+    accent_color_id: int
+    accepted_gift_types: AcceptedGiftTypes
     active_usernames: None | list[str] = Field(None)
+    available_reactions: list[ReactionType] | None = None
+    background_custom_emoji_id: str | None = None
     bio: None | str = Field(None)
+    birthdate: Birthdate | None = None
+    business_intro: BusinessIntro | None = None
+    business_location: BusinessLocation | None = None
+    business_opening_hours: BusinessOpeningHours | None = None
+    can_send_gift: None | bool = Field(None)
+    can_send_paid_media: None | bool = Field(None)
     can_set_sticker_set: None | bool = Field(None)
+    custom_emoji_sticker_set_name: str | None = None
     description: None | bool = Field(None)
-    emoji_status_custom_emoji_id: None | str = Field(None)
+    emoji_status_custom_emoji_id: str | None = None
+    emoji_status_expiration_date: datetime | None = None
     first_name: None | str = Field(None)
+    has_aggressive_anti_spam_enabled: None | bool = Field(None)
+    has_hidden_members: None | bool = Field(None)
     has_private_forwards: None | bool = Field(None)
     has_protected_content: None | bool = Field(None)
     has_restricted_voice_and_video_messages: None | bool = Field(None)
-    id: int = Field(...)  # noqa: A003, VNE003
+    has_visible_history: None | bool = Field(None)
+    id: int
     invite_link: None | bool = Field(None)
     is_forum: None | bool = Field(None)
     join_by_request: None | bool = Field(None)
@@ -95,31 +188,27 @@ class Chat(TelegramBotApiType):
     last_name: None | str = Field(None)
     linked_chat_id: None | int = Field(None)
     location: Optional["ChatLocation"] = Field(None)
+    max_reaction_count: int
     message_auto_delete_time: None | int = Field(None)
     permissions: Optional["ChatPermissions"] = Field(None)
+    personal_chat: Chat | None = None
     photo: Optional["ChatPhoto"] = Field(None)
     pinned_message: Optional["Message"] = Field(None)
+    profile_accent_color_id: int | None = None
+    profile_background_custom_emoji_id: str | None = None
     slow_mode_delay: None | int = Field(None)
     sticker_set_name: None | str = Field(None)
-    title: None | str = Field(None)
-    type: str = Field(...)  # noqa: A003, VNE003
+    title: str | None = None
+    type: str
+    unrestrict_boost_count: int | None = None
     username: None | str = Field(None)
-
-
-class ChatLocation(TelegramBotApiType):
-    """
-    Represents a location to which a chat is connected.
-
-    https://core.telegram.org/bots/api#chatlocation
-    """
-
-    address: str = Field(...)
-    location: "Location" = Field(...)
 
 
 class ChatPermissions(TelegramBotApiType):
     """
-    Describes actions that a non-administrator user is allowed to take in a chat.
+    Describes actions
+    that a non-administrator user
+    is allowed to take in a chat.
 
     https://core.telegram.org/bots/api#chatpermissions
     """
@@ -263,21 +352,6 @@ class KeyboardButton(TelegramBotApiType):
     text: str = Field(...)
 
 
-class Location(TelegramBotApiType):
-    """
-    This object represents a point on the map.
-
-    https://core.telegram.org/bots/api#location
-    """
-
-    heading: None | int = Field(None, ge=1, le=360)
-    horizontal_accuracy: None | float = Field(None, ge=0, le=1500)
-    latitude: float = Field(...)
-    live_period: None | int = Field(None)
-    longitude: float = Field(...)
-    proximity_alert_radius: None | int = Field(None)
-
-
 class MaskPosition(TelegramBotApiType):
     """
     This object describes the position on faces where a mask should be placed by default.
@@ -289,6 +363,14 @@ class MaskPosition(TelegramBotApiType):
     scale: float = Field(...)
     x_shift: float = Field(...)
     y_shift: float = Field(...)
+
+
+class LinkPreviewOptions(TelegramBotApiType):
+    is_disabled: bool | None = None
+    prefer_large_media: bool | None = None
+    prefer_small_media: bool | None = None
+    show_above_text: bool | None = None
+    url: str | None = None
 
 
 class Message(TelegramBotApiType):
@@ -306,7 +388,7 @@ class Message(TelegramBotApiType):
     dice: None | Dice = Field(None)
     document: None | Document = Field(None)
     edit_date: None | datetime = Field(None)
-    entities: Optional[list["MessageEntity"]] = Field(None)
+    entities: list["MessageEntity"] | None = Field(None)
     forward_date: None | datetime = Field(None)
     forward_from: Optional["User"] = Field(None)
     forward_from_chat: None | Chat = Field(None)
@@ -317,14 +399,15 @@ class Message(TelegramBotApiType):
     has_protected_content: None | bool = Field(None)
     is_automatic_forward: None | bool = Field(None)
     is_topic_message: None | bool = Field(None)
+    link_preview_options: LinkPreviewOptions | None = None
     left_chat_member: Optional["User"] = Field(None)
     media_group_id: None | str = Field(None)
     message_id: int = Field(...)
     message_thread_id: None | int = Field(None)
     new_chat_members: None | list["User"] = Field(None)
-    new_chat_photo: Optional[list["PhotoSize"]] = Field(None)
+    new_chat_photo: list["PhotoSize"] | None = Field(None)
     new_chat_title: None | str = Field(None)
-    photo: Optional[list["PhotoSize"]] = Field(None)
+    photo: list["PhotoSize"] | None = Field(None)
     reply_markup: Optional["InlineKeyboardMarkup"] = Field(None)
     reply_to_message: Optional["Message"] = Field(None)
     sender_chat: None | Chat = Field(None)
@@ -334,11 +417,6 @@ class Message(TelegramBotApiType):
     video: Optional["Video"] = Field(None)
     video_note: Optional["VideoNote"] = Field(None)
     voice: Optional["Voice"] = Field(None)
-
-    class Config:
-        fields = {
-            "from_": "from",
-        }
 
 
 class MessageEntity(TelegramBotApiType):
@@ -353,7 +431,7 @@ class MessageEntity(TelegramBotApiType):
     language: None | str = Field(None)
     length: int = Field(...)
     offset: int = Field(...)
-    type: str = Field(...)  # noqa: A003, VNE003
+    type: str = Field(...)
     url: None | str = Field(None)
     user: Optional["User"] = Field(None)
 
@@ -425,7 +503,7 @@ class Sticker(TelegramBotApiType):
     premium_animation: None | File = Field(None)
     set_name: None | str = Field(None)
     thumb: None | PhotoSize = Field(None)
-    type: str = Field(...)  # noqa: A003,VNE003
+    type: str = Field(...)
     width: int = Field(...)
 
 
@@ -479,10 +557,12 @@ class User(TelegramBotApiType):
     """
 
     added_to_attachment_menu: None | bool = Field(None)
+    can_connect_to_business: None | bool = Field(None)
     can_join_groups: None | bool = Field(None)
     can_read_all_group_messages: None | bool = Field(None)
     first_name: str = Field(...)
-    id: int = Field(...)  # noqa: A003, VNE003
+    has_main_web_app: None | bool = Field(None)
+    id: int = Field(...)
     is_bot: bool = Field(...)
     is_premium: None | bool = Field(None)
     language_code: None | str = Field(None)
@@ -557,18 +637,18 @@ class WebhookInfo(TelegramBotApiType):
 
 ReplyMarkupType = (
     ForceReply
-    | InlineKeyboardMarkup  # noqa: W503
-    | ReplyKeyboardMarkup  # noqa: W503
-    | ReplyKeyboardRemove  # noqa: W503
+    | InlineKeyboardMarkup
+    | ReplyKeyboardMarkup
+    | ReplyKeyboardRemove
 )
 
-__models__: set[Type[TelegramBotApiType]] = {
+__models__: set[type[TelegramBotApiType]] = {
     Audio,
     BotCommand,
     BotCommandScope,
     BotCommandScopeDefault,
     CallbackQuery,
-    Chat,
+    ChatFullInfo,
     ChatLocation,
     ChatPermissions,
     ChatPhoto,
@@ -594,38 +674,3 @@ __models__: set[Type[TelegramBotApiType]] = {
     Voice,
     WebhookInfo,
 }
-
-__all__ = (
-    "__models__",
-    "Audio",
-    "BotCommand",
-    "BotCommandScope",
-    "BotCommandScopeDefault",
-    "CallbackQuery",
-    "Chat",
-    "ChatLocation",
-    "ChatPermissions",
-    "ChatPhoto",
-    "Dice",
-    "Document",
-    "File",
-    "ForceReply",
-    "InlineKeyboardButton",
-    "InlineKeyboardMarkup",
-    "KeyboardButton",
-    "Location",
-    "MaskPosition",
-    "Message",
-    "MessageEntity",
-    "PhotoSize",
-    "ReplyKeyboardMarkup",
-    "ReplyKeyboardRemove",
-    "ReplyMarkupType",
-    "Sticker",
-    "Update",
-    "User",
-    "Video",
-    "VideoNote",
-    "Voice",
-    "WebhookInfo",
-)

@@ -1,11 +1,9 @@
 import asyncio
-from asyncio import AbstractEventLoop
-from typing import AsyncGenerator
-
 import pytest
 import pytest_asyncio
 from aiohttp.test_utils import TestServer
-
+from asyncio import AbstractEventLoop
+from collections.abc import AsyncGenerator
 from oyabun.bot import Bot
 from tests.bot_test_app import TelegramApp
 

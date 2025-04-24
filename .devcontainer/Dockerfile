@@ -1,8 +1,26 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.12.10-alpine3.21
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# stage: builder for `task` binary
+
+FROM golang:1.24.2-alpine3.21 AS stage-go
+
+ENV GOBIN=/app/bin
 
 WORKDIR /app
+
+RUN set -eux; \
+    go install github.com/go-task/task/v3/cmd/task@latest
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# stage: system layer and binaries
+
+FROM python:3.12.10-alpine3.21
+COPY --chmod=0777 --from=stage-go /app/bin/task /usr/local/bin/task
+
+ENV PYTHONDONTWRITEBYTECODE=true
+ENV PYTHONUNBUFFERED=true
 
 RUN set -eux; \
     addgroup \
@@ -16,6 +34,11 @@ RUN set -eux; \
         -s /bin/bash \
         -u 1001 \
         developer \
+    && \
+    install \
+        -d \
+        -m 0755 \
+        /app \
     && \
     chown \
         -R \
@@ -37,9 +60,13 @@ RUN set -eux; \
     && \
     pip install \
         --upgrade \
-        pip \
-        poetry
+        pip
 
+RUN set -eux; \
+    pip install \
+        poetry==2.1.2
+
+WORKDIR /app
 
 USER developer
 

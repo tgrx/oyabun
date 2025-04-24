@@ -1,58 +1,50 @@
+from collections.abc import Generator
+from collections.abc import Iterator
+from collections.abc import Mapping
 from contextlib import contextmanager
 from io import BytesIO
 from pathlib import Path
-from typing import Any
-from typing import Generator
-from typing import Generic
-from typing import IO
-from typing import Iterator
-from typing import Type
-from typing import TypeVar
-
-import orjson
 from pydantic import BaseModel
+from pydantic import ConfigDict
 from pydantic import Field
-
-
-def orjson_dumps(value: Any, *, default: Any) -> str:
-    return orjson.dumps(value, default=default).decode()
+from typing import IO
+from typing import Any
+from typing import Generic
+from typing import TypeVar
 
 
 class TelegramBotApiType(BaseModel):
-    class Config:
-        allow_population_by_field_name = True
-        extra = "forbid"
-        json_dumps = orjson_dumps
-        json_loads = orjson.loads
+    model_config = ConfigDict(
+        extra="forbid",
+        populate_by_name=True,
+        serialize_by_alias=True,
+        strict=False,
+        validate_assignment=True,
+        validate_default=True,
+    )
 
-    def _prepare_export_kw(self, kw: dict[str, Any]) -> None:
-        kw.update(
-            {
-                "by_alias": True,
-                "exclude_none": True,
-                "exclude_unset": True,
-            }
-        )
+    def _prepare_export_kw(
+        self,
+        kwargs: Mapping[str, Any],
+        /,
+    ) -> Mapping[str, Any]:
+        new_kwargs: Mapping[str, Any] = kwargs | {  # type: ignore[operator]
+            "exclude_none": True,
+            "exclude_unset": True,
+        }
 
-    def jsonb(self, **kw: Any) -> bytes:  # noqa: A003, VNE003
-        value = self.json(**kw)
-        if isinstance(value, bytes):
-            return value
+        return new_kwargs
 
-        return value.encode()
+    def model_dump(self, /, **kwargs: Any) -> dict[str, Any]:
+        kw = self._prepare_export_kw(kwargs)
+        return super().model_dump(**kw)
 
-    def json(self, **kw: Any) -> str:  # noqa: A003, VNE003
-        self._prepare_export_kw(kw)
+    def model_dump_json(self, /, **kwargs: Any) -> str:
+        kw = self._prepare_export_kw(kwargs)
+        return super().model_dump_json(**kw)
 
-        value: str | bytes = super().json(**kw)
-        if isinstance(value, str):
-            return value
-
-        return value.decode()
-
-    def dict(self, **kw: Any) -> dict:  # noqa: A003, VNE003
-        self._prepare_export_kw(kw)
-        return super().dict(**kw)
+    def model_dump_jsonb(self, /, **kwargs: Any) -> bytes:
+        return self.model_dump_json(**kwargs).encode("utf-8")
 
 
 class Request(TelegramBotApiType):
@@ -92,9 +84,13 @@ class Request(TelegramBotApiType):
 
         return dict(fields_files)
 
-    def _prepare_export_kw(self, kw: dict[str, Any]) -> None:
-        kw["exclude"] = frozenset(self._get_input_files())
-        return super()._prepare_export_kw(kw)
+    def _prepare_export_kw(
+        self, kw: Mapping[str, Any], /
+    ) -> Mapping[str, Any]:
+        new_kw: Mapping[str, Any] = kw | {  # type: ignore[operator]
+            "exclude": frozenset(self._get_input_files()),
+        }
+        return super()._prepare_export_kw(new_kw)
 
 
 class ResponseParameters(TelegramBotApiType):
@@ -105,7 +101,7 @@ class ResponseParameters(TelegramBotApiType):
 ResponseResultT = TypeVar("ResponseResultT")
 
 
-class Response(Generic[ResponseResultT], TelegramBotApiType):
+class Response(TelegramBotApiType, Generic[ResponseResultT]):
     """
     The response contains a JSON object,
         which always has a Boolean field 'ok'
@@ -125,26 +121,18 @@ class Response(Generic[ResponseResultT], TelegramBotApiType):
     https://core.telegram.org/bots/api#making-requests
     """
 
-    ok: bool = Field(...)
-    result: None | ResponseResultT = Field(None)
-    error_code: None | int = Field(None)
-    description: None | str = Field(None)
-    parameters: None | ResponseParameters = Field(None)
+    description: None | str = None
+    error_code: None | int = None
+    ok: bool
+    parameters: None | ResponseParameters = None
+    result: None | ResponseResultT = None
 
 
-BaseModelType = Type[BaseModel]
+BaseModelType = type[BaseModel]
 
-__models__: set[Type[TelegramBotApiType]] = {
+__models__: set[type[TelegramBotApiType]] = {
     Request,
     Response,
     ResponseParameters,
     TelegramBotApiType,
 }
-
-__all__ = (
-    "__models__",
-    "Request",
-    "Response",
-    "ResponseParameters",
-    "TelegramBotApiType",
-)

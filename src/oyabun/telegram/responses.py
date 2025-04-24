@@ -1,14 +1,11 @@
-from typing import Type
-
-from pydantic import Field
-
 from oyabun.telegram import File
 from oyabun.telegram.base import Response
-from oyabun.telegram.entities import Chat
+from oyabun.telegram.entities import ChatFullInfo
 from oyabun.telegram.entities import Message
 from oyabun.telegram.entities import Update
 from oyabun.telegram.entities import User
 from oyabun.telegram.entities import WebhookInfo
+from pydantic import Field
 
 
 class AnswerCallbackQueryResponse(Response[bool]):
@@ -35,8 +32,8 @@ class EditMessageTextResponse(Response[bool | Message]):
     result: None | bool | Message = Field(None)
 
 
-class GetChatResponse(Response[Chat]):
-    result: None | Chat = Field(None)
+class GetChatResponse(Response[ChatFullInfo]):
+    result: None | ChatFullInfo = Field(None)
 
 
 class GetFileResponse(Response[File]):
@@ -67,7 +64,7 @@ class SetWebhookResponse(Response[bool]):
     result: bool = Field(False)
 
 
-__models__: set[Type[Response]] = {
+__models__: set[type[Response]] = {
     AnswerCallbackQueryResponse,
     DeleteMessageResponse,
     DeleteWebhookResponse,
@@ -83,21 +80,3 @@ __models__: set[Type[Response]] = {
     SendPhotoResponse,
     SetWebhookResponse,
 }
-
-__all__ = (
-    "__models__",
-    "AnswerCallbackQueryResponse",
-    "DeleteMessageResponse",
-    "DeleteWebhookResponse",
-    "EditMessageCaptionResponse",
-    "EditMessageReplyMarkupResponse",
-    "EditMessageTextResponse",
-    "GetChatResponse",
-    "GetFileResponse",
-    "GetMeResponse",
-    "GetUpdatesResponse",
-    "GetWebhookInfoResponse",
-    "SendMessageResponse",
-    "SendPhotoResponse",
-    "SetWebhookResponse",
-)

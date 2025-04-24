@@ -1,12 +1,10 @@
 import traceback
-from typing import Any
-from typing import Type
-from typing import TypeVar
-
 from oyabun.bot import Bot
 from oyabun.telegram import Update
 from samurai.fsm.actions import AbstractAction
 from samurai.persistence import Persistence
+from typing import Any
+from typing import TypeVar
 
 StateT = TypeVar("StateT")
 
@@ -21,7 +19,7 @@ class FSM:
         self,
         state0: StateT,
         state1: StateT,
-        action_cls: Type[AbstractAction],
+        action_cls: type[AbstractAction],
     ) -> "FSM":
         key = (state0, state1)
         if key not in self._stt:
