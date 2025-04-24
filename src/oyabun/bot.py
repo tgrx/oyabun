@@ -601,7 +601,6 @@ class Bot:
                 raise self.RequestError(err)
 
             # actual&valid Telegram response
-            print(body)
             response = response_cls.model_validate_json(body)
 
             if not response.ok:
